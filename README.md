@@ -71,3 +71,21 @@ export default defineConfig([
   },
 ])
 ```
+
+## Command To Run Application
+yarn run dev
+
+## Command To Build
+yarn build
+
+## Command To Firebase Deploy
+firebase deploy --only hosting
+
+## Details
+BG Limpo is a private project to organize the cleaning of board games.
+
+Project Console: https://console.firebase.google.com/project/bg-limpo/overview
+Hosting URL: https://bg-limpo.web.app
+
+## This application is hosted on:
+https://bg-limpo.web.app/
