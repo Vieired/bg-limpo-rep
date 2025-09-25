@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import type { FirestoreDocument, FirestoreListResponse } from './shared/models/domain/Firestore';
+import { getValue } from './shared/helpers/firestoreToJS';
 import './App.css'
 
 // Your web app's Firebase configuration
@@ -15,29 +15,9 @@ const firebaseConfig = {
   appId: "1:245775062234:web:5ad4705676304ef9e301e3"
 };
 
-// Representa um campo genérico do Firestore
-type FirestoreValue =
-  | { stringValue: string }
-  | { integerValue: string }
-  | { booleanValue: boolean }
-  | { arrayValue: { values: FirestoreValue[] } };
-
-// Documento retornado pela API
-interface FirestoreDocument {
-  name: string;
-  fields: Record<string, FirestoreValue>;
-  createTime: string;
-  updateTime: string;
-}
-
-// Resposta quando lista documentos
-interface FirestoreListResponse {
-  documents: FirestoreDocument[];
-}
-
 function App() {
-  const [count, setCount] = useState(0);
   const [token, setToken] = useState<string|null>(null);
+  const [ games, setGames ] = useState<FirestoreDocument[]|null>(null);
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
@@ -74,7 +54,7 @@ function App() {
     }
 
     const data: FirestoreListResponse = await res.json();
-    return data.documents || [];
+    return data?.documents || [];
   }, [token, url]);
 
   useEffect(() => {
@@ -86,37 +66,26 @@ function App() {
 
     if (!token) return;
 
-    listarJogos().then(jogos => {
-      // console.log("jogos: ", jogos);
-      jogos.forEach(doc => {
-        console.log("doc: ", doc);
-        // console.log(doc.fields.nome?.stringValue, doc.fields.ano?.integerValue);
-      });
-    });
+    listarJogos()
+      .then((games: FirestoreDocument[]) => {
+        setGames(games)
+      })
   }, [listarJogos, token]);
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1>BG Limpo</h1>
+      {games != null ? (
+        <ul>
+          {(games as FirestoreDocument[])?.map((game: FirestoreDocument) => (
+            <li key={game.name}>
+              {getValue(game.fields.name)}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>Carregando...</p>
+      )}
     </>
   )
 }
