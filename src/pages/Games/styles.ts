@@ -15,8 +15,8 @@ export const Content = styled.div`
     display: flex;
     flex-direction: column;
     width: 100vh;
+    height: 100vh;
     gap: 2rem;
-    padding: 1rem;
     color: #D9753B;
 
     > ul {
@@ -31,6 +31,7 @@ export const Content = styled.div`
         align-self: end;
         justify-content: space-between;
         width: 100%;
+        padding-top: 1rem;
     }
 
     @media (min-width: 992px) {
