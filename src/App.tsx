@@ -4,14 +4,14 @@
 // import type { FirestoreDocument, FirestoreListResponse } from './shared/models/domain/Firestore';
 // import { getValue } from './shared/helpers/firestoreToJS';
 // import { firebaseConfig } from './shared/firebase/config';
-import { ToastContainer } from 'react-toastify';
-import GlobalStyle from "./styles/global";
 // import { BrowserRouter, Route, Routes } from 'react-router';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Login from './pages/Login';
 // import { firebaseAuth } from './shared/services/authService';
+import { ToastContainer } from 'react-toastify';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css'
+import Login from './pages/Login';
 import Games from './pages/Games';
+import GlobalStyle from "./styles/global";
 
 function App() {
   // const user = localStorage?.getItem("user");
