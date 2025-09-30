@@ -26,9 +26,9 @@ const Login: React.FC = () => {
                     
                     // pegar token JWT (ID token)
                     // return user.getIdToken()
-                    user.getIdToken().then(token => {
+                    user.getIdToken().then(token =>
                         localStorage.setItem("tk", JSON.stringify(token))
-                    })
+                    )
                 });
         } catch (error) {
             console.error("Erro no login:", error);

@@ -1,4 +1,4 @@
-// import { useEffect } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 // import { initializeApp } from "firebase/app";
 // import { getAuth } from 'firebase/auth';
 // import type { FirestoreDocument, FirestoreListResponse } from './shared/models/domain/Firestore';
@@ -6,15 +6,16 @@
 // import { firebaseConfig } from './shared/firebase/config';
 // import { BrowserRouter, Route, Routes } from 'react-router';
 // import { firebaseAuth } from './shared/services/authService';
+import { firebaseAuthService } from './shared/services/firebaseAuthService';
 import { ToastContainer } from 'react-toastify';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import './App.css'
 import Login from './pages/Login';
 import Games from './pages/Games';
+import './App.css'
 import GlobalStyle from "./styles/global";
+import type { User } from 'firebase/auth';
 
 function App() {
-  // const user = localStorage?.getItem("user");
 
   // useEffect(() => {
 
@@ -34,6 +35,9 @@ function App() {
 
   // const [token, setToken] = useState<string|null>(null);
   // // const [ games, setGames ] = useState<FirestoreDocument[]|null>(null);
+  const [logged, setLogged] = useState<boolean>(
+    localStorage.getItem("user") != null && localStorage.getItem("user") !== ""
+  );
 
   // // Initialize Firebase
   // const app = initializeApp(firebaseConfig);
@@ -59,16 +63,6 @@ function App() {
   //   return data?.documents || [];
   // }, [token, url]);
 
-  // useEffect(() => {
-
-  //   if (!token) return;
-
-  //   listarJogos()
-  //     .then((games: FirestoreDocument[]) => {
-  //       setGames(games)
-  //     })
-  // }, [listarJogos, token]);
-
   // const login = useCallback(async (email: string, senha: string): Promise<string> => {
   //     try {
   //     // const userCredential = await signInWithEmailAndPassword(auth, email, senha);
@@ -86,17 +80,16 @@ function App() {
   //     }
   // }, []);
 
-  // useEffect(() => {
-  //   login("logominus@gmail.com", "logominus@gmail.com")
-  //     .then(resp => setToken(resp));
-  // }, [login]);
+  const authStateCbk = useCallback((user: User | null): void => {
+    if (!user)
+      setLogged(false);
+    else
+      setLogged(true);
+  }, []);
 
-  // useEffect(() => {
-  //   if (localStorage?.getItem("user") && typeof(localStorage.getItem("user")) === "string") {
-  //     const user = localStorage?.getItem("user");
-  //     user.getIdToken()
-  //   }
-  // }, []);
+  useLayoutEffect(() => {
+    firebaseAuthService.listenAuthState(authStateCbk);
+  }, [authStateCbk]);
 
   return (
     <>
@@ -111,11 +104,9 @@ function App() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-      />    
+      />
       <GlobalStyle />
-
-      
-      {localStorage?.getItem("user") && typeof(localStorage.getItem("user")) === "string" ? (
+      {logged ? (
         <BrowserRouter>
           <Routes>
               <Route index element={<Games/>} />
@@ -125,19 +116,6 @@ function App() {
       ) : (
         <Login/>
       )}
-
-      {/* <h1>BG Limpo</h1>
-      {games != null ? (
-        <ul>
-          {(games as FirestoreDocument[])?.map((game: FirestoreDocument) => (
-            <li key={game.name}>
-              {getValue(game.fields.name)}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>Carregando...</p>
-      )} */}
     </>
   )
 }
