@@ -2,15 +2,21 @@
 export type FirestoreValue =
   | { stringValue: string }
   | { integerValue: string }
+  | { doubleValue: number }
   | { booleanValue: boolean }
-  | { arrayValue: { values: FirestoreValue[] } };
+  | { nullValue: null }
+  | { arrayValue: { values?: FirestoreValue[] } }
+  | { mapValue: { fields?: Record<string, FirestoreValue> } }
+  | { timestampValue: string }
+  | { referenceValue: string }
+  | { geoPointValue: { latitude: number; longitude: number } };
 
 // Documento retornado pela API
 export interface FirestoreDocument {
-  name: string;
+  name?: string;
   fields: Record<string, FirestoreValue>;
-  createTime: string;
-  updateTime: string;
+  createTime?: string;
+  updateTime?: string;
 }
 
 // Resposta quando lista documentos

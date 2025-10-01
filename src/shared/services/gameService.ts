@@ -8,7 +8,7 @@ const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.proje
 
 export const gameService = {
 
-  fetchGames: async (/*showOnlyActiveGamesFilter?: boolean*/) => {
+  fetchGames: async (showOnlyActiveGamesFilter?: boolean) => {
 
     const storageToken = localStorage?.getItem("tk");
     const token = storageToken ? JSON.parse(storageToken) : null;
@@ -18,7 +18,10 @@ export const gameService = {
         "Authorization": `Bearer ${token}`
         // "Content-Type": "application/json"
       },
-    });
+      params: {
+        showOnlyActiveGamesFilter: showOnlyActiveGamesFilter
+      }
+    } as RequestInit);
     
     if (!res?.ok) {
       throw new Error(`Erro ao buscar jogos: ${res.statusText}`);

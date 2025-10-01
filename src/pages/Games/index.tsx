@@ -9,44 +9,35 @@ import Switch from "react-switch";
 //     selectGames,
 //     toggleShowOnlyActiveGamesFilter,
 // } from "../../store/gamesSlice.js";
-// import type { Game } from "../../shared/models/Games.ts";
+import type { Game } from "../../shared/models/Games.ts";
 import Button from "../../components/Inputs/Button/index";
 // import ModalAddOrEdit from "./ModalAddOrEdit/index";
 // import ModalCleaning from "./ModalCleaning/index.tsx";
-// import Card from "./Card/index.tsx";
+import Card from "./Card/index.tsx";
 import { firebaseAuthService } from "../../shared/services/firebaseAuthService.ts";
+import type { FirestoreDocument } from "../../shared/models/domain/Firestore.ts";
 // import { setUser } from "../../store/usersSlice.ts";
 // import { firebaseConfig } from "../../shared/firebase/config";
-import { Container, Content, Loading, Toolbar } from "./styles";
-import { getValue } from "../../shared/helpers/firestoreToJS.ts";
-import type { FirestoreDocument } from "../../shared/models/domain/Firestore.ts";
+import { firestoreDocToJson } from "../../shared/helpers/firestoreToJS.ts";
 import { gameService } from "../../shared/services/gameService.ts";
+import { settingsService } from "../../shared/services/settingsService.ts";
+import { Container, Content, Loading, Toolbar } from "./styles";
 
 const Games: React.FC = () => {
 
-    const [ games, setGames ] = useState<FirestoreDocument[]|null>(null);
-
-    // const dispatch = useDispatch();
-    const gamesStatus = /*useSelector(selectGames).status*/ "ok";
-    // const {
-    //     games,
-    //     limitInMonths,
-    //     showOnlyActiveGamesFilter,
-    // } = /*useSelector(selectGames)*/ {
-    //     games: Game[];
-    //     status: string;
-    //     limitInMonths: number | null;
-    //     today: string;
-    //     showOnlyActiveGamesFilter: boolean;
-    // } as InitialStateGames;
     const navigate = useNavigate();
-
-    const subtitle = /*`Frequência de limpezas: ${limitInMonths} meses`*/"Lorem ipsum dolor sit amet";
-
+    
     // const [modalOpen, setModalOpen] = useState<boolean>(false);
     // const [modalCleaningOpen, setModalCleaningOpen] = useState<boolean>(false);
-    // const [gameEditing, setGameEditing] = useState<Game|null>(null);
+    const [, setGameEditing] = useState<Game|null>(null);
     const [activeEdition, setActiveEdition] = useState<boolean>(false);
+    const [ games, setGames ] = useState<FirestoreDocument[]|null>(null);
+    const [ cleaningFrequency, setCleaningFrequency ] = useState<number>(0);
+    const [ showOnlyActiveGamesFilterToggle, setShowOnlyActiveGamesFilterToggle ] = useState<boolean>(true);
+    const [ cleaningFrequencyLoading, setCleaningFrequencyLoading ] = useState<boolean>(true);
+    const [ gamesLoading, setGamesLoading ] = useState<boolean>(true);
+
+    const subtitle = `Frequência de limpezas: ${cleaningFrequency} meses`;
 
     // const toggleModal = useCallback(() => {
     //     setModalOpen(prevState => !prevState);
@@ -85,15 +76,28 @@ const Games: React.FC = () => {
     //     setGameEditing(null);
     // }
 
-    const refreshGames = useCallback(() => {
-        // // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        // dispatch(fetchGames(showOnlyActiveGamesFilter) as any);
-        gameService.fetchGames().then((resp) => {
-            setGames(resp)
-        });
+    const mappingArrayFirestoreDocumentToArrayGame = (games: FirestoreDocument[]): Game[] => {
+        const ret: Game[] = games.map((game) => firestoreDocToJson(game) as Game); // casting do tipo Record<string, any> para Game
+        return ret;
+    }
+
+    const getSettings = useCallback(() => {
+        settingsService.fetchSettings().then((resp: number) => {
+            setCleaningFrequency(resp);
+            setCleaningFrequencyLoading(false)
+        })
     }, []);
 
+    const refreshGames = useCallback(() => {
+        gameService.fetchGames(showOnlyActiveGamesFilterToggle).then((resp) => {
+            setGames(resp);
+            setGamesLoading(false);
+        });
+    }, [showOnlyActiveGamesFilterToggle]);
+
     useEffect(() => refreshGames(), [refreshGames]);
+
+    useEffect(() => getSettings(), [getSettings]);
 
     return (
         <Container>
@@ -117,8 +121,7 @@ const Games: React.FC = () => {
                 </nav>
                 <h2>BG Limpo</h2>
                 <small>
-                    {subtitle}
-                    {/* {limitInMonths ? (
+                    {!cleaningFrequencyLoading ? (
                         subtitle
                     ) : (
                         <Skeleton
@@ -127,7 +130,7 @@ const Games: React.FC = () => {
                             baseColor="#00000017"
                             highlightColor="#00000047"
                         />
-                    )} */}
+                    )}
                 </small>
                 <Toolbar>
                     <Button
@@ -153,27 +156,29 @@ const Games: React.FC = () => {
                             <span>Exibir Somente Ativos</span>
                             <Switch
                                 id="onlyActives"
-                                // onChange={(e) => toggleShowOnlyActiveGamesFilter(e)}
-                                onChange={() => {}}
-                                checked={/*showOnlyActiveGamesFilter*/true}
+                                onChange={(e) => setShowOnlyActiveGamesFilterToggle(e)}
+                                checked={showOnlyActiveGamesFilterToggle}
                             />
                         </label>
                     </span>
                 </Toolbar>
-                {gamesStatus as string !== "pending" ? (
+                {!gamesLoading && games ? (
                     <ul>
-                        {(games as FirestoreDocument[])?.map((game: FirestoreDocument) => (
+                        {/* {(games as FirestoreDocument[])?.map((game: FirestoreDocument) => (
                             <li key={game.name}>
                                 {getValue(game.fields.name)}
                             </li>
-                            // <Card
-                            //     key={game.id}
-                            //     game={game}
-                            //     activeEdition={activeEdition}
-                            //     setGameEditing={setGameEditing}
-                            //     toggleModalCleaning={toggleModalCleaning}
-                            //     toggleModal={toggleModal}
-                            // />
+                        ))} */}
+                        {(mappingArrayFirestoreDocumentToArrayGame(games) as Game[])?.map((game: Game) => (
+                            <Card
+                                key={game.name}
+                                game={game}
+                                activeEdition={activeEdition}
+                                setGameEditing={setGameEditing}
+                                toggleModalCleaning={/*toggleModalCleaning*/() => {}}
+                                toggleModal={/*toggleModal*/() => {}}
+                                limitInMonths={cleaningFrequency}
+                            />
                         ))}
                     </ul>
                 ) : (
