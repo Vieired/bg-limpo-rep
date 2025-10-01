@@ -1,10 +1,12 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-    display: flex;
+    /* display: flex; */
     background: #fff2ea;
-
+    min-width: 320px;
+    
     @media (min-width: 992px) {
+        display: flex;
         padding-left: 0;
         padding-right: 0;
         justify-content: center;
@@ -14,8 +16,10 @@ export const Container = styled.div`
 export const Content = styled.div`
     display: flex;
     flex-direction: column;
-    width: 100vh;
-    height: 100vh;
+    /* width: 100vh; */
+    /* height: 100vh; */
+    min-height: 100vh;
+    padding: 0 1rem;
     gap: 2rem;
     color: #D9753B;
 
