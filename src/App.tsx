@@ -1,4 +1,5 @@
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 // import { initializeApp } from "firebase/app";
 // import { getAuth } from 'firebase/auth';
 // import type { FirestoreDocument, FirestoreListResponse } from './shared/models/domain/Firestore';
@@ -8,7 +9,6 @@ import { useCallback, useLayoutEffect, useState } from 'react';
 // import { firebaseAuth } from './shared/services/authService';
 import { firebaseAuthService } from './shared/services/firebaseAuthService';
 import { ToastContainer } from 'react-toastify';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
 import Games from './pages/Games';
 import Settings from './pages/Settings';
@@ -18,24 +18,9 @@ import type { User } from 'firebase/auth';
 
 function App() {
 
-  // useEffect(() => {
-
-  //   const currentUser = localStorage?.getItem("user") && typeof(localStorage.getItem("user")) === "string"
-  //     ? JSON.parse(localStorage.getItem("user") as string)
-  //     : null;
-
-  //   if (new Date(currentUser?.stsTokenManager?.expirationTime) < new Date()) {
-  //     firebaseAuth.signOut().then(() => {
-  //         // Signs out if the user's token is expired.
-  //         localStorage.clear();
-  //       }).catch((error) => {
-  //         console.log(error);
-  //       });
-  //   }
-  // }, []);
+  // const navigate = useNavigate();
 
   // const [token, setToken] = useState<string|null>(null);
-  // // const [ games, setGames ] = useState<FirestoreDocument[]|null>(null);
   const [logged, setLogged] = useState<boolean>(
     localStorage.getItem("user") != null && localStorage.getItem("user") !== ""
   );
@@ -43,26 +28,6 @@ function App() {
   // // Initialize Firebase
   // const app = initializeApp(firebaseConfig);
   // /*export*/ const auth = getAuth(app);
-
-  // const PROJECT_ID = firebaseConfig.projectId;
-  // const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/jogos`;  
-
-  // const listarJogos = useCallback(async (): Promise<FirestoreDocument[]> => {
-
-  //   const res = await fetch(url, {
-  //     headers: {
-  //       "Authorization": `Bearer ${token}`
-  //       // "Content-Type": "application/json"
-  //     },
-  //   });
-    
-  //   if (!res?.ok) {
-  //     throw new Error(`Erro ao buscar jogos: ${res.statusText}`);
-  //   }
-
-  //   const data: FirestoreListResponse = await res.json();
-  //   return data?.documents || [];
-  // }, [token, url]);
 
   // const login = useCallback(async (email: string, senha: string): Promise<string> => {
   //     try {
@@ -82,13 +47,22 @@ function App() {
   // }, []);
 
   const authStateCbk = useCallback((user: User | null): void => {
-    if (!user)
+    if (!user) {
+      localStorage.clear();
       setLogged(false);
-    else
+      firebaseAuthService.signOut();
+      // .then(() => {
+      //   // Signs out if the user's token is expired.
+      //   localStorage.clear();
+      //   setLogged(false);
+      // }).catch((error) => {
+      //   console.log(error);
+      // });
+    } else
       setLogged(true);
   }, []);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     firebaseAuthService.listenAuthState(authStateCbk);
   }, [authStateCbk]);
 

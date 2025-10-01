@@ -23,3 +23,11 @@ export interface FirestoreDocument {
 export interface FirestoreListResponse {
   documents: FirestoreDocument[];
 }
+
+export interface FirestoreErrorResponse {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  code: any; //FirestoreErrorCode
+  message: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  details?: any; //FirestoreErrorDetail[]
+}

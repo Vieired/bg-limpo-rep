@@ -1,14 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+// import { toast } from "react-toastify";
 import { FaPlus, FaPen, FaPowerOff, FaCog } from "react-icons/fa";
 // import { useDispatch, useSelector } from "react-redux";
 import Skeleton from "react-loading-skeleton";
 import Switch from "react-switch";
-// import {
-//     fetchGames,
-//     selectGames,
-//     toggleShowOnlyActiveGamesFilter,
-// } from "../../store/gamesSlice.js";
 import type { Game } from "../../shared/models/Games.ts";
 import Button from "../../components/Inputs/Button/index";
 // import ModalAddOrEdit from "./ModalAddOrEdit/index";
@@ -88,6 +84,24 @@ const Games: React.FC = () => {
         })
     }, []);
 
+    // const refreshGames = useCallback(() => {
+    //     gameService.fetchGames(showOnlyActiveGamesFilterToggle)
+    //         .then((res: Response) => {
+    //             if (!res?.ok) {
+    //                 toast.error("Erro ao tentar obter lista de jogos.", {
+    //                     toastId: "notification-message",
+    //                 });
+    //                 console.log("Erro: ", res.status);
+    //                 throw new Error(`Erro ao buscar jogos: ${res.statusText}`);
+    //             }
+
+    //             res.json().then((data: FirestoreListResponse) => {
+    //                 // return data?.documents || [];
+    //                 setGames(data?.documents || []);
+    //                 setGamesLoading(false);
+    //             });
+    //         });
+    // }, [showOnlyActiveGamesFilterToggle]);
     const refreshGames = useCallback(() => {
         gameService.fetchGames(showOnlyActiveGamesFilterToggle).then((resp) => {
             setGames(resp);

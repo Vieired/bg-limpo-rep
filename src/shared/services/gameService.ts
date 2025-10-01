@@ -1,5 +1,5 @@
 import { firebaseConfig } from "../firebase/config";
-import type { FirestoreListResponse } from "../models/domain/Firestore";
+import type { FirestoreDocument, FirestoreListResponse } from "../models/domain/Firestore";
 
 // const app = initializeApp(firebaseConfig);
 // const db = getFirestore(app);
@@ -8,7 +8,24 @@ const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.proje
 
 export const gameService = {
 
-  fetchGames: async (showOnlyActiveGamesFilter?: boolean) => {
+  // fetchGames: async (showOnlyActiveGamesFilter?: boolean): Promise<Response> => {
+
+  //   const storageToken = localStorage?.getItem("tk");
+  //   const token = storageToken ? JSON.parse(storageToken) : null;
+
+  //   const res = await fetch(url, {
+  //     headers: {
+  //       "Authorization": `Bearer ${token}`
+  //     },
+  //     params: {
+  //       showOnlyActiveGamesFilter: showOnlyActiveGamesFilter
+  //     }
+  //   } as RequestInit);
+    
+  //   return res;
+  // },
+
+  fetchGames: async (showOnlyActiveGamesFilter?: boolean): Promise<FirestoreDocument[]> => {
 
     const storageToken = localStorage?.getItem("tk");
     const token = storageToken ? JSON.parse(storageToken) : null;

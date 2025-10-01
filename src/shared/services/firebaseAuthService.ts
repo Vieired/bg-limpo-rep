@@ -4,6 +4,7 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  type Unsubscribe,
   type User,
   type UserCredential,
 } from "firebase/auth";
@@ -16,7 +17,7 @@ export const firebaseAuthService = {
   signIn: async (email: string, password: string): Promise<UserCredential> => {
     return signInWithEmailAndPassword(auth, email, password);
   },
-  listenAuthState: (cb: (user: User | null) => void) => {
+  listenAuthState: (cb: (user: User | null) => void): Unsubscribe => {
     return onAuthStateChanged(auth, cb);
   },
   signOut: (): Promise<void> => {
