@@ -11,6 +11,7 @@ import { ToastContainer } from 'react-toastify';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
 import Games from './pages/Games';
+import Settings from './pages/Settings';
 import './App.css'
 import GlobalStyle from "./styles/global";
 import type { User } from 'firebase/auth';
@@ -110,7 +111,7 @@ function App() {
         <BrowserRouter>
           <Routes>
               <Route index element={<Games/>} />
-              {/* <Route path="/settings" element={<Settings/>} /> */}
+              <Route path="/settings" element={<Settings/>} />
           </Routes>
         </BrowserRouter>
       ) : (

@@ -26,5 +26,5 @@ export interface GameCleaning {
 }
 
 export interface ISettings {
-    cleaningFrequency?: number;
+    cleaning_frequency?: number;
 }
