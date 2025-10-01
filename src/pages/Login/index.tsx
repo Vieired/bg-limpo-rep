@@ -12,7 +12,7 @@ import { Container } from "./styles";
 const Login: React.FC = () => {
     
     const login = useCallback(async (email: string, senha: string): Promise<void> => {
-        
+
         firebaseAuthService.signIn(email, senha)
             .then(userCredential => {
                 const user = userCredential.user;
@@ -20,9 +20,9 @@ const Login: React.FC = () => {
                 
                 // pegar token JWT (ID token)
                 // return user.getIdToken()
-                user.getIdToken().then(token =>
-                    localStorage.setItem("tk", JSON.stringify(token))
-                )
+                // user.getIdToken().then(token =>
+                //     localStorage.setItem("tk", JSON.stringify(token))
+                // )
             })
             .catch((error: FirebaseError) => {
                 const errorCode = error.code;
@@ -36,35 +36,7 @@ const Login: React.FC = () => {
 
     const handleSubmit = (data: Auth) => {
         
-        login(data.email, data.password)
-            .then(resp => localStorage.setItem("tk", JSON.stringify(resp)))
-            .catch((error: FirebaseError) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                toast.error(errorMessage, {
-                    toastId: "invalid-form-field",
-                });
-                console.log("Error: ", errorCode, errorMessage);
-            });
-
-        // firebaseAuthService.signIn(data.email, data.password)
-        //     .then((userCredential) => {
-        //         // Signed in 
-        //         const user = userCredential.user;
-        //         const token = user.getIdToken();
-        //         // console.log("token: ", token);
-        //         localStorage.setItem("user", JSON.stringify(user));
-        //         // localStorage.setItem("token", JSON.stringify(token));
-        //         return token;
-        //     })
-        //     .catch((error) => {
-        //         const errorCode = error.code;
-        //         const errorMessage = error.message;
-        //         toast.error(errorMessage, {
-        //             toastId: "invalid-form-field",
-        //         });
-        //         console.log("Error: ", errorCode, errorMessage);
-        //     });
+        login(data.email, data.password);
     }
 
     const formik = useFormik({

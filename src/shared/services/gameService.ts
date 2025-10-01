@@ -6,6 +6,13 @@ import type { FirestoreDocument, FirestoreListResponse } from "../models/domain/
 const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/jogos`;
 // const token = localStorage?.getItem("tk") && typeof(localStorage.getItem("tk")) === "string";
 
+const getToken = () => {
+  const currentUser = localStorage?.getItem("user") && typeof(localStorage.getItem("user")) === "string"
+    ? JSON.parse(localStorage.getItem("user") as string)
+    : null;
+  return currentUser?.stsTokenManager?.accessToken as string;
+}
+
 export const gameService = {
 
   // fetchGames: async (showOnlyActiveGamesFilter?: boolean): Promise<Response> => {
@@ -27,8 +34,9 @@ export const gameService = {
 
   fetchGames: async (showOnlyActiveGamesFilter?: boolean): Promise<FirestoreDocument[]> => {
 
-    const storageToken = localStorage?.getItem("tk");
-    const token = storageToken ? JSON.parse(storageToken) : null;
+    const token = getToken();
+    // const storageToken = localStorage?.getItem("tk");
+    // const token = storageToken ? JSON.parse(storageToken) : null;
 
     const res = await fetch(url, {
       headers: {
