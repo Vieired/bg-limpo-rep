@@ -1,45 +1,51 @@
 import { useCallback } from "react";
+import { toast } from "react-toastify";
 import { useFormik } from "formik";
 import type { Auth } from "../../shared/models/domain/Auth";
+import { firebaseAuthService } from "../../shared/services/firebaseAuthService";
+import type { FirebaseError } from "firebase/app";
 import Input from "../../components/Inputs/Input";
 import Button from "../../components/Inputs/Button";
 import { Container } from "./styles";
-import { firebaseAuthService } from "../../shared/services/firebaseAuthService";
 
 
 const Login: React.FC = () => {
     
-    // const [token, setToken] = useState<string|null>(null);
-    // const [ games, setGames ] = useState<FirestoreDocument[]|null>(null);
-
-    // Initialize Firebase
-    // const app = initializeApp(firebaseConfig);
-    // const auth = getAuth(app);
-
-    
     const login = useCallback(async (email: string, senha: string): Promise<void> => {
-        try {
-            firebaseAuthService.signIn(email, senha)
-                .then(userCredential => {
-                    const user = userCredential.user;
-                    localStorage.setItem("user", JSON.stringify(user));
-                    
-                    // pegar token JWT (ID token)
-                    // return user.getIdToken()
-                    user.getIdToken().then(token =>
-                        localStorage.setItem("tk", JSON.stringify(token))
-                    )
+        
+        firebaseAuthService.signIn(email, senha)
+            .then(userCredential => {
+                const user = userCredential.user;
+                localStorage.setItem("user", JSON.stringify(user));
+                
+                // pegar token JWT (ID token)
+                // return user.getIdToken()
+                user.getIdToken().then(token =>
+                    localStorage.setItem("tk", JSON.stringify(token))
+                )
+            })
+            .catch((error: FirebaseError) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                toast.error(errorMessage, {
+                    toastId: "invalid-form-field",
                 });
-        } catch (error) {
-            console.error("Erro no login:", error);
-            throw error;
-        }
+                console.log("Error: ", errorCode, errorMessage);
+            });
     }, []);
 
     const handleSubmit = (data: Auth) => {
         
         login(data.email, data.password)
-            .then(resp => localStorage.setItem("tk", JSON.stringify(resp)));
+            .then(resp => localStorage.setItem("tk", JSON.stringify(resp)))
+            .catch((error: FirebaseError) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                toast.error(errorMessage, {
+                    toastId: "invalid-form-field",
+                });
+                console.log("Error: ", errorCode, errorMessage);
+            });
 
         // firebaseAuthService.signIn(data.email, data.password)
         //     .then((userCredential) => {
