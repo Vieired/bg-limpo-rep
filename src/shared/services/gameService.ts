@@ -1,4 +1,5 @@
 import { firebaseConfig } from "../firebase/config";
+import { getAccessToken } from "../helpers/auth";
 import type { FirestoreDocument, FirestoreListResponse } from "../models/domain/Firestore";
 
 // const app = initializeApp(firebaseConfig);
@@ -34,7 +35,7 @@ export const gameService = {
 
   fetchGames: async (showOnlyActiveGamesFilter?: boolean): Promise<FirestoreDocument[]> => {
 
-    const token = getToken();
+    const token = getAccessToken();
     // const storageToken = localStorage?.getItem("tk");
     // const token = storageToken ? JSON.parse(storageToken) : null;
 
