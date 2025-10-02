@@ -28,7 +28,7 @@ const Login: React.FC = () => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 toast.error(errorMessage, {
-                    toastId: "invalid-form-field",
+                    toastId: "notification-message",
                 });
                 console.log("Error: ", errorCode, errorMessage);
             });
