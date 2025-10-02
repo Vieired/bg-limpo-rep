@@ -45,7 +45,7 @@ export function firestoreDocToJson(doc: FirestoreDocument): Record<string, any> 
 
 // Função que converte valor JS em FirestoreValue
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function toFirestoreValue(value: any): FirestoreValue {
+export function toFirestoreValue(value: any): FirestoreValue {
   if (value === null) return { nullValue: null };
 
   switch (typeof value) {

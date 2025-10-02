@@ -1,12 +1,13 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaArrowLeft as LeftIcon, FaCheck } from 'react-icons/fa';
 import { useFormik } from "formik";
+import { settingsService } from "../../shared/services/settingsService";
 import Button from "../../components/Inputs/Button";
 import InputNumber from "../../components/Inputs/InputNumber";
+import { FirebaseError } from "firebase/app";
 import { Container, Content, Buttons } from "./styles";
-import { settingsService } from "../../shared/services/settingsService";
-import { useEffect, useState } from "react";
 
 
 
@@ -18,23 +19,25 @@ const Settings: React.FC = () => {
     const [ loading, setLoading ] = useState<boolean>(true);
 
     const handleSubmit = (data: { limitInMonths: number }) => {
-        try {
-            settingsService.updateSettings({cleaning_frequency: data.limitInMonths})
-                .then(() => {
-                    toast.success("Frequência de limpezas alterada com sucesso.", {
-                        toastId: "notification-message",
-                    });
-            
-                    navigate('/');
+
+        settingsService.updateSettings({cleaning_frequency: data.limitInMonths})
+            .then(() => {
+                toast.success("Frequência de limpezas alterada com sucesso.", {
+                    toastId: "notification-message",
                 });
-        }
-        catch(error) {
-            toast.error("Erro ao tentar alterar Frequência de limpezas.", {
-                toastId: "notification-message",
+        
+                navigate('/');
+            })
+            .catch((error: FirebaseError) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                toast.error(`Erro ao tentar alterar Frequência de limpezas (${errorMessage}).`, {
+                    toastId: "notification-message",
+                });
+                console.log("Error: ", errorCode, errorMessage);
+                // throw new Error(error.response?.data?.Message || 'Error');
             });
-            console.log("Erro: ", error);
-            // throw new Error(error.response?.data?.Message || 'Error');
-        }
+        
     }
 
     const formik = useFormik({
