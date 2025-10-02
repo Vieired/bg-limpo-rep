@@ -84,24 +84,6 @@ const Games: React.FC = () => {
         })
     }, []);
 
-    // const refreshGames = useCallback(() => {
-    //     gameService.fetchGames(showOnlyActiveGamesFilterToggle)
-    //         .then((res: Response) => {
-    //             if (!res?.ok) {
-    //                 toast.error("Erro ao tentar obter lista de jogos.", {
-    //                     toastId: "notification-message",
-    //                 });
-    //                 console.log("Erro: ", res.status);
-    //                 throw new Error(`Erro ao buscar jogos: ${res.statusText}`);
-    //             }
-
-    //             res.json().then((data: FirestoreListResponse) => {
-    //                 // return data?.documents || [];
-    //                 setGames(data?.documents || []);
-    //                 setGamesLoading(false);
-    //             });
-    //         });
-    // }, [showOnlyActiveGamesFilterToggle]);
     const refreshGames = useCallback(() => {
         gameService.fetchGames(showOnlyActiveGamesFilterToggle).then((resp) => {
             setGames(resp);
