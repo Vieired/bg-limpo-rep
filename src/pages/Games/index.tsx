@@ -7,7 +7,7 @@ import Skeleton from "react-loading-skeleton";
 import Switch from "react-switch";
 import type { Game } from "../../shared/models/Games.ts";
 import Button from "../../components/Inputs/Button/index";
-// import ModalAddOrEdit from "./ModalAddOrEdit/index";
+import ModalAddOrEdit from "./ModalAddOrEdit/index";
 // import ModalCleaning from "./ModalCleaning/index.tsx";
 import Card from "./Card/index.tsx";
 import { firebaseAuthService } from "../../shared/services/firebaseAuthService.ts";
@@ -23,10 +23,10 @@ const Games: React.FC = () => {
 
     const navigate = useNavigate();
     
-    // const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
     // const [modalCleaningOpen, setModalCleaningOpen] = useState<boolean>(false);
-    const [, setGameEditing] = useState<Game|null>(null);
-    const [activeEdition, setActiveEdition] = useState<boolean>(false);
+    const [ gameEditing, setGameEditing ] = useState<Game|null>(null);
+    const [ activeEdition, setActiveEdition ] = useState<boolean>(false);
     const [ games, setGames ] = useState<FirestoreDocument[]|null>(null);
     const [ cleaningFrequency, setCleaningFrequency ] = useState<number>(0);
     const [ showOnlyActiveGamesFilterToggle, setShowOnlyActiveGamesFilterToggle ] = useState<boolean>(true);
@@ -35,14 +35,14 @@ const Games: React.FC = () => {
 
     const subtitle = `Frequência de limpezas: ${cleaningFrequency} meses`;
 
-    // const toggleModal = useCallback(() => {
-    //     setModalOpen(prevState => !prevState);
-    //     // setModalOpen(!modalOpen);
-    // }, []);
+    const toggleModalAddOrEdit = useCallback(() => {
+        setModalOpen(prevState => !prevState);
+        // setModalOpen(!modalOpen);
+    }, []);
 
-    // const toggleModalCleaning = useCallback(() => {
-    //     setModalCleaningOpen(prevState => !prevState);
-    // }, []);
+    const toggleModalCleaning = useCallback(() => {
+        // setModalCleaningOpen(prevState => !prevState);
+    }, []);
 
     const toggleActiveEdition = () => {
         setActiveEdition(prevState => !prevState);
@@ -61,20 +61,24 @@ const Games: React.FC = () => {
     }
 
     const handleAddClick = () => {
-        // toggleModal();
+        toggleModalAddOrEdit();
     }
 
     const handleEnableEditingClick = () => {
         toggleActiveEdition();
     }
 
-    // const clearGameEditing = () => {
-    //     setGameEditing(null);
-    // }
+    const clearGameEditing = () => {
+        setGameEditing(null);
+    }
 
     const mappingArrayFirestoreDocumentToArrayGame = (games: FirestoreDocument[]): Game[] => {
-        const ret: Game[] = games.map((game) => firestoreDocToJson(game) as Game); // casting do tipo Record<string, any> para Game
-        return ret;
+        return games.map((game: FirestoreDocument) => {
+            return {
+                ...firestoreDocToJson(game) as Game,
+                id: game.name,
+            } as Game; // casting do tipo Record<string, any> para Game
+        }) as Game[];
     }
 
     const getSettings = useCallback(() => {
@@ -171,8 +175,8 @@ const Games: React.FC = () => {
                                 game={game}
                                 activeEdition={activeEdition}
                                 setGameEditing={setGameEditing}
-                                toggleModalCleaning={/*toggleModalCleaning*/() => {}}
-                                toggleModal={/*toggleModal*/() => {}}
+                                toggleModalCleaning={toggleModalCleaning}
+                                toggleModal={toggleModalAddOrEdit}
                                 limitInMonths={cleaningFrequency}
                             />
                         ))}
@@ -188,15 +192,15 @@ const Games: React.FC = () => {
                     </Loading>
                 )}
 
-                {/* <ModalAddOrEdit
+                <ModalAddOrEdit
                     gameEditing={gameEditing}
                     modalOpen={modalOpen}
-                    toggleModal={toggleModal}
+                    toggleModal={toggleModalAddOrEdit}
                     clearGameEditing={clearGameEditing}
                     // data-testid="tl-addOrEditModal"
                 />
 
-                <ModalCleaning
+                {/* <ModalCleaning
                     gameEditing={gameEditing}
                     modalOpen={modalCleaningOpen}
                     toggleModal={toggleModalCleaning}

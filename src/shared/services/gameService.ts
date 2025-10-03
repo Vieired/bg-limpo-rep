@@ -1,6 +1,8 @@
 import { firebaseConfig } from "../firebase/config";
 import { getAccessToken } from "../helpers/auth";
+import { toFirestoreValue } from "../helpers/firestoreToJS";
 import type { FirestoreDocument, FirestoreListResponse } from "../models/domain/Firestore";
+import type { Game } from "../models/Games";
 
 const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/jogos`;
 
@@ -58,4 +60,33 @@ export const gameService = {
     
   //   return gameList
   // },
+
+  updateGame: async (data: Game) => {
+
+    const docId = data.id.split("projects/bg-limpo/databases/(default)/documents/jogos/")[1];
+
+    const fields = Object.fromEntries(
+      Object.entries(data).map(([k, v]) => [k, toFirestoreValue(v)])
+    );
+
+    const body = {
+      fields,
+      // updateMask: { fieldPaths: Object.keys(data) },
+    };
+
+    const response = await fetch(`${url}/${docId}`, {
+      method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${getAccessToken()}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body),
+    } as RequestInit);
+
+    if (!response.ok) {
+      throw new Error(`Erro ao atualizar doc: ${response.statusText}`);
+    }
+
+    return await response.json();
+  },
 };
