@@ -90,3 +90,11 @@ export function jsonToFirestoreDoc(obj: Record<string, any>): FirestoreDocument 
     ),
   };
 }
+
+export function jsonToFirestoreDocGenericType<T>(obj: Record<string, T>): FirestoreDocument {
+  return {
+    fields: Object.fromEntries(
+      Object.entries(obj).map(([key, value]) => [key, toFirestoreValue(value)])
+    ),
+  };
+}
