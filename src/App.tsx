@@ -25,6 +25,10 @@ function App() {
     localStorage.getItem("user") != null && localStorage.getItem("user") !== ""
   );
 
+  // const currentUser = localStorage?.getItem("user") && typeof(localStorage.getItem("user")) === "string"
+  //   ? JSON.parse(localStorage.getItem("user") as string)
+  //   : null;
+
   // // Initialize Firebase
   // const app = initializeApp(firebaseConfig);
   // /*export*/ const auth = getAuth(app);
@@ -66,6 +70,15 @@ function App() {
     firebaseAuthService.listenAuthState(authStateCbk);
   }, [authStateCbk]);
 
+  // useEffect(() => {
+  //   if (!currentUser) return;
+
+  //   const { stsTokenManager: { expirationTime } } = currentUser;
+  //   if (new Date(expirationTime) < new Date()) {
+  //     firebaseAuthService.signOut()
+  //   }
+  // }, [currentUser]);
+
   return (
     <>
       <ToastContainer
@@ -81,16 +94,16 @@ function App() {
         pauseOnHover
       />
       <GlobalStyle />
-      {logged ? (
-        <BrowserRouter>
-          <Routes>
-              <Route index element={<Games/>} />
-              <Route path="/settings" element={<Settings/>} />
-          </Routes>
-        </BrowserRouter>
-      ) : (
-        <Login/>
-      )}
+      <BrowserRouter>
+        {logged ? (
+            <Routes>
+                <Route index element={<Games/>} />
+                <Route path="/settings" element={<Settings/>} />
+                </Routes>
+        ) : (
+          <Login/>
+        )}
+      </BrowserRouter>
     </>
   )
 }
