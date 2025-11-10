@@ -197,6 +197,7 @@ const Games: React.FC = () => {
                     modalOpen={modalOpen}
                     toggleModal={toggleModalAddOrEdit}
                     clearGameEditing={clearGameEditing}
+                    refreshList={refreshGames}
                     // data-testid="tl-addOrEditModal"
                 />
 

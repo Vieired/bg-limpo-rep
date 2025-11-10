@@ -89,4 +89,31 @@ export const gameService = {
 
     return await response.json();
   },
+
+  createGame: async (payload: Game) => {
+
+    const fields = Object.fromEntries(
+      Object.entries(payload).map(([k, v]) => [k, toFirestoreValue(v)])
+    );
+
+    const body = {
+      fields,
+    };
+
+    const response = await fetch(`${url}`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${getAccessToken()}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body),
+    } as RequestInit);
+
+    if (!response.ok) {
+      throw new Error(`Erro ao atualizar doc: ${response.statusText}`);
+    }
+
+    return await response.json();
+  }
+
 };

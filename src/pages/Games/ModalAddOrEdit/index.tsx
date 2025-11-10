@@ -31,7 +31,7 @@ import {
 
 interface Props {
     gameEditing: Game | null;
-    // refreshList: () => void;
+    refreshList: () => void;
     modalOpen: boolean;
     toggleModal: () => void;
     clearGameEditing: () => void;
@@ -39,7 +39,7 @@ interface Props {
 
 const ModalAddOrEdit: React.FC<Props> = ({
   gameEditing,
-  // refreshList,
+  refreshList,
   modalOpen,
   toggleModal,
   clearGameEditing,
@@ -47,15 +47,9 @@ const ModalAddOrEdit: React.FC<Props> = ({
 
   const today = new Date().toISOString().split("T")[0];
 
-  /*
-  *  Poderia usar o callback refreshGames passado via prop do componente pai, 
-  *  mas preferi fazer a chamada via Redux mesmo para demonstração
-  */
-  const showOnlyActiveGamesFilterToggle = /*useSelector(selectGames)*/ true;
-
   const done = () => {
     toggleModal();
-    gameService.fetchGames(showOnlyActiveGamesFilterToggle);
+    refreshList();
   };
 
   const handleSubmit = (data: Game) => {
@@ -64,21 +58,20 @@ const ModalAddOrEdit: React.FC<Props> = ({
       gameService.updateGame({
         ...data,
         cleaning_method: Number(data.cleaning_method),
-      } as Game)
-      .then(() => {
+      } as Game).then(() => {
         toast.success("Jogo atualizado com sucesso.", {
             toastId: "notification-message",
         });
         done();
       })
     }
-    // else {
-    //   gameService.createGame({
-    //     ...data,
-    //     cleaning_method: Number(data.cleaning_method),
-    //   })
-    //   .then(() => done())
-    // }
+    else {
+      gameService.createGame({
+        ...data,
+        cleaning_method: Number(data.cleaning_method),
+      })
+      .then(() => done())
+    }
   };
 
   const formik = useFormik({
