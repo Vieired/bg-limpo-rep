@@ -8,7 +8,7 @@ import Switch from "react-switch";
 import type { Game } from "../../shared/models/Games.ts";
 import Button from "../../components/Inputs/Button/index";
 import ModalAddOrEdit from "./ModalAddOrEdit/index";
-// import ModalCleaning from "./ModalCleaning/index.tsx";
+import ModalCleaning from "./ModalCleaning/index.tsx";
 import Card from "./Card/index.tsx";
 import { firebaseAuthService } from "../../shared/services/firebaseAuthService.ts";
 import type { FirestoreDocument } from "../../shared/models/domain/Firestore.ts";
@@ -24,7 +24,7 @@ const Games: React.FC = () => {
     const navigate = useNavigate();
     
     const [modalOpen, setModalOpen] = useState<boolean>(false);
-    // const [modalCleaningOpen, setModalCleaningOpen] = useState<boolean>(false);
+    const [modalCleaningOpen, setModalCleaningOpen] = useState<boolean>(false);
     const [ gameEditing, setGameEditing ] = useState<Game|null>(null);
     const [ activeEdition, setActiveEdition ] = useState<boolean>(false);
     const [ games, setGames ] = useState<FirestoreDocument[]|null>(null);
@@ -41,7 +41,7 @@ const Games: React.FC = () => {
     }, []);
 
     const toggleModalCleaning = useCallback(() => {
-        // setModalCleaningOpen(prevState => !prevState);
+        setModalCleaningOpen(prevState => !prevState);
     }, []);
 
     const toggleActiveEdition = () => {
@@ -201,12 +201,13 @@ const Games: React.FC = () => {
                     // data-testid="tl-addOrEditModal"
                 />
 
-                {/* <ModalCleaning
+                <ModalCleaning
                     gameEditing={gameEditing}
                     modalOpen={modalCleaningOpen}
                     toggleModal={toggleModalCleaning}
                     clearGameEditing={clearGameEditing}
-                /> */}
+                    refreshList={refreshGames}
+                />
             </Content>
         </Container>
     );

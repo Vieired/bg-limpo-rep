@@ -110,7 +110,7 @@ export const gameService = {
     } as RequestInit);
 
     if (!response.ok) {
-      throw new Error(`Erro ao atualizar doc: ${response.statusText}`);
+      throw new Error(`Erro ao tentar criar doc: ${response.statusText}`);
     }
 
     return await response.json();
