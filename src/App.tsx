@@ -62,8 +62,10 @@ function App() {
       // }).catch((error) => {
       //   console.log(error);
       // });
-    } else
-      setLogged(true);
+      return;
+    }
+
+    setLogged(true);
   }, []);
 
   useEffect(() => {
