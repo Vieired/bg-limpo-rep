@@ -68,6 +68,7 @@ function App() {
     setLogged(true);
   }, []);
 
+  // TODO: fazer esta checagem em todas requisições da aplicação (alternativamente usar um Interceptor)
   useEffect(() => {
     firebaseAuthService.listenAuthState(authStateCbk);
   }, [authStateCbk]);
@@ -98,10 +99,10 @@ function App() {
       <GlobalStyle />
       <BrowserRouter>
         {logged ? (
-            <Routes>
-                <Route index element={<Games/>} />
-                <Route path="/settings" element={<Settings/>} />
-                </Routes>
+          <Routes>
+            <Route index element={<Games/>} />
+            <Route path="/settings" element={<Settings/>} />
+          </Routes>
         ) : (
           <Login/>
         )}
