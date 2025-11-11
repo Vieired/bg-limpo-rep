@@ -17,6 +17,7 @@ import type { FirestoreDocument } from "../../shared/models/domain/Firestore.ts"
 import { firestoreDocToJson } from "../../shared/helpers/firestoreToJS.ts";
 import { gameService } from "../../shared/services/gameService.ts";
 import { settingsService } from "../../shared/services/settingsService.ts";
+import { checkIfAuthenticationIsRequired } from "../../shared/utils/auth.tsx";
 import { Container, Content, Loading, Toolbar } from "./styles";
 
 const Games: React.FC = () => {
@@ -53,9 +54,7 @@ const Games: React.FC = () => {
         firebaseAuthService.signOut()
             .then(() => {
                 // Sign-out successful.
-                // dispatch(setUser(null));
-                localStorage.clear();
-                window.location.reload();
+                checkIfAuthenticationIsRequired();
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             }).catch((error: any) => {
                 // An error happened.

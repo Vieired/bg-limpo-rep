@@ -3,7 +3,7 @@ import { getAccessToken } from "../helpers/auth";
 import { toFirestoreValue } from "../helpers/firestoreToJS";
 import type { FirestoreDocument, FirestoreListResponse } from "../models/domain/Firestore";
 import type { Game } from "../models/Games";
-// import { checkIfAuthenticationIsRequired } from "../utils/auth";
+import { checkIfAuthenticationIsRequired } from "../utils/auth";
 
 const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/jogos`;
 
@@ -11,7 +11,7 @@ export const gameService = {
 
   fetchGames: async (showOnlyActiveGamesFilter?: boolean): Promise<FirestoreDocument[]> => {
 
-    // checkIfAuthenticationIsRequired();
+    checkIfAuthenticationIsRequired();
 
     const token = getAccessToken();
 
@@ -66,6 +66,8 @@ export const gameService = {
 
   updateGame: async (data: Game) => {
 
+    checkIfAuthenticationIsRequired();
+
     const docId = data.id.split("projects/bg-limpo/databases/(default)/documents/jogos/")[1];
 
     const fields = Object.fromEntries(
@@ -94,6 +96,8 @@ export const gameService = {
   },
 
   createGame: async (payload: Game) => {
+
+    checkIfAuthenticationIsRequired();
 
     const fields = Object.fromEntries(
       Object.entries(payload).map(([k, v]) => [k, toFirestoreValue(v)])

@@ -3,7 +3,7 @@ export const checkIfAuthenticationIsRequired = () => {
         ? JSON.parse(localStorage.getItem("user") as string)
         : null;
 
-    if (new Date(currentUser?.stsTokenManager?.expirationTime) < new Date()) {
+    if (currentUser?.stsTokenManager?.expirationTime < new Date().getTime()) { // compara timestamp
         localStorage.clear();
         document.location.reload();
     }
