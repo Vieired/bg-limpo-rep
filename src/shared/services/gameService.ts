@@ -3,12 +3,15 @@ import { getAccessToken } from "../helpers/auth";
 import { toFirestoreValue } from "../helpers/firestoreToJS";
 import type { FirestoreDocument, FirestoreListResponse } from "../models/domain/Firestore";
 import type { Game } from "../models/Games";
+// import { checkIfAuthenticationIsRequired } from "../utils/auth";
 
 const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/jogos`;
 
 export const gameService = {
 
   fetchGames: async (showOnlyActiveGamesFilter?: boolean): Promise<FirestoreDocument[]> => {
+
+    // checkIfAuthenticationIsRequired();
 
     const token = getAccessToken();
 

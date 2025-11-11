@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 // import { initializeApp } from "firebase/app";
-// import { getAuth } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 // import type { FirestoreDocument, FirestoreListResponse } from './shared/models/domain/Firestore';
 // import { getValue } from './shared/helpers/firestoreToJS';
 // import { firebaseConfig } from './shared/firebase/config';
@@ -51,7 +51,14 @@ function App() {
   // }, []);
 
   const authStateCbk = useCallback((user: User | null): void => {
-    if (!user) {
+
+    const auth = getAuth();
+    if (!auth?.currentUser) return;
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { stsTokenManager: { expirationTime } } = auth.currentUser as any;
+    // if (expirationTime > new Date('2025-11-10T22:41:12.797Z').getTime()) { // timestamp
+    if (!user || expirationTime < new Date().getTime()) {
       localStorage.clear();
       setLogged(false);
       firebaseAuthService.signOut();

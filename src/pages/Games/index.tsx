@@ -49,10 +49,13 @@ const Games: React.FC = () => {
     };
 
     const handleSignOut = () => {
-        firebaseAuthService.signOut().then(() => {
+
+        firebaseAuthService.signOut()
+            .then(() => {
                 // Sign-out successful.
                 // dispatch(setUser(null));
                 localStorage.clear();
+                window.location.reload();
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             }).catch((error: any) => {
                 // An error happened.
