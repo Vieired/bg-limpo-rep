@@ -13,7 +13,7 @@ import { firebaseConfig } from "../firebase/config";
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-export const firebaseAuthService = {
+export const authService = {
   signIn: async (email: string, password: string): Promise<UserCredential> => {
     return signInWithEmailAndPassword(auth, email, password);
   },

@@ -7,7 +7,7 @@ import { getAuth } from 'firebase/auth';
 // import { firebaseConfig } from './shared/firebase/config';
 // import { BrowserRouter, Route, Routes } from 'react-router';
 // import { firebaseAuth } from './shared/services/authService';
-import { firebaseAuthService } from './shared/services/firebaseAuthService';
+import { authService } from './shared/services/authService';
 import { ToastContainer } from 'react-toastify';
 import Login from './pages/Login';
 import Games from './pages/Games';
@@ -59,7 +59,7 @@ function App() {
     const { stsTokenManager: { expirationTime } } = auth.currentUser as any;
     // if (expirationTime > new Date('2025-11-10T22:41:12.797Z').getTime()) { // timestamp
     if (!user || expirationTime < new Date().getTime()) {
-      firebaseAuthService.signOut()
+      authService.signOut()
         .then(() => {
           // Signs out if the user's token is expired.
           localStorage.clear();
@@ -76,7 +76,7 @@ function App() {
 
   // TODO: fazer esta checagem em todas requisições da aplicação (alternativamente usar um Interceptor)
   useEffect(() => {
-    firebaseAuthService.listenAuthState(authStateCbk);
+    authService.listenAuthState(authStateCbk);
   }, [authStateCbk]);
 
   // useEffect(() => {

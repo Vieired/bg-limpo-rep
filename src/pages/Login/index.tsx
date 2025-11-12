@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
 import type { Auth } from "../../shared/models/domain/Auth";
-import { firebaseAuthService } from "../../shared/services/firebaseAuthService";
+import { authService } from "../../shared/services/authService";
 import type { FirebaseError } from "firebase/app";
 import Input from "../../components/Inputs/Input";
 import Button from "../../components/Inputs/Button";
@@ -13,7 +13,7 @@ const Login: React.FC = () => {
     
     const login = useCallback(async (email: string, senha: string): Promise<void> => {
 
-        firebaseAuthService.signIn(email, senha)
+        authService.signIn(email, senha)
             .then(userCredential => {
                 const user = userCredential.user;
                 localStorage.setItem("user", JSON.stringify(user));
