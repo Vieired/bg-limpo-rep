@@ -59,16 +59,15 @@ function App() {
     const { stsTokenManager: { expirationTime } } = auth.currentUser as any;
     // if (expirationTime > new Date('2025-11-10T22:41:12.797Z').getTime()) { // timestamp
     if (!user || expirationTime < new Date().getTime()) {
-      localStorage.clear();
-      setLogged(false);
-      firebaseAuthService.signOut();
-      // .then(() => {
-      //   // Signs out if the user's token is expired.
-      //   localStorage.clear();
-      //   setLogged(false);
-      // }).catch((error) => {
-      //   console.log(error);
-      // });
+      firebaseAuthService.signOut()
+        .then(() => {
+          // Signs out if the user's token is expired.
+          localStorage.clear();
+          setLogged(false);
+          document.location.reload();
+        }).catch((error) => {
+          console.log(error);
+        });
       return;
     }
 
