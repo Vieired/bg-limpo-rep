@@ -10,18 +10,18 @@ import Button from "../../components/Inputs/Button/index";
 import ModalAddOrEdit from "./ModalAddOrEdit/index";
 import ModalCleaning from "./ModalCleaning/index.tsx";
 import Card from "./Card/index.tsx";
-import { authService } from "../../shared/services/authService.ts";
 import type { FirestoreDocument } from "../../shared/models/domain/Firestore.ts";
 // import { setUser } from "../../store/usersSlice.ts";
 // import { firebaseConfig } from "../../shared/firebase/config";
 import { firestoreDocToJson } from "../../shared/helpers/firestoreToJS.ts";
 import { gameService } from "../../shared/services/gameService.ts";
 import { settingsService } from "../../shared/services/settingsService.ts";
-import { checkIfAuthenticationIsRequired } from "../../shared/utils/auth.tsx";
 import { Container, Content, Loading, Toolbar } from "./styles";
+import { useAuth } from "../../contexts/authContext.tsx";
 
 const Games: React.FC = () => {
 
+    const { logout } = useAuth();
     const navigate = useNavigate();
     
     const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -51,15 +51,17 @@ const Games: React.FC = () => {
 
     const handleSignOut = () => {
 
-        authService.signOut()
-            .then(() => {
-                // Sign-out successful.
-                checkIfAuthenticationIsRequired();
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            }).catch((error: any) => {
-                // An error happened.
-                console.log(error);
-            });
+        logout();
+
+        // authService.signOut()
+        //     .then(() => {
+        //         // Sign-out successful.
+        //         checkIfAuthenticationIsRequired();
+        //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        //     }).catch((error: any) => {
+        //         // An error happened.
+        //         console.log(error);
+        //     });
     }
 
     const handleAddClick = () => {

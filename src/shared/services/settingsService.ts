@@ -9,9 +9,10 @@
 import { firebaseConfig } from "../firebase/config";
 // import { fetchDocs } from "./firestoreService";
 import type { ISettings } from "../models/Games";
-import { getAccessToken } from "../helpers/auth";
+// import { getAccessToken } from "../helpers/auth";
 import { firestoreDocToJson, toFirestoreValue } from "../helpers/firestoreToJS";
 import type { FirestoreDocument } from "../models/domain/Firestore";
+import { getTokens } from "./authService";
 
 // const app = initializeApp(firebaseConfig);
 // const db = getFirestore(app);
@@ -24,7 +25,8 @@ export const settingsService = {
 
   fetchSettings: async (): Promise<number> => {
 
-    const token = getAccessToken();
+    const token = getTokens()?.idToken;
+    // const token = getAccessToken();
 
     const res = await fetch(url, {
       headers: {
@@ -84,6 +86,8 @@ export const settingsService = {
 
   updateSettings: async (data: ISettings): Promise<void> => {
 
+    const token = getTokens()?.idToken;
+
     const fields = Object.fromEntries(
       Object.entries(data).map(([k, v]) => [k, toFirestoreValue(v)])
     );
@@ -96,7 +100,7 @@ export const settingsService = {
     const response = await fetch(url, {
       method: "PATCH",
       headers: {
-        "Authorization": `Bearer ${getAccessToken()}`,
+        "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify(body),

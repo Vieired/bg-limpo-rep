@@ -1,9 +1,10 @@
 import { firebaseConfig } from "../firebase/config";
-import { getAccessToken } from "../helpers/auth";
+// import { getAccessToken } from "../helpers/auth";
 import { toFirestoreValue } from "../helpers/firestoreToJS";
 import type { FirestoreDocument, FirestoreListResponse } from "../models/domain/Firestore";
 import type { Game } from "../models/Games";
-import { checkIfAuthenticationIsRequired } from "../utils/auth";
+import { clearTokens, getTokens } from "./authService";
+// import { checkIfAuthenticationIsRequired } from "../utils/auth";
 
 const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/jogos`;
 
@@ -11,19 +12,26 @@ export const gameService = {
 
   fetchGames: async (showOnlyActiveGamesFilter?: boolean): Promise<FirestoreDocument[]> => {
 
-    checkIfAuthenticationIsRequired();
+    // checkIfAuthenticationIsRequired();
 
-    const token = getAccessToken();
+    // const token = getAccessToken();
+    const token = getTokens()?.idToken;
 
     // TODO: fazer funcionar a ordenação dos jogos pelo cleaning_date e name, e o filtro pelo isActive conforme o valor do parâmetro showOnlyActiveGamesFilter
-
     const res = await fetch(url, {
       headers: { "Authorization": `Bearer ${token}` },
       params: {
         showOnlyActiveGamesFilter: showOnlyActiveGamesFilter
       }
     } as RequestInit);
-    
+
+    if (res.status === 401) {
+      // token inválido no backend
+      clearTokens();
+      window.location.href = "/";
+      throw new Error("Token inválido — redirecionando");
+    }
+
     if (!res?.ok) {
       throw new Error(`Erro ao buscar jogos: ${res.statusText}`);
     }
@@ -66,7 +74,8 @@ export const gameService = {
 
   updateGame: async (data: Game) => {
 
-    checkIfAuthenticationIsRequired();
+    // checkIfAuthenticationIsRequired();
+    const token = getTokens()?.idToken;
 
     const docId = data.id.split("projects/bg-limpo/databases/(default)/documents/jogos/")[1];
 
@@ -82,11 +91,17 @@ export const gameService = {
     const response = await fetch(`${url}/${docId}`, {
       method: "PATCH",
       headers: {
-        "Authorization": `Bearer ${getAccessToken()}`,
+        "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify(body),
     } as RequestInit);
+
+    if (response.status === 401) {
+      clearTokens();
+      window.location.href = "/";
+      throw new Error("Token inválido — redirecionando");
+    }
 
     if (!response.ok) {
       throw new Error(`Erro ao atualizar doc: ${response.statusText}`);
@@ -97,7 +112,8 @@ export const gameService = {
 
   createGame: async (payload: Game) => {
 
-    checkIfAuthenticationIsRequired();
+    // checkIfAuthenticationIsRequired();
+    const token = getTokens()?.idToken;
 
     const fields = Object.fromEntries(
       Object.entries(payload).map(([k, v]) => [k, toFirestoreValue(v)])
@@ -110,11 +126,17 @@ export const gameService = {
     const response = await fetch(`${url}`, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${getAccessToken()}`,
+        "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify(body),
     } as RequestInit);
+
+    if (response.status === 401) {
+      clearTokens();
+      window.location.href = "/";
+      throw new Error("Token inválido — redirecionando");
+    }
 
     if (!response.ok) {
       throw new Error(`Erro ao tentar criar doc: ${response.statusText}`);
