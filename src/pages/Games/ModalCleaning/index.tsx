@@ -63,7 +63,6 @@ const ModalCleaning: React.FC<Props> = ({
 
   const handleSubmit = (data: Game/*GameCleaning*/) => {
 
-    console.log("data: ", data);
     // if (data?.id) {
     //   dispatch(updateCleaningDate({
     //     id: data.id,
