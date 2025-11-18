@@ -1,7 +1,18 @@
 import { type User } from "firebase/auth";
-import { createContext, useContext, useState } from "react";
-import { clearTokens, getTokens, setTokens, signOut } from "../shared/services/authService";
+import {
+    createContext,
+    useContext,
+    useState
+} from "react";
+import {
+    clearTokens,
+    getTokens,
+    // isAuthenticated,
+    setTokens,
+    signOut
+} from "../shared/services/authService";
 import { firebaseConfig } from "../shared/firebase/config";
+import { toast } from "react-toastify";
 
 interface IAuthContext {
     user: User | null;
@@ -75,7 +86,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         const data = await res.json();
         if (!res.ok) {
-            alert("Erro: " + data.error?.message);
+            toast.error("Erro: " + data.error?.message);
             return;
         }
 
@@ -94,17 +105,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         window.location.reload();
     };
 
-  return (
-    <AuthContext.Provider value={{
-        user,
-        loggedIn,
-        loading,
-        login,
-        logout
-    }}>
-        {children}
-    </AuthContext.Provider>
-  );
+    // useEffect(() => {
+    //     isAuthenticated();
+    // }, []);
+
+    return (
+        <AuthContext.Provider value={{
+            user,
+            loggedIn,
+            loading,
+            login,
+            logout
+        }}>
+            {children}
+        </AuthContext.Provider>
+    );
 }
 
 // eslint-disable-next-line react-refresh/only-export-components

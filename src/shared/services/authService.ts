@@ -2,8 +2,8 @@ import {
   // onAuthStateChanged,
   // signInWithEmailAndPassword,
   signOut as logOut,
-//   type Unsubscribe,
-//   type User,
+  // type Unsubscribe,
+  // type User,
 //   type UserCredential,
 } from "firebase/auth";
 import { auth } from "../helpers/auth";
@@ -19,6 +19,10 @@ import { auth } from "../helpers/auth";
 //     return signOut(auth);
 //   }
 // };
+
+// export function listenAuthState(cb: (user: User | null) => void): Unsubscribe {
+//   return onAuthStateChanged(auth, cb);
+// }
 
 export interface AuthTokens {
   idToken: string;
