@@ -69,7 +69,7 @@ export const gameService = {
       }
     };
 
-    // TODO: fazer funcionar a ordenação dos jogos pelo cleaning_date e name, e o filtro pelo isActive conforme o valor do parâmetro showOnlyActiveGamesFilter
+    // TODO: fazer funcionar a ordenação dos jogos pelo cleaning_date e name
     const res = await fetch(`${url}:runQuery`, {
       method: 'POST',
       headers: { "Authorization": `Bearer ${token}` },
