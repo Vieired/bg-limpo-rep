@@ -48,26 +48,38 @@ export const gameService = {
     // const token = getAccessToken();
     const token = getTokens()?.idToken;
 
-    const queryBody = {
-      structuredQuery: {
-        from: [
-          {
-            collectionId: COLLECTION_ID
-          }
-        ],
-        where: {
-          fieldFilter: {
-            field: {
-              fieldPath: 'isActive'
-            },
-            op: 'EQUAL',
-            value: {
-              booleanValue: showOnlyActiveGamesFilter
+    const queryBody = showOnlyActiveGamesFilter
+      ?
+      {
+        structuredQuery: {
+          from: [
+            {
+              collectionId: COLLECTION_ID
+            }
+          ],
+          where: {
+            fieldFilter: {
+              field: {
+                fieldPath: 'isActive'
+              },
+              op: 'EQUAL',
+              value: {
+                booleanValue: true
+              }
             }
           }
         }
       }
-    };
+      :
+      {
+        structuredQuery: {
+          from: [
+            {
+              collectionId: COLLECTION_ID
+            }
+          ]
+        }
+      };
 
     // TODO: fazer funcionar a ordenação dos jogos pelo cleaning_date e name
     const res = await fetch(`${url}:runQuery`, {
@@ -92,6 +104,7 @@ export const gameService = {
     const activeGames: FirestoreDocument[] = data
       .filter((item:FirestoreListResponseV2) => item.document) // Filtra apenas os objetos que contêm um documento
       .map((item:FirestoreListResponseV2) => item.document);
+    
     return activeGames;
   },
 
