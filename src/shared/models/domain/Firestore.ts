@@ -24,6 +24,10 @@ export interface FirestoreListResponse {
   documents: FirestoreDocument[];
 }
 
+export interface FirestoreListResponseV2 {
+  document: FirestoreDocument[];
+}
+
 export interface FirestoreErrorResponse {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   code: any; //FirestoreErrorCode

@@ -1,14 +1,45 @@
 import { firebaseConfig } from "../firebase/config";
 // import { getAccessToken } from "../helpers/auth";
 import { toFirestoreValue } from "../helpers/firestoreToJS";
-import type { FirestoreDocument, FirestoreListResponse } from "../models/domain/Firestore";
+import type { FirestoreDocument, FirestoreListResponseV2 } from "../models/domain/Firestore";
 import type { Game } from "../models/Games";
 import { clearTokens, getTokens } from "./authService";
 // import { checkIfAuthenticationIsRequired } from "../utils/auth";
 
-const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/jogos`;
+const COLLECTION_ID = "jogos";
+const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents`;
 
 export const gameService = {
+
+  // fetchGames: async (showOnlyActiveGamesFilter?: boolean): Promise<FirestoreDocument[]> => {
+
+  //   // checkIfAuthenticationIsRequired();
+
+  //   // const token = getAccessToken();
+  //   const token = getTokens()?.idToken;
+
+  //   // TODO: fazer funcionar a ordenação dos jogos pelo cleaning_date e name, e o filtro pelo isActive conforme o valor do parâmetro showOnlyActiveGamesFilter
+  //   const res = await fetch(`${url}/${COLLECTION_ID}`, {
+  //     headers: { "Authorization": `Bearer ${token}` },
+  //     params: {
+  //       showOnlyActiveGamesFilter: showOnlyActiveGamesFilter
+  //     }
+  //   } as RequestInit);
+
+  //   if (res.status === 401) {
+  //     // token inválido no backend
+  //     clearTokens();
+  //     window.location.href = "/";
+  //     throw new Error("Token inválido — redirecionando");
+  //   }
+
+  //   if (!res?.ok) {
+  //     throw new Error(`Erro ao buscar jogos: ${res.statusText}`);
+  //   }
+
+  //   const data: FirestoreListResponse = await res.json();
+  //   return data?.documents || [];
+  // },
 
   fetchGames: async (showOnlyActiveGamesFilter?: boolean): Promise<FirestoreDocument[]> => {
 
@@ -17,12 +48,32 @@ export const gameService = {
     // const token = getAccessToken();
     const token = getTokens()?.idToken;
 
-    // TODO: fazer funcionar a ordenação dos jogos pelo cleaning_date e name, e o filtro pelo isActive conforme o valor do parâmetro showOnlyActiveGamesFilter
-    const res = await fetch(url, {
-      headers: { "Authorization": `Bearer ${token}` },
-      params: {
-        showOnlyActiveGamesFilter: showOnlyActiveGamesFilter
+    const queryBody = {
+      structuredQuery: {
+        from: [
+          {
+            collectionId: COLLECTION_ID
+          }
+        ],
+        where: {
+          fieldFilter: {
+            field: {
+              fieldPath: 'isActive'
+            },
+            op: 'EQUAL',
+            value: {
+              booleanValue: showOnlyActiveGamesFilter
+            }
+          }
+        }
       }
+    };
+
+    // TODO: fazer funcionar a ordenação dos jogos pelo cleaning_date e name, e o filtro pelo isActive conforme o valor do parâmetro showOnlyActiveGamesFilter
+    const res = await fetch(`${url}:runQuery`, {
+      method: 'POST',
+      headers: { "Authorization": `Bearer ${token}` },
+      body: JSON.stringify(queryBody),
     } as RequestInit);
 
     if (res.status === 401) {
@@ -36,41 +87,13 @@ export const gameService = {
       throw new Error(`Erro ao buscar jogos: ${res.statusText}`);
     }
 
-    const data: FirestoreListResponse = await res.json();
-    return data?.documents || [];
+    const data = await res.json();
+    // O Firestore retorna um array de objetos, onde cada documento está aninhado
+    const activeGames: FirestoreDocument[] = data
+      .filter((item:FirestoreListResponseV2) => item.document) // Filtra apenas os objetos que contêm um documento
+      .map((item:FirestoreListResponseV2) => item.document);
+    return activeGames;
   },
-
-  // fetchGames: async (showOnlyActiveGamesFilter?: boolean): Promise<FirestoreDocument[]> => {
-
-  //   const gamesRef = collection(db, "jogos");
-  //           const q = showOnlyActiveGamesFilter
-  //               ? query(
-  //                   gamesRef,
-  //                   where("isActive", "==", true),
-  //                   // where("isActive", "==", gamesSlice.getInitialState().isActiveFilter),
-  //                   // orderBy("name", "asc"),
-  //                   orderBy("cleaning_date"),
-  //                   orderBy("__name__"),
-  //                   // where("id", "==", auth.currentUser.uid)
-  //               )
-  //               : query(
-  //                   gamesRef,
-  //                   orderBy("cleaning_date"),
-  //                   orderBy("__name__"),
-  //               );
-  //   const querySnapshot = await getDocs(q);
-  //   const gameList: Game[] = [];
-  //   querySnapshot.forEach((doc) => {
-  //       // doc.data() is never undefined for query doc snapshots
-  //       // console.log(doc.id, " => ", doc.data());
-  //       gameList.push({
-  //           // id: doc.id,
-  //           ...doc.data() as Game
-  //       });
-  //   });
-    
-  //   return gameList
-  // },
 
   updateGame: async (data: Game) => {
 
