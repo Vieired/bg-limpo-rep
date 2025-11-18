@@ -59,6 +59,7 @@ export const Container = styled.li`
                 width: 100px;
                 max-width: inherit;
                 max-height: 100px;
+                min-height: 100px;
                 object-fit: contain;
                 object-position: center;
             }
