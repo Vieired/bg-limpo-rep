@@ -69,6 +69,7 @@ const Settings: React.FC = () => {
                     </Button>
                 </nav>
                 <h2>Configurações</h2>
+                <small>v.2.0</small>
                 <form onSubmit={formik.handleSubmit}>
                     <InputNumber
                         name="limitInMonths"

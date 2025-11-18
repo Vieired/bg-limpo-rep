@@ -40,6 +40,10 @@ export const Content = styled.div`
         flex-direction: column;
         gap: 1rem;
     }
+
+    small {
+        text-align: end;
+    }
 `;
 
 export const Buttons = styled.div`
