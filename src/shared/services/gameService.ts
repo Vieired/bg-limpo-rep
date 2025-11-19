@@ -67,7 +67,21 @@ export const gameService = {
                 booleanValue: true
               }
             }
-          }
+          },
+          orderBy: [
+            {
+              field: {
+                fieldPath: "cleaning_date"
+              },
+              direction: "ASCENDING" // Ou "DESCENDING"
+            },
+            {
+              field: {
+                fieldPath: "__name__"
+              },
+              direction: "ASCENDING"
+            },
+          ],
         }
       }
       :
@@ -77,7 +91,21 @@ export const gameService = {
             {
               collectionId: COLLECTION_ID
             }
-          ]
+          ],
+          orderBy: [
+            {
+              field: {
+                fieldPath: "cleaning_date"
+              },
+              direction: "ASCENDING" // Ou "DESCENDING"
+            },
+            {
+              field: {
+                fieldPath: "__name__"
+              },
+              direction: "ASCENDING"
+            },
+          ],
         }
       };
 
