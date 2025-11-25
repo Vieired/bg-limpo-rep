@@ -81,7 +81,7 @@ const ModalAddOrEdit: React.FC<Props> = ({
     initialValues: gameEditing?.id
       ? (gameEditing as Game)
       : {
-        id: 'idle',
+        // id: 'idle',
         cleaning_date: today,
         cleaning_method: 1,
         cleaning_methods: [],

@@ -153,7 +153,7 @@ const Card: React.FC<ICard> = ({
                         <FaPen />
                     </button>
                 )}
-            </span>            
+            </span>
         </Container>
     )
 }

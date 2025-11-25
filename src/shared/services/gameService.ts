@@ -141,7 +141,7 @@ export const gameService = {
     // checkIfAuthenticationIsRequired();
     const token = getTokens()?.idToken;
 
-    const docId = data.id.split(`projects/${firebaseConfig.projectId}/databases/(default)/documents/${COLLECTION_ID}/`)[1];
+    // const docId = data?.id?.split(`projects/${firebaseConfig.projectId}/databases/(default)/documents/${COLLECTION_ID}/`)[1];
 
     const fields = Object.fromEntries(
       Object.entries(data).map(([k, v]) => [k, toFirestoreValue(v)])
@@ -152,7 +152,7 @@ export const gameService = {
       // updateMask: { fieldPaths: Object.keys(data) },
     };
 
-    const response = await fetch(`${url}/${COLLECTION_ID}/${docId}`, {
+    const response = await fetch(`${url}/${COLLECTION_ID}/${data?.id}`, {
       method: "PATCH",
       headers: {
         "Authorization": `Bearer ${token}`,

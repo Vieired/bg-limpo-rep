@@ -18,6 +18,7 @@ import { gameService } from "../../shared/services/gameService.ts";
 import { settingsService } from "../../shared/services/settingsService.ts";
 import { Container, Content, Loading, Toolbar } from "./styles";
 import { useAuth } from "../../contexts/authContext.tsx";
+import { firebaseConfig } from "../../shared/firebase/config.ts";
 
 const Games: React.FC = () => {
 
@@ -77,10 +78,11 @@ const Games: React.FC = () => {
     }
 
     const mappingArrayFirestoreDocumentToArrayGame = (games: FirestoreDocument[]): Game[] => {
+        // return games.map((game: FirestoreDocument) => firestoreDocToJson(game) as Game) as Game[];
         return games.map((game: FirestoreDocument) => {
             return {
                 ...firestoreDocToJson(game) as Game,
-                id: game.name,
+                id: game.name?.split(`projects/${firebaseConfig.projectId}/databases/(default)/documents/jogos/`)[1],
             } as Game; // casting do tipo Record<string, any> para Game
         }) as Game[];
     }
