@@ -1,0 +1,46 @@
+name: Daily Game Cleanup Check
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+
+jobs:
+  check-games:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Create service-account.json
+        run: |
+          echo "$FIREBASE_PRIVATE_KEY" | sed 's/\\n/\n/g' > private_key.txt
+          cat <<EOF > service-account.json
+          {
+            "type": "service_account",
+            "project_id": "${{ secrets.FIREBASE_PROJECT_ID }}",
+            "private_key_id": "dummy",
+            "private_key": "$(cat private_key.txt)",
+            "client_email": "${{ secrets.FIREBASE_CLIENT_EMAIL }}",
+            "client_id": "dummy",
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token",
+            "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+            "client_x509_cert_url": ""
+          }
+          EOF
+
+      - name: Install deps
+        run: npm install axios google-auth-library
+
+      - name: Run scheduled script
+        run: node .github/scripts/checkGames.js
+        env:
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_SERVER_KEY: ${{ secrets.FIREBASE_SERVER_KEY }}
