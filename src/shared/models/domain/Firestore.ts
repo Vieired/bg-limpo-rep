@@ -13,6 +13,7 @@ export type FirestoreValue =
 
 // Documento retornado pela API
 export interface FirestoreDocument {
+  // id: string;
   name?: string;
   fields: Record<string, FirestoreValue>;
   createTime?: string;
