@@ -207,6 +207,51 @@ export const gameService = {
     }
 
     return await response.json();
-  }
+  },
+
+  notifyGameCleanup: async (/*data: Game*/) => {
+
+    const url = `https://fcm.googleapis.com/v1/projects/${firebaseConfig.projectId}/messages:send`;
+
+    const token = getTokens()?.idToken;
+
+    // const docId = data?.id?.split(`projects/${firebaseConfig.projectId}/databases/(default)/documents/${COLLECTION_ID}/`)[1];
+
+    // const fields = Object.fromEntries(
+    //   Object.entries(data).map(([k, v]) => [k, toFirestoreValue(v)])
+    // );
+
+    // const body = { fields };
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      // body: JSON.stringify(body),
+      body: JSON.stringify({
+        "message": {
+          "token": "FCM_DEVICE_TOKEN_DO_USUARIO",
+          "notification": {
+            "title": "Hora de limpar o jogo!",
+            "body": "Um dos seus jogos atingiu a data de limpeza."
+          }
+        }
+      })
+    } as RequestInit);
+
+    if (response.status === 401) {
+      clearTokens();
+      window.location.href = "/";
+      throw new Error("Token inválido — redirecionando");
+    }
+
+    if (!response.ok) {
+      throw new Error(`Erro ao atualizar doc: ${response.statusText}`);
+    }
+
+    return await response.json();
+  },
 
 };
