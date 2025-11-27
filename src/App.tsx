@@ -5,9 +5,11 @@ import { AuthProvider } from './contexts/authContext';
 import './App.css'
 import GlobalStyle from "./styles/global";
 import { useEffect } from 'react';
-import { requestNotificationPermission } from './pushNotifications';
+import { messaging, requestNotificationPermission } from './firebase';
 import { onMessage } from 'firebase/messaging';
-import { messaging } from './firebase';
+// import { requestNotificationPermission } from './pushNotifications';
+// import { onMessage } from 'firebase/messaging';
+// import { messaging } from './firebase';
 // import { onForegroundMessage, requestNotificationPermission } from './firebase';
 
 function App() {
