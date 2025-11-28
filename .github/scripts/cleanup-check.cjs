@@ -12,7 +12,7 @@ const serviceAccount = {
 const SERVER_KEY = process.env.FIREBASE_SERVER_KEY;
 
 const PROJECT_ID = serviceAccount.project_id;
-const COLLECTION = "games";
+const COLLECTION = "jogos";
 
 // Converte data YYYY-MM-DD ou YYYY-MM-DDTHH:mm
 function parseCleaningDate(dateStr) {
