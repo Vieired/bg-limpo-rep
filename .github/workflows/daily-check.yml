@@ -34,7 +34,7 @@ jobs:
           EOF
 
       - name: Run scheduled script
-        run: node .github/scripts/checkGames.js
+        run: node .github/scripts/cleanup-check.js
         env:
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
           FIREBASE_SERVER_KEY: ${{ secrets.FIREBASE_SERVER_KEY }}
