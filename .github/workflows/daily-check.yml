@@ -30,7 +30,7 @@ jobs:
           > service-account.json
 
       - name: Run scheduled script
-        run: node .github/scripts/cleanup-check.js
+        run: node .github/scripts/cleanup-check.cjs
         env:
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
           FIREBASE_SERVER_KEY: ${{ secrets.FIREBASE_SERVER_KEY }}
