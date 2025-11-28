@@ -4,12 +4,12 @@ const fetch = require("node-fetch");
 
 // Monta o serviceAccount manualmente a partir das 5 secrets
 const serviceAccount = {
-  project_id: process.env.PROJECT_ID,
-  client_email: process.env.CLIENT_EMAIL,
-  private_key: process.env.PRIVATE_KEY.replace(/\\n/g, "\n"),
+  project_id: process.env.FIREBASE_PROJECT_ID,
+  client_email: process.env.FIREBASE_CLIENT_EMAIL,
+  private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
 };
 
-const SERVER_KEY = process.env.SERVER_KEY;
+const SERVER_KEY = process.env.FIREBASE_SERVER_KEY;
 
 const PROJECT_ID = serviceAccount.project_id;
 const COLLECTION = "games";
