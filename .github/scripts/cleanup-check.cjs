@@ -2,29 +2,31 @@
 
 const fetch = require("node-fetch");
 
-// Carrega secrets do GitHub Actions
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-const SERVER_KEY = process.env.FIREBASE_SERVER_KEY;
+// Monta o serviceAccount manualmente a partir das 5 secrets
+const serviceAccount = {
+  project_id: process.env.PROJECT_ID,
+  client_email: process.env.CLIENT_EMAIL,
+  private_key: process.env.PRIVATE_KEY.replace(/\\n/g, "\n"),
+};
+
+const SERVER_KEY = process.env.SERVER_KEY;
 
 const PROJECT_ID = serviceAccount.project_id;
-const COLLECTION = "games"; // altere se sua coleção tiver outro nome
+const COLLECTION = "games";
 
-// Converte data YYYY-MM-DD ou YYYY-MM-DDTHH:mm para objeto Date
+// Converte data YYYY-MM-DD ou YYYY-MM-DDTHH:mm
 function parseCleaningDate(dateStr) {
   if (!dateStr) return null;
-  if (dateStr.length === 10) {
-    return new Date(dateStr + "T00:00:00");
-  }
+  if (dateStr.length === 10) return new Date(dateStr + "T00:00:00");
   return new Date(dateStr);
 }
 
-// Checa se está vencido (cleaning_date <= hoje)
 function isExpired(cleanDate) {
   const now = new Date();
   return cleanDate <= now;
 }
 
-// Envia push para um token
+// Envia push
 async function sendPush(token, title, body) {
   const res = await fetch("https://fcm.googleapis.com/fcm/send", {
     method: "POST",
@@ -34,10 +36,7 @@ async function sendPush(token, title, body) {
     },
     body: JSON.stringify({
       to: token,
-      notification: {
-        title,
-        body,
-      },
+      notification: { title, body },
     }),
   });
 
@@ -45,7 +44,7 @@ async function sendPush(token, title, body) {
   console.log("FCM Response:", data);
 }
 
-// Gera token OAuth2 usando serviceAccount
+// Gera access token OAuth2
 async function getAccessToken() {
   const jwt = require("jsonwebtoken");
 
@@ -74,7 +73,7 @@ async function getAccessToken() {
   return json.access_token;
 }
 
-// Busca todos os jogos do Firestore
+// Firestore GET
 async function getAllGames(bearerToken) {
   const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLLECTION}`;
 
@@ -86,10 +85,7 @@ async function getAllGames(bearerToken) {
   return data.documents || [];
 }
 
-// ------------------------------------
-//        EXECUÇÃO PRINCIPAL
-// ------------------------------------
-
+// EXECUÇÃO
 (async () => {
   console.log("🔍 Iniciando verificação de jogos...");
 
@@ -98,25 +94,18 @@ async function getAllGames(bearerToken) {
 
   console.log(`📦 Total de jogos encontrados: ${games.length}`);
 
-  // TODO: tokens devem vir do seu banco
-  // por enquanto testar com token manual
-  const userTokens = [
-    // coloque aqui tokens de teste
-  ];
+  const userTokens = []; // TODO: puxar do Firestore
 
   for (const doc of games) {
     const fields = doc.fields;
-
     if (!fields.cleaning_date) continue;
 
     const cleanDate = parseCleaningDate(fields.cleaning_date.stringValue);
-
     if (!cleanDate) continue;
 
     if (isExpired(cleanDate)) {
       console.log("⚠ Jogo vencido:", fields.name?.stringValue);
 
-      // Enviar push para cada token
       for (const token of userTokens) {
         await sendPush(
           token,
