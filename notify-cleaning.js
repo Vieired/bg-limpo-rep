@@ -17,7 +17,7 @@ const db = admin.firestore();
 async function run() {
   console.log("🔎 Lendo jogos do Firestore...");
 
-  const snapshot = await db.collection("games").get();
+  const snapshot = await db.collection("jogos").get();
 
   const today = new Date().toISOString().split("T")[0]; // formato YYYY-MM-DD
 
