@@ -21,23 +21,32 @@ const COLLECTION = "jogos";
 function parseCleaningDate(dateStr) {
   if (!dateStr) return null;
 
-  // Se for apenas YYYY-MM-DD
+  // Caso seja formato YYYY-MM-DD
   if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
     const [y, m, d] = dateStr.split("-").map(Number);
-    return new Date(y, m - 1, d, 0, 0, 0); // <- Data LOCAL
+    return new Date(y, m - 1, d);
   }
 
-  return new Date(dateStr); // Para quando tiver hora
+  // fallback
+  return new Date(dateStr);
 }
 
 function isExpired(cleanDate) {
+  if (!cleanDate) return false;
+
+  const date = new Date(cleanDate);
+  if (isNaN(date)) return false;
+
+  // Soma 5 meses na data de limpeza
+  const limit = new Date(date);
+  limit.setMonth(limit.getMonth() + 5);
+
+  // Normaliza comparação (remover horas)
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+  limit.setHours(0, 0, 0, 0);
 
-  const cmp = new Date(cleanDate);
-  cmp.setHours(0, 0, 0, 0);
-
-  return cmp < today;
+  return limit < today;
 }
 
 // Push
