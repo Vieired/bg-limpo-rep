@@ -80,19 +80,18 @@ async function getAccessToken() {
 
 // Firestore GET
 async function getAllGames(bearerToken) {
-  const url = `https://firestore.googleapis.com/v1/projects/{PROJECT_ID}/databases/(default)/documents/{COLLECTION}`;
-  // const url =
-  //   `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}` +
-  //   `/databases/(default)/documents` +
-  //   `?parent=projects/${PROJECT_ID}/databases/(default)/documents` +
-  //   `&collectionId=jogos`;
-  // const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLLECTION}?pageSize=1000`;
+  const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLLECTION}`;
+
+  console.log("URL usada:", url); // debug
 
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${bearerToken}` },
   });
 
   const data = await res.json();
+
+  console.log("Resposta Firestore:", JSON.stringify(data, null, 2)); // debug
+
   return data.documents || [];
 }
 
