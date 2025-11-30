@@ -2,6 +2,9 @@
 import { messaging } from "./firebase";
 import { getToken } from "firebase/messaging";
 import { getFirestore, collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { getApps } from "firebase/app";
+
+console.log("Firebase apps carregados:", getApps());
 
 const db = getFirestore();
 const VAPID_PUBLIC_KEY = "BPKrMEgi8Q4pYUaiXoDPK3pktNFCgdwgVyv-Z5Jlpo4oADyxVPpsb7QJ9Im7GTSaC_QWb3nSELcMtwP1u6NSrrU";
@@ -28,7 +31,9 @@ export async function requestNotificationPermission() {
   console.log("📨 Token FCM:", token);
 
   // Salvar no Firestore
+  console.log("Chegou aqui 1");
   await saveTokenToFirestore(token);
+  console.log("Chegou aqui 2");
 
   return token;
 }
