@@ -12,6 +12,7 @@
   "dependencies": {
     "firebase": "^12.3.0",
     "formik": "^2.4.6",
+    "google-auth-library": "^10.5.0",
     "jsonwebtoken": "^9.0.2",
     "node-fetch": "2",
     "react": "^19.1.1",
