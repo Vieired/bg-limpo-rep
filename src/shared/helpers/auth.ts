@@ -9,6 +9,17 @@ export const getStorageToken = () => {
   return currentUser?.stsTokenManager?.accessToken as string;
 }
 
+export const checkIfAuthenticationIsRequired = () => { // TODO: remover se continuar sem uso
+    const currentUser = localStorage?.getItem("user") && typeof(localStorage.getItem("user")) === "string"
+        ? JSON.parse(localStorage.getItem("user") as string)
+        : null;
+
+    if (currentUser?.stsTokenManager?.expirationTime < new Date().getTime()) { // compara timestamp
+        localStorage.clear();
+        document.location.reload();
+    }
+}
+
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
