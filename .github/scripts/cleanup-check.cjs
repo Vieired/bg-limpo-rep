@@ -75,7 +75,7 @@ async function getAccessToken() {
 
 // Firestore GET
 async function getAllGames(bearerToken) {
-  const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLLECTION}`;
+  const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLLECTION}?pageSize=1000`;
 
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${bearerToken}` },
