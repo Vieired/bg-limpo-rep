@@ -14,27 +14,23 @@ import { onMessage } from 'firebase/messaging';
 
 function App() {
 
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker
-      .register("/firebase-messaging-sw.js")
-      .then((reg) => console.log("Service Worker registrado:", reg))
-      .catch((err) => console.error("Erro ao registrar SW:", err));
-  }
-
-  // useEffect(() => {
-  //   requestNotificationPermission()
-  //     .then((token) => {
-  //       console.log("Token salvo no backend:", token);
-  //     })
-  //     .catch((err) => console.error(err));
-
-  //   onForegroundMessage((payload) => {
-  //     alert(`Notificação recebida: ${payload.notification?.title}`);
-  //   });
-  // }, []);
-  
   useEffect(() => {
-    requestNotificationPermission();
+    async function initFCM() {
+      if ("serviceWorker" in navigator) {
+        console.log("🛠 Registrando service worker...");
+
+        const registration = await navigator.serviceWorker.register(
+          "/firebase-messaging-sw.js"
+        );
+
+        console.log("✅ Service Worker registrado:", registration);
+
+        // Agora sim — só depois do SW — pedir permissão e gerar token
+        await requestNotificationPermission();
+      }
+    }
+
+    initFCM();
   }, []);
 
   useEffect(() => {
