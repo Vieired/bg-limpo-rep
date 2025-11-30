@@ -21,14 +21,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Create minimal service-account.json safely
-        run: |
-          printf '{\n"type": "service_account",\n"project_id": "%s",\n"private_key": "%s",\n"client_email": "%s"\n}\n' \
-          "${{ secrets.FIREBASE_PROJECT_ID }}" \
-          "${{ secrets.FIREBASE_PRIVATE_KEY }}" \
-          "${{ secrets.FIREBASE_CLIENT_EMAIL }}" \
-          > service-account.json
-
       - name: Run scheduled script
         run: node .github/scripts/cleanup-check.cjs
         env:
