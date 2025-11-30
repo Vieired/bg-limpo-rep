@@ -20,13 +20,24 @@ const COLLECTION = "jogos";
 // Utils
 function parseCleaningDate(dateStr) {
   if (!dateStr) return null;
-  if (dateStr.length === 10) return new Date(dateStr + "T00:00:00");
-  return new Date(dateStr);
+
+  // Se for apenas YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    const [y, m, d] = dateStr.split("-").map(Number);
+    return new Date(y, m - 1, d, 0, 0, 0); // <- Data LOCAL
+  }
+
+  return new Date(dateStr); // Para quando tiver hora
 }
 
 function isExpired(cleanDate) {
-  const now = new Date();
-  return cleanDate <= now;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const cmp = new Date(cleanDate);
+  cmp.setHours(0, 0, 0, 0);
+
+  return cmp < today;
 }
 
 // Push
