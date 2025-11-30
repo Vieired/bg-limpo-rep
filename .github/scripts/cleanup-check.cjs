@@ -54,7 +54,8 @@ async function getAccessToken() {
     aud: "https://oauth2.googleapis.com/token",
     iat: Math.floor(Date.now() / 1000),
     exp: Math.floor(Date.now() / 1000) + 3600,
-    scope: "https://www.googleapis.com/auth/datastore",
+    scope: "https://www.googleapis.com/auth/datastore https://www.googleapis.com/auth/cloud-platform",
+    // scope: "https://www.googleapis.com/auth/datastore",
   };
 
   const token = jwt.sign(payload, serviceAccount.private_key, {
