@@ -34,14 +34,18 @@ export async function requestNotificationPermission() {
 }
 
 async function saveTokenToFirestore(token: string) {
-  const tokensRef = collection(db, "fcm_tokens");
-  const docRef = doc(tokensRef, token); // documento com o ID = token (evita duplicados)
+  try {
+    const tokensRef = collection(db, "fcm_tokens");
+    const docRef = doc(tokensRef, token);
 
-  await setDoc(docRef, {
-    token,
-    createdAt: serverTimestamp(),
-    userAgent: navigator.userAgent,
-  });
+    await setDoc(docRef, {
+      token,
+      createdAt: serverTimestamp(),
+      userAgent: navigator.userAgent,
+    });
 
-  console.log("💾 Token salvo no Firestore");
+    console.log("💾 Token salvo no Firestore");
+  } catch (err) {
+    console.error("❌ Erro ao salvar token:", err);
+  }
 }
