@@ -1,12 +1,13 @@
-// scripts/cleanup-check.js
+// scripts/cleanup-check.cjs
 
 console.log("PROJECT_ID:", process.env.FIREBASE_PROJECT_ID);
 console.log("CLIENT_EMAIL:", process.env.FIREBASE_CLIENT_EMAIL);
 console.log("PRIVATE_KEY length:", process.env.FIREBASE_PRIVATE_KEY?.length);
 
 const fetch = require("node-fetch");
+const { GoogleAuth } = require("google-auth-library");
 
-// Monta o serviceAccount manualmente a partir das 5 secrets
+// Monta o serviceAccount manualmente a partir das secrets
 const serviceAccount = {
   project_id: process.env.FIREBASE_PROJECT_ID,
   client_email: process.env.FIREBASE_CLIENT_EMAIL,
@@ -14,8 +15,6 @@ const serviceAccount = {
 };
 
 const SERVER_KEY = process.env.FIREBASE_SERVER_KEY;
-
-const PROJECT_ID = serviceAccount.project_id;
 const COLLECTION = "jogos";
 
 // Converte data YYYY-MM-DD ou YYYY-MM-DDTHH:mm
@@ -48,60 +47,50 @@ async function sendPush(token, title, body) {
   console.log("FCM Response:", data);
 }
 
-// Gera access token OAuth2
+// 🔑 Novo método oficial para obter token OAuth2 válido
 async function getAccessToken() {
-  const jwt = require("jsonwebtoken");
-
-  const payload = {
-    iss: serviceAccount.client_email,
-    sub: serviceAccount.client_email,
-    aud: "https://oauth2.googleapis.com/token",
-    iat: Math.floor(Date.now() / 1000),
-    exp: Math.floor(Date.now() / 1000) + 3600,
-    scope: "https://www.googleapis.com/auth/datastore https://www.googleapis.com/auth/cloud-platform",
-    // scope: "https://www.googleapis.com/auth/datastore",
-  };
-
-  const token = jwt.sign(payload, serviceAccount.private_key, {
-    algorithm: "RS256",
+  const auth = new GoogleAuth({
+    credentials: {
+      client_email: serviceAccount.client_email,
+      private_key: serviceAccount.private_key,
+    },
+    scopes: ["https://www.googleapis.com/auth/datastore"],
   });
 
-  const res = await fetch("https://oauth2.googleapis.com/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body:
-      "grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=" +
-      token,
+  const client = await auth.getClient();
+  const tokenResponse = await client.getAccessToken();
+
+  return tokenResponse.token || tokenResponse;
+}
+
+// 🔍 Busca jogos no Firestore
+async function getAllGames() {
+  const token = await getAccessToken();
+  console.log("🔑 Token gerado:", String(token).slice(0, 20) + "...");
+
+  const url = `https://firestore.googleapis.com/v1/projects/${serviceAccount.project_id}/databases/(default)/documents/${COLLECTION}`;
+  console.log("URL usada:", url);
+
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   const json = await res.json();
-  return json.access_token;
+  console.log("Resposta Firestore:", JSON.stringify(json, null, 2));
+
+  if (!json.documents) return [];
+  return json.documents;
 }
 
-// Firestore GET
-async function getAllGames(bearerToken) {
-  const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLLECTION}`;
-
-  console.log("URL usada:", url); // debug
-
-  const res = await fetch(url, {
-    headers: { Authorization: `Bearer ${bearerToken}` },
-  });
-
-  const data = await res.json();
-
-  console.log("Resposta Firestore:", JSON.stringify(data, null, 2)); // debug
-
-  return data.documents || [];
-}
-
-// EXECUÇÃO
+// -----------------------------------------------------------------------------
+// EXECUÇÃO PRINCIPAL
+// -----------------------------------------------------------------------------
 (async () => {
   console.log("🔍 Iniciando verificação de jogos...");
 
-  const accessToken = await getAccessToken();
-  const games = await getAllGames(accessToken);
-
+  const games = await getAllGames();
   console.log(`📦 Total de jogos encontrados: ${games.length}`);
 
   const userTokens = []; // TODO: puxar do Firestore
