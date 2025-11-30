@@ -1,5 +1,9 @@
 // scripts/cleanup-check.js
 
+console.log("PROJECT_ID:", process.env.FIREBASE_PROJECT_ID);
+console.log("CLIENT_EMAIL:", process.env.FIREBASE_CLIENT_EMAIL);
+console.log("PRIVATE_KEY length:", process.env.FIREBASE_PRIVATE_KEY?.length);
+
 const fetch = require("node-fetch");
 
 // Monta o serviceAccount manualmente a partir das 5 secrets
