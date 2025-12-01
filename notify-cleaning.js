@@ -5,6 +5,9 @@ import fetch from "node-fetch";
 // Service account vindo do GitHub Actions SECRET
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
+// Corrige possíveis problemas de quebras de linha
+serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+
 // Inicializar Firebase Admin
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
