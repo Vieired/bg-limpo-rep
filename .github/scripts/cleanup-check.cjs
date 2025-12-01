@@ -103,6 +103,19 @@ async function getAllGames() {
   return json.documents;
 }
 
+async function getAllTokens() {
+  const tokenUrl = `https://firestore.googleapis.com/v1/projects/${serviceAccount.project_id}/databases/(default)/documents/fcm_tokens`;
+  const tokenRes = await fetch(tokenUrl, {
+    headers: {
+      Authorization: `Bearer ${await getAccessToken()}`,
+    },
+  });
+
+  const tokenJson = await tokenRes.json();
+  if (!tokenJson.documents) return [];
+  return tokenJson.documents.map(doc => doc.name.split("/").pop()); // pega o ID do documento que é o token
+}
+
 // EXECUÇÃO
 (async () => {
   console.log("🔍 Iniciando verificação de jogos...");
@@ -110,7 +123,9 @@ async function getAllGames() {
   const games = await getAllGames();
   console.log(`📦 Total de jogos encontrados: ${games.length}`);
 
-  const userTokens = []; // TODO
+  // const userTokens = []; // TODO
+  const userTokens = await getAllTokens();
+  console.log("📨 Tokens encontrados:", userTokens.length);
 
   for (const doc of games) {
     const fields = doc.fields;
