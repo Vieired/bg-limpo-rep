@@ -106,18 +106,39 @@ async function getAllTokens() {
 // -------------------- PUSH --------------------
 
 async function sendPush(token, title, body) {
+  
+  const url = `https://fcm.googleapis.com/v1/projects/${serviceAccount.project_id}/messages:send`;
+
   try {
-    const res = await fetch("https://fcm.googleapis.com/fcm/send", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `key=${SERVER_KEY}`,
-      },
-      body: JSON.stringify({
-        to: token,
-        notification: { title, body },
-      }),
-    });
+    const res = await fetch(url,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // NÃO usar serverKey aqui
+        },
+        body: JSON.stringify({
+          message: {
+            token: token, // token do Firestore
+            notification: {
+              title: "Jogo vencido!",
+              body: `O jogo ${game.name} venceu a data de limpeza.`,
+            },
+          },
+        }),
+      }
+    );
+    // const res = await fetch("https://fcm.googleapis.com/fcm/send", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: `key=${SERVER_KEY}`,
+    //   },
+    //   body: JSON.stringify({
+    //     to: token,
+    //     notification: { title, body },
+    //   }),
+    // });
 
     const text = await res.text();
     try {
