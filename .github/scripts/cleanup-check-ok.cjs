@@ -51,29 +51,20 @@ function isExpired(cleanDate) {
 
 // Push
 async function sendPush(token, title, body) {
-  try {
-    const res = await fetch("https://fcm.googleapis.com/fcm/send", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `key=${SERVER_KEY}`,
-      },
-      body: JSON.stringify({
-        to: token,
-        notification: { title, body },
-      }),
-    });
+  const res = await fetch("https://fcm.googleapis.com/fcm/send", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `key=${SERVER_KEY}`,
+    },
+    body: JSON.stringify({
+      to: token,
+      notification: { title, body },
+    }),
+  });
 
-    const text = await res.text(); // primeiro pega como texto
-    try {
-      const data = JSON.parse(text); // tenta parsear
-      console.log("FCM Response:", data);
-    } catch (err) {
-      console.log("⚠ Resposta não JSON do FCM:", text);
-    }
-  } catch (err) {
-    console.error("❌ Erro ao enviar push:", err);
-  }
+  const data = await res.json();
+  console.log("FCM Response:", data);
 }
 
 // Auth oficial Google
@@ -112,19 +103,6 @@ async function getAllGames() {
   return json.documents;
 }
 
-async function getAllTokens() {
-  const tokenUrl = `https://firestore.googleapis.com/v1/projects/${serviceAccount.project_id}/databases/(default)/documents/fcm_tokens`;
-  const tokenRes = await fetch(tokenUrl, {
-    headers: {
-      Authorization: `Bearer ${await getAccessToken()}`,
-    },
-  });
-
-  const tokenJson = await tokenRes.json();
-  if (!tokenJson.documents) return [];
-  return tokenJson.documents.map(doc => doc.name.split("/").pop()); // pega o ID do documento que é o token
-}
-
 // EXECUÇÃO
 (async () => {
   console.log("🔍 Iniciando verificação de jogos...");
@@ -132,9 +110,7 @@ async function getAllTokens() {
   const games = await getAllGames();
   console.log(`📦 Total de jogos encontrados: ${games.length}`);
 
-  // const userTokens = []; // TODO
-  const userTokens = await getAllTokens();
-  console.log("📨 Tokens encontrados:", userTokens.length);
+  const userTokens = []; // TODO
 
   for (const doc of games) {
     const fields = doc.fields;
