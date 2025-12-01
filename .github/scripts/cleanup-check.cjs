@@ -1,47 +1,38 @@
-// scripts/cleanup-check.cjs
+// .github/scripts/cleanup-check.cjs
 
-console.log("PROJECT_ID:", "[OK]");
-console.log("CLIENT_EMAIL:", "[OK]");
-console.log("PRIVATE_KEY length:", process.env.FIREBASE_PRIVATE_KEY?.length);
+console.log("🔍 Iniciando verificação de jogos...");
 
+// Configurações
 const fetch = require("node-fetch");
 const { GoogleAuth } = require("google-auth-library");
 
-// Monta o serviceAccount manualmente
+const SERVER_KEY = process.env.FIREBASE_SERVER_KEY;
+const COLLECTION_GAMES = "jogos";
+const COLLECTION_TOKENS = "fcm_tokens";
+
+// Monta o serviceAccount a partir das secrets
 const serviceAccount = {
   project_id: process.env.FIREBASE_PROJECT_ID,
   client_email: process.env.FIREBASE_CLIENT_EMAIL,
   private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
 };
 
-const SERVER_KEY = process.env.FIREBASE_SERVER_KEY;
-const COLLECTION = "jogos";
+// -------------------- UTILS --------------------
 
-// Utils
 function parseCleaningDate(dateStr) {
   if (!dateStr) return null;
-
-  // Caso seja formato YYYY-MM-DD
   if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
     const [y, m, d] = dateStr.split("-").map(Number);
     return new Date(y, m - 1, d);
   }
-
-  // fallback
   return new Date(dateStr);
 }
 
 function isExpired(cleanDate) {
   if (!cleanDate) return false;
-
-  const date = new Date(cleanDate);
-  if (isNaN(date)) return false;
-
-  // Soma 5 meses na data de limpeza
-  const limit = new Date(date);
+  const limit = new Date(cleanDate);
   limit.setMonth(limit.getMonth() + 5);
 
-  // Normaliza comparação (remover horas)
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   limit.setHours(0, 0, 0, 0);
@@ -49,34 +40,8 @@ function isExpired(cleanDate) {
   return limit < today;
 }
 
-// Push
-async function sendPush(token, title, body) {
-  try {
-    const res = await fetch("https://fcm.googleapis.com/fcm/send", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `key=${SERVER_KEY}`,
-      },
-      body: JSON.stringify({
-        to: token,
-        notification: { title, body },
-      }),
-    });
+// -------------------- FIRESTORE --------------------
 
-    const text = await res.text(); // primeiro pega como texto
-    try {
-      const data = JSON.parse(text); // tenta parsear
-      console.log("FCM Response:", data);
-    } catch (err) {
-      console.log("⚠ Resposta não JSON do FCM:", text);
-    }
-  } catch (err) {
-    console.error("❌ Erro ao enviar push:", err);
-  }
-}
-
-// Auth oficial Google
 async function getAccessToken() {
   const auth = new GoogleAuth({
     credentials: {
@@ -91,13 +56,9 @@ async function getAccessToken() {
   return token;
 }
 
-// Firestore
 async function getAllGames() {
   const token = await getAccessToken();
-  console.log("🔑 Token gerado:", String(token).slice(0, 20) + "...");
-
-  const url = `https://firestore.googleapis.com/v1/projects/${serviceAccount.project_id}/databases/(default)/documents/${COLLECTION}`;
-  console.log("URL usada:", url);
+  const url = `https://firestore.googleapis.com/v1/projects/${serviceAccount.project_id}/databases/(default)/documents/${COLLECTION_GAMES}`;
 
   const res = await fetch(url, {
     headers: {
@@ -105,46 +66,93 @@ async function getAllGames() {
     },
   });
 
-  const json = await res.json();
-  console.log("Resposta Firestore:", JSON.stringify(json, null, 2));
+  const text = await res.text();
+  let json;
+  try {
+    json = JSON.parse(text);
+  } catch (err) {
+    console.error("❌ Erro ao parsear resposta Firestore:", text);
+    return [];
+  }
 
   if (!json.documents) return [];
-  return json.documents;
+  return json.documents.filter(doc => doc.fields); // só documentos válidos
 }
 
 async function getAllTokens() {
-  const tokenUrl = `https://firestore.googleapis.com/v1/projects/${serviceAccount.project_id}/databases/(default)/documents/fcm_tokens`;
-  const tokenRes = await fetch(tokenUrl, {
+  const token = await getAccessToken();
+  const url = `https://firestore.googleapis.com/v1/projects/${serviceAccount.project_id}/databases/(default)/documents/${COLLECTION_TOKENS}`;
+
+  const res = await fetch(url, {
     headers: {
-      Authorization: `Bearer ${await getAccessToken()}`,
+      Authorization: `Bearer ${token}`,
     },
   });
 
-  const tokenJson = await tokenRes.json();
-  if (!tokenJson.documents) return [];
-  return tokenJson.documents.map(doc => doc.name.split("/").pop()); // pega o ID do documento que é o token
+  const text = await res.text();
+  let json;
+  try {
+    json = JSON.parse(text);
+  } catch (err) {
+    console.error("❌ Erro ao parsear tokens Firestore:", text);
+    return [];
+  }
+
+  if (!json.documents) return [];
+  // Cada doc.id é o token
+  return json.documents.map(doc => doc.name.split("/").pop());
 }
 
-// EXECUÇÃO
+// -------------------- PUSH --------------------
+
+async function sendPush(token, title, body) {
+  try {
+    const res = await fetch("https://fcm.googleapis.com/fcm/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `key=${SERVER_KEY}`,
+      },
+      body: JSON.stringify({
+        to: token,
+        notification: { title, body },
+      }),
+    });
+
+    const text = await res.text();
+    try {
+      const data = JSON.parse(text);
+      console.log("📨 Push enviado:", data);
+    } catch (err) {
+      console.warn("⚠ Resposta não JSON do FCM:", text);
+    }
+  } catch (err) {
+    console.error("❌ Erro ao enviar push:", err);
+  }
+}
+
+// -------------------- EXECUÇÃO --------------------
+
 (async () => {
-  console.log("🔍 Iniciando verificação de jogos...");
-
   const games = await getAllGames();
-  console.log(`📦 Total de jogos encontrados: ${games.length}`);
+  console.log(`📦 Total de jogos válidos encontrados: ${games.length}`);
 
-  // const userTokens = []; // TODO
   const userTokens = await getAllTokens();
-  console.log("📨 Tokens encontrados:", userTokens.length);
+  console.log(`📨 Total de tokens encontrados: ${userTokens.length}`);
+  if (userTokens.length === 0) {
+    console.log("❌ Nenhum token FCM disponível. Abortando envio de push.");
+    return;
+  }
 
   for (const doc of games) {
     const fields = doc.fields;
-    if (!fields.cleaning_date) continue;
+    if (!fields.cleaning_date || !fields.name) continue;
 
     const cleanDate = parseCleaningDate(fields.cleaning_date.stringValue);
     if (!cleanDate) continue;
 
     if (isExpired(cleanDate)) {
-      console.log("⚠ Jogo vencido:", fields.name?.stringValue);
+      console.log("⚠ Jogo vencido:", fields.name.stringValue);
 
       for (const token of userTokens) {
         await sendPush(
