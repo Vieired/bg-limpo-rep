@@ -223,7 +223,7 @@ async function sendPush(userToken, title, body) {
         await sendPush(
           token,
           "Limpeza Vencida",
-          `O jogo ${fields.name.stringValue} precisa ser limpo.`
+          `O jogo ${fields.name.stringValue} precisa de manutenção de rotina.`
         );
       }
     }
