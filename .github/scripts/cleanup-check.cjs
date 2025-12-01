@@ -104,53 +104,97 @@ async function getAllTokens() {
 }
 
 // -------------------- PUSH --------------------
-
-async function sendPush(token, title, body) {
-  
-  const url = `https://fcm.googleapis.com/v1/projects/${serviceAccount.project_id}/messages:send`;
-
+async function sendPush(userToken, title, body) {
   try {
-    const res = await fetch(url,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // NÃO usar serverKey aqui
-        },
-        body: JSON.stringify({
-          message: {
-            token: token, // token do Firestore
-            notification: {
-              title: "Jogo vencido!",
-              body: `O jogo ${game.name} venceu a data de limpeza.`,
-            },
+    // 1) Gerar Access Token válido para o FCM
+    const auth = new GoogleAuth({
+      credentials: {
+        client_email: serviceAccount.client_email,
+        private_key: serviceAccount.private_key,
+      },
+      scopes: ["https://www.googleapis.com/auth/firebase.messaging"],
+    });
+
+    const client = await auth.getClient();
+    const accessToken = (await client.getAccessToken()).token;
+
+    const url = `https://fcm.googleapis.com/v1/projects/${serviceAccount.project_id}/messages:send`;
+
+    // 2) Enviar push
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`, // CORRETO
+      },
+      body: JSON.stringify({
+        message: {
+          token: userToken, // CORRETO
+          notification: {
+            title,
+            body,
           },
-        }),
-      }
-    );
-    // const res = await fetch("https://fcm.googleapis.com/fcm/send", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `key=${SERVER_KEY}`,
-    //   },
-    //   body: JSON.stringify({
-    //     to: token,
-    //     notification: { title, body },
-    //   }),
-    // });
+        },
+      }),
+    });
 
     const text = await res.text();
     try {
       const data = JSON.parse(text);
       console.log("📨 Push enviado:", data);
-    } catch (err) {
+    } catch {
       console.warn("⚠ Resposta não JSON do FCM:", text);
     }
   } catch (err) {
     console.error("❌ Erro ao enviar push:", err);
   }
 }
+// async function sendPush(token, title, body) {
+
+//   const url = `https://fcm.googleapis.com/v1/projects/${serviceAccount.project_id}/messages:send`;
+
+//   try {
+//     const res = await fetch(url,
+//       {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`, // NÃO usar serverKey aqui
+//         },
+//         body: JSON.stringify({
+//           message: {
+//             token: token, // token do Firestore
+//             notification: {
+//               title: "Jogo vencido!",
+//               body: `O jogo ${game.name} venceu a data de limpeza.`,
+//             },
+//           },
+//         }),
+//       }
+//     );
+//     // const res = await fetch("https://fcm.googleapis.com/fcm/send", {
+//     //   method: "POST",
+//     //   headers: {
+//     //     "Content-Type": "application/json",
+//     //     Authorization: `key=${SERVER_KEY}`,
+//     //   },
+//     //   body: JSON.stringify({
+//     //     to: token,
+//     //     notification: { title, body },
+//     //   }),
+//     // });
+
+//     const text = await res.text();
+//     try {
+//       const data = JSON.parse(text);
+//       console.log("📨 Push enviado:", data);
+//     } catch (err) {
+//       console.warn("⚠ Resposta não JSON do FCM:", text);
+//     }
+//   } catch (err) {
+//     console.error("❌ Erro ao enviar push:", err);
+//   }
+// }
 
 // -------------------- EXECUÇÃO --------------------
 
