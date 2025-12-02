@@ -18,10 +18,14 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage((payload) => {
   console.log("[firebase-messaging-sw.js] Background message:", payload);
 
-  const { title, body, icon } = payload.notification;
+  // const { title, body, icon } = payload.notification;
 
-  self.registration.showNotification(title, {
-    body,
-    icon
+  // self.registration.showNotification(title, {
+  //   body,
+  //   icon
+  // });
+
+  self.registration.showNotification(payload.data.title, {
+    body: payload.data.body,
   });
 });
