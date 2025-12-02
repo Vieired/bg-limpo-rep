@@ -5,11 +5,8 @@ import { AuthProvider } from './contexts/authContext';
 import './App.css'
 import GlobalStyle from "./styles/global";
 import { useEffect } from 'react';
-import {
-  messaging,
-  // requestNotificationPermission
-} from './firebase';
-import { onMessage } from 'firebase/messaging';
+// import { messaging } from './firebase';
+// import { onMessage } from 'firebase/messaging';
 import { requestNotificationPermission } from './pushNotifications';
 // import { onMessage } from 'firebase/messaging';
 // import { messaging } from './firebase';
@@ -36,15 +33,15 @@ function App() {
     initFCM();
   }, []);
 
-  useEffect(() => {
-    onMessage(messaging, (payload) => {
-      console.log("📩 Notificação recebida em foreground:", payload);
+  // useEffect(() => {
+  //   onMessage(messaging, (payload) => {
+  //     console.log("📩 Notificação recebida em foreground:", payload);
 
-      new Notification(payload.notification?.title ?? "Notificação", {
-        body: payload.notification?.body,
-      });
-    });
-  }, []);
+  //     new Notification(payload.notification?.title ?? "Notificação", {
+  //       body: payload.notification?.body,
+  //     });
+  //   });
+  // }, []);
 
   return (
     
