@@ -1,20 +1,3 @@
-// import { initializeApp } from "firebase/app";
-// import { getMessaging } from "firebase/messaging";
-// import { getFirestore } from "firebase/firestore";
-// import { firebaseConfig } from "./shared/firebase/config";
-
-
-// // Inicializar app Firebase
-// const app = initializeApp(firebaseConfig);
-
-// // Exportar Firestore (caso você use)
-// export const db = getFirestore(app);
-
-// // Exportar Messaging (obrigatório para Push)
-// export const messaging = getMessaging(app);
-
-
-
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { firebaseConfig } from "./shared/firebase/config";
