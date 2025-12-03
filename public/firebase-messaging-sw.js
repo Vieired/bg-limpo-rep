@@ -14,22 +14,26 @@ firebase.initializeApp({
 // Inicializa o messaging
 const messaging = firebase.messaging();
 
+/*
 // NÃO CHAME self.registration.showNotification
 // Deixe o navegador exibir automaticamente.
 // Apenas logue o payload.
 messaging.onBackgroundMessage((payload) => {
   console.log("[firebase-messaging-sw.js] Background message:", payload);
 });
+*/
 
-/*messaging.onBackgroundMessage((payload) => {
+/*
+messaging.onBackgroundMessage((payload) => {
   console.log("[firebase-messaging-sw.js] Background message:", payload);
 
   self.registration.showNotification(payload.data.title, {
     body: payload.data.body,
   });
-});*/
+});
+*/
 
-/*// Notificação quando o app está FECHADO
+// Notificação quando o app está FECHADO
 messaging.onBackgroundMessage((payload) => {
   console.log("[firebase-messaging-sw.js] Background message:", payload);
 
@@ -39,4 +43,4 @@ messaging.onBackgroundMessage((payload) => {
     body,
     icon
   });
-});*/
+});

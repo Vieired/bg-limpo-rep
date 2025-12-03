@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getMessaging, getToken } from "firebase/messaging";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { firebaseConfig } from "./shared/firebase/config";
 
 // Inicializa app Firebase
@@ -36,7 +36,7 @@ export async function requestNotificationPermission(): Promise<string> {
   return token;
 }
 
-/*// Recebe mensagens quando o app estiver aberto (foreground)
+// Recebe mensagens quando o app estiver aberto (foreground)
 export function onForegroundMessage(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   callback: (payload: any) => void
@@ -45,4 +45,4 @@ export function onForegroundMessage(
     console.log("Mensagem no foreground:", payload);
     callback(payload);
   });
-}*/
+}

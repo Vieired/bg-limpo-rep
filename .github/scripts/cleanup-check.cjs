@@ -104,37 +104,7 @@ async function getAllTokens() {
 }
 
 // -------------------- PUSH --------------------
-async function sendPush(token, title, body) {
-  const url = `https://fcm.googleapis.com/v1/projects/${serviceAccount.project_id}/messages:send`;
-
-  const accessToken = await getAccessToken();
-
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    },
-    body: JSON.stringify({
-      message: {
-        token,
-        data: {
-          title,
-          body
-        }
-      }
-    }),
-  });
-
-  const text = await res.text();
-  try {
-    console.log("📨 Push enviado:", JSON.parse(text));
-  } catch {
-    console.warn("⚠ Resposta não JSON:", text);
-  }
-}
-
-/*async function sendPush(userToken, title, body) {
+async function sendPush(userToken, title, body) {
   try {
     // 1) Gerar Access Token válido para o FCM
     const auth = new GoogleAuth({
@@ -177,6 +147,36 @@ async function sendPush(token, title, body) {
     }
   } catch (err) {
     console.error("❌ Erro ao enviar push:", err);
+  }
+}
+
+/*async function sendPush(token, title, body) {
+  const url = `https://fcm.googleapis.com/v1/projects/${serviceAccount.project_id}/messages:send`;
+
+  const accessToken = await getAccessToken();
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({
+      message: {
+        token,
+        data: {
+          title,
+          body
+        }
+      }
+    }),
+  });
+
+  const text = await res.text();
+  try {
+    console.log("📨 Push enviado:", JSON.parse(text));
+  } catch {
+    console.warn("⚠ Resposta não JSON:", text);
   }
 }*/
 

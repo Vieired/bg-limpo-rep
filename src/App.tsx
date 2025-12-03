@@ -1,16 +1,14 @@
+import { useEffect } from 'react';
+import RoutesHandler from './routes/RoutesHandler';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import RoutesHandler from './routes/RoutesHandler';
 import { AuthProvider } from './contexts/authContext';
-import './App.css'
-import GlobalStyle from "./styles/global";
-import { useEffect } from 'react';
-// import { messaging } from './firebase';
-// import { onMessage } from 'firebase/messaging';
+import { onMessage } from 'firebase/messaging';
+import { messaging } from './firebase';
 import { requestNotificationPermission } from './pushNotifications';
-// import { onMessage } from 'firebase/messaging';
-// import { messaging } from './firebase';
 // import { onForegroundMessage, requestNotificationPermission } from './firebase';
+import GlobalStyle from "./styles/global";
+import './App.css'
 
 function App() {
 
@@ -33,15 +31,15 @@ function App() {
     initFCM();
   }, []);
 
-  // useEffect(() => {
-  //   onMessage(messaging, (payload) => {
-  //     console.log("📩 Notificação recebida em foreground:", payload);
+  useEffect(() => {
+    onMessage(messaging, (payload) => {
+      console.log("📩 Notificação recebida em foreground:", payload);
 
-  //     new Notification(payload.notification?.title ?? "Notificação", {
-  //       body: payload.notification?.body,
-  //     });
-  //   });
-  // }, []);
+      new Notification(payload.notification?.title ?? "Notificação", {
+        body: payload.notification?.body,
+      });
+    });
+  }, []);
 
   return (
     
