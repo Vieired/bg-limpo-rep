@@ -1,6 +1,6 @@
 // .github/scripts/cleanup-check.cjs
 
-console.log("🔍 Iniciando verificação de jogos...");
+console.log("🔍 Iniciando verificação de jogos (branch develop)...");
 
 // Configurações
 const fetch = require("node-fetch");
