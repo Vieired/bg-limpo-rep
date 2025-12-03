@@ -104,7 +104,7 @@ async function getAllTokens() {
 }
 
 // -------------------- PUSH --------------------
-async function sendPush(userToken, title, body) {
+async function sendPush(userToken, title, body, photoUrl) {
   try {
     // 1) Gerar Access Token válido para o FCM
     const auth = new GoogleAuth({
@@ -133,6 +133,7 @@ async function sendPush(userToken, title, body) {
           notification: {
             title,
             body,
+            image: photoUrl, // 👈 IMAGEM GRANDE
           },
         },
       }),
@@ -254,7 +255,8 @@ async function sendPush(userToken, title, body) {
         await sendPush(
           token,
           "Limpeza Vencida",
-          `O jogo ${fields.name.stringValue} precisa de manutenção de rotina.`
+          `O jogo ${fields.name.stringValue} precisa de manutenção de rotina.`,
+          fields.photoUrl.stringValue,
         );
       }
     }
