@@ -125,11 +125,11 @@ async function sendPush(userToken, title, body, photoUrl) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`, // CORRETO
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         message: {
-          token: userToken, // CORRETO
+          token: userToken,
           notification: {
             title,
             body,
