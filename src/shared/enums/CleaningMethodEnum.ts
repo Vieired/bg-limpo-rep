@@ -26,7 +26,7 @@ export const getTypeDescription = (value: CleaningMethodEnum): string => {
     const data = {
         1: 'Virgem',
         2: 'Aplicação de Sílica',
-        3: 'Aplicação de Sílica Azul',
+        3: 'Sílica Gel Azul GS Química & Cia (10g)',
         4: 'Sanol',
         5: 'Talco',
         6: 'Arejado na Sombra',
