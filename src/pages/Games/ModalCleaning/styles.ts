@@ -103,3 +103,18 @@ export const ModalFooter = styled.div`
 export const Buttons = styled.div`
   display: flex;
 `;
+
+export const CleaningMethods = styled.div`
+  color: var(--gray3);
+  font-style: italic;
+
+  &&& > ul {
+    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+
+    > li {
+      list-style: inside;
+    }
+  }
+`;

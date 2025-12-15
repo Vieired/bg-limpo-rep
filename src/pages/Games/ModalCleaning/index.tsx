@@ -1,18 +1,18 @@
 import { useMemo } from "react";
 import ReactModal from "react-modal";
 import { useFormik } from "formik";
-// import { useDispatch, useSelector } from "react-redux";
 import { RiCloseFill } from "react-icons/ri";
 import { MdCleaningServices } from "react-icons/md";
 import { toast } from "react-toastify";
+import Skeleton from "react-loading-skeleton";
+import type { MultiValue } from "react-select";
 import type { Game } from "../../../shared/models/Games";
-// import { fetchGames, selectGames, updateCleaningDate } from "../../../store/gamesSlice";
+import type { Dropdown } from "../../../shared/models/domain/Select";
+import { gameService } from "../../../shared/services/gameService";
 import Button from "../../../components/Inputs/Button";
 import InputDate from "../../../components/Inputs/InputDate";
 import schema from "./schema";
 import InputSelectMulti from "../../../components/Inputs/InputSelectMulti";
-import type { MultiValue } from "react-select";
-import type { Dropdown } from "../../../shared/models/domain/Select";
 import { getTypeDescription, getTypeList } from "../../../shared/enums/CleaningMethodEnum";
 import Input from "../../../components/Inputs/Input";
 import {
@@ -22,8 +22,8 @@ import {
   ModalBody,
   Buttons,
   ModalFooter,
+  CleaningMethods,
 } from "./styles";
-import { gameService } from "../../../shared/services/gameService";
 
 interface Props {
     gameEditing: Game | null;
@@ -201,6 +201,51 @@ const ModalCleaning: React.FC<Props> = ({
                 onChange={formik?.handleChange}
                 errorText={getErrorMessage("cleaning_date")}
               />
+              {gameEditing?.cleaning_methods == null ? (
+                <>
+                  <Skeleton
+                    height={16}
+                    width={400}
+                    baseColor="#00000017"
+                    highlightColor="#00000047"
+                  />
+                  <Skeleton
+                    height={8}
+                    width={250}
+                    baseColor="#00000017"
+                    highlightColor="#00000047"
+                  />
+                  <Skeleton
+                    height={8}
+                    width={250}
+                    baseColor="#00000017"
+                    highlightColor="#00000047"
+                  />
+                  <Skeleton
+                    height={8}
+                    width={250}
+                    baseColor="#00000017"
+                    highlightColor="#00000047"
+                  />
+                </>
+              ) : (
+                <>
+                  {gameEditing?.cleaning_methods?.length > 0 ? (
+                    <CleaningMethods>
+                      <h3>Últimos Métodos de Limpeza Usados:</h3>
+                      <ul>
+                        {gameEditing?.cleaning_methods?.map((cleaning_method) => {
+                        return <li key={cleaning_method}>{getTypeDescription(cleaning_method)}</li>
+                        })}
+                      </ul>
+                    </CleaningMethods>
+                  ) : (
+                    <CleaningMethods>
+                      <h4>Nenhum método de limpeza foi usado anteriormente.</h4>
+                    </CleaningMethods>
+                  )}
+                </>
+              )}
             </form>
           </ModalBody>
           <ModalFooter>
