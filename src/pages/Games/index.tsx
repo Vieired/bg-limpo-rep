@@ -125,7 +125,7 @@ const Games: React.FC = () => {
                         <FaPowerOff/>
                     </Button>
                 </nav>
-                <h2>BG Limpo</h2>
+                <h2>BG Limpo 2.0</h2>
                 <small>
                     {!cleaningFrequencyLoading ? (
                         subtitle

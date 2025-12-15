@@ -33,7 +33,7 @@ const Login: React.FC = () => {
         <Container>
             <div>
                 <h1>
-                    BG Limpo
+                    BG Limpo 2.0
                 </h1>
             </div>
             <div>
