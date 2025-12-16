@@ -10,6 +10,8 @@ const SERVER_KEY = process.env.FIREBASE_SERVER_KEY;
 const COLLECTION_GAMES = "jogos";
 const COLLECTION_TOKENS = "fcm_tokens";
 
+const URL = `https://firestore.googleapis.com/v1/projects/${serviceAccount.project_id}/databases/(default)/documents`;
+
 // Monta o serviceAccount a partir das secrets
 const serviceAccount = {
   project_id: process.env.FIREBASE_PROJECT_ID,
@@ -58,9 +60,8 @@ async function getAccessToken() {
 
 async function getAllGames() {
   const token = await getAccessToken();
-  const url = `https://firestore.googleapis.com/v1/projects/${serviceAccount.project_id}/databases/(default)/documents/${COLLECTION_GAMES}`;
 
-  const res = await fetch(url, {
+  const res = await fetch(`${URL}/${COLLECTION_GAMES}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -81,9 +82,8 @@ async function getAllGames() {
 
 async function getAllTokens() {
   const token = await getAccessToken();
-  const url = `https://firestore.googleapis.com/v1/projects/${serviceAccount.project_id}/databases/(default)/documents/${COLLECTION_TOKENS}`;
 
-  const res = await fetch(url, {
+  const res = await fetch(`${URL}/${COLLECTION_TOKENS}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
