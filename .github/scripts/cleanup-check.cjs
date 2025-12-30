@@ -159,11 +159,7 @@ async function sendPush(userToken, title, body, photoUrl) {
 // -------------------- EXECUÇÃO --------------------
 
 (async () => {
-  const games = await getAllGames()
-    .then((response) => {
-      console.log("response", response)
-      return response;
-    });
+  const games = await getAllGames();
   console.log(`📦 Total de jogos válidos encontrados: ${games.length}`);
 
   const userTokens = await getAllTokens();
