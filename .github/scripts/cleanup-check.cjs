@@ -188,7 +188,7 @@ async function sendPush(userToken, title, body, photoUrl) {
           token,
           "Limpeza Vencida",
           `O jogo ${fields.name.stringValue} precisa de manutenção de rotina.`,
-          fields?.photoUrl?.stringValue || null,
+          fields.photoUrl?.stringValue,
         );
       }
     }
