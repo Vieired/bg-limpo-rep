@@ -6,7 +6,7 @@ console.log("🔍 Iniciando verificação de jogos (branch develop)...");
 const fetch = require("node-fetch");
 const { GoogleAuth } = require("google-auth-library");
 
-// const SERVER_KEY = process.env.FIREBASE_SERVER_KEY;
+const SERVER_KEY = process.env.FIREBASE_SERVER_KEY;
 const COLLECTION_GAMES = "jogos";
 const COLLECTION_TOKENS = "fcm_tokens";
 
