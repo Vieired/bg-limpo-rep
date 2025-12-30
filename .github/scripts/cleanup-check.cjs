@@ -6,18 +6,18 @@ console.log("🔍 Iniciando verificação de jogos (branch develop)...");
 const fetch = require("node-fetch");
 const { GoogleAuth } = require("google-auth-library");
 
-const SERVER_KEY = process.env.FIREBASE_SERVER_KEY;
-const COLLECTION_GAMES = "jogos";
-const COLLECTION_TOKENS = "fcm_tokens";
-
-const URL = `https://firestore.googleapis.com/v1/projects/${serviceAccount.project_id}/databases/(default)/documents`;
-
 // Monta o serviceAccount a partir das secrets
 const serviceAccount = {
   project_id: process.env.FIREBASE_PROJECT_ID,
   client_email: process.env.FIREBASE_CLIENT_EMAIL,
   private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
 };
+
+// const SERVER_KEY = process.env.FIREBASE_SERVER_KEY;
+const COLLECTION_GAMES = "jogos";
+const COLLECTION_TOKENS = "fcm_tokens";
+
+const URL = `https://firestore.googleapis.com/v1/projects/${serviceAccount.project_id}/databases/(default)/documents`;
 
 // -------------------- UTILS --------------------
 
