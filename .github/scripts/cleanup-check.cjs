@@ -6,7 +6,7 @@ console.log("🔍 Iniciando verificação de jogos (branch develop)...");
 const fetch = require("node-fetch");
 const { GoogleAuth } = require("google-auth-library");
 
-const SERVER_KEY = process.env.FIREBASE_SERVER_KEY;
+// const SERVER_KEY = process.env.FIREBASE_SERVER_KEY;
 const COLLECTION_GAMES = "jogos";
 const COLLECTION_TOKENS = "fcm_tokens";
 
@@ -32,6 +32,11 @@ function parseCleaningDate(dateStr) {
 
 function isExpired(cleanDate) {
   if (!cleanDate) return false;
+
+  // fetchSettings().then((response) => {
+  //   console.log("fetchSettings response: ", response)
+  // });
+
   const limit = new Date(cleanDate);
   limit.setMonth(limit.getMonth() + 5);
 
@@ -151,87 +156,14 @@ async function sendPush(userToken, title, body, photoUrl) {
   }
 }
 
-/*async function sendPush(token, title, body) {
-  const url = `https://fcm.googleapis.com/v1/projects/${serviceAccount.project_id}/messages:send`;
-
-  const accessToken = await getAccessToken();
-
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    },
-    body: JSON.stringify({
-      message: {
-        token,
-        data: {
-          title,
-          body
-        }
-      }
-    }),
-  });
-
-  const text = await res.text();
-  try {
-    console.log("📨 Push enviado:", JSON.parse(text));
-  } catch {
-    console.warn("⚠ Resposta não JSON:", text);
-  }
-}*/
-
-// async function sendPush(token, title, body) {
-
-//   const url = `https://fcm.googleapis.com/v1/projects/${serviceAccount.project_id}/messages:send`;
-
-//   try {
-//     const res = await fetch(url,
-//       {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${token}`, // NÃO usar serverKey aqui
-//         },
-//         body: JSON.stringify({
-//           message: {
-//             token: token, // token do Firestore
-//             notification: {
-//               title: "Jogo vencido!",
-//               body: `O jogo ${game.name} venceu a data de limpeza.`,
-//             },
-//           },
-//         }),
-//       }
-//     );
-//     // const res = await fetch("https://fcm.googleapis.com/fcm/send", {
-//     //   method: "POST",
-//     //   headers: {
-//     //     "Content-Type": "application/json",
-//     //     Authorization: `key=${SERVER_KEY}`,
-//     //   },
-//     //   body: JSON.stringify({
-//     //     to: token,
-//     //     notification: { title, body },
-//     //   }),
-//     // });
-
-//     const text = await res.text();
-//     try {
-//       const data = JSON.parse(text);
-//       console.log("📨 Push enviado:", data);
-//     } catch (err) {
-//       console.warn("⚠ Resposta não JSON do FCM:", text);
-//     }
-//   } catch (err) {
-//     console.error("❌ Erro ao enviar push:", err);
-//   }
-// }
-
 // -------------------- EXECUÇÃO --------------------
 
 (async () => {
-  const games = await getAllGames();
+  const games = await getAllGames()
+    .then((response) => {
+      console.log("response", response)
+      return response;
+    });
   console.log(`📦 Total de jogos válidos encontrados: ${games.length}`);
 
   const userTokens = await getAllTokens();
@@ -245,10 +177,14 @@ async function sendPush(userToken, title, body, photoUrl) {
     const fields = doc.fields;
     if (!fields.cleaning_date || !fields.name) continue;
 
+    // garante que isActive exista e seja true
+    const isActive = fields.isActive?.booleanValue === true;
+    if (!isActive) continue;
+
     const cleanDate = parseCleaningDate(fields.cleaning_date.stringValue);
     if (!cleanDate) continue;
 
-    if (isExpired(cleanDate)) {
+    if (isExpired(cleanDate) && isActive === true) {
       console.log("⚠ Jogo vencido:", fields.name.stringValue);
 
       for (const token of userTokens) {
