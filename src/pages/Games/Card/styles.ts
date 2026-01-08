@@ -14,9 +14,10 @@ export const Container = styled.li`
         background: #C30414;
     }
 
-    > span {
+    > span { // para todas as três colunas do card
         display: grid;
         justify-content: space-between;
+        justify-content: normal;
         gap: 1rem;
 
         @media (min-width: 768px) {
@@ -33,21 +34,35 @@ export const Container = styled.li`
             text-align: left;
         }
 
-        > p:first-of-type, p:nth-child(3) {
+        > div:first-of-type, div:nth-child(3) {
             justify-self: flex-start;
         }
 
-        > p:nth-child(2) {
+        > div:nth-child(2) {
             justify-self: flex-start;
             align-content: end;
             color: #ffffff75;
             text-align: start;
         }
 
-        > p:nth-child(3) {
-            align-content: end;
+        > div:nth-child(3) {
+            /* align-content: end; */
             font-size: .8rem;
             color: #ffffff75;
+            text-align: end;
+            display: flex;
+            flex-direction: column;
+            justify-self: flex-end;
+            justify-content: flex-end;
+            row-gap: 2px;
+
+            @media (min-width: 768px) {
+                row-gap: 8px;
+            }
+
+            @media (min-width: 1200px) {
+                row-gap: 8px;
+            }
         }
 
         &:first-of-type {
@@ -66,7 +81,7 @@ export const Container = styled.li`
         }
     }
 
-    > span:last-of-type {
+    > span:last-of-type { // terceira coluna do card | botões CRUD
         grid-template-columns: 1fr;
         
         @media (min-width: 768px) {
