@@ -27,6 +27,8 @@ const Card: React.FC<ICard> = ({
     const getDiffDays = (startDate: string, endDate: string): number => {
         const a = new Date(startDate);
         const b = new Date(endDate);
+        a.setHours(0, 0, 0, 0);
+        b.setHours(0, 0, 0, 0);
         const timeDiff = Math.abs(b.getTime() - a.getTime());
         const diffDays = Math.floor(timeDiff / (1000 * 3600 * 24));
         // const diffDays = Math.round(timeDiff / (1000 * 3600 * 24));
@@ -37,6 +39,8 @@ const Card: React.FC<ICard> = ({
     const getDiffMonths = (startDate: string, endDate: string): number => {
         const a = new Date(startDate);
         const b = new Date(endDate);
+        a.setHours(0, 0, 0, 0);
+        b.setHours(0, 0, 0, 0);
         const anoInicial = a.getFullYear();
         const mesInicial = a.getMonth();
         const diaInicial = a.getDate();
