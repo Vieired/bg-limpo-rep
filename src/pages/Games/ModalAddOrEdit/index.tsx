@@ -45,6 +45,7 @@ const ModalAddOrEdit: React.FC<Props> = ({
   clearGameEditing,
 }) => {
 
+  const element = document.createElement("div");
   const today = new Date().toISOString().split("T")[0];
 
   const done = () => {
@@ -130,7 +131,7 @@ const ModalAddOrEdit: React.FC<Props> = ({
       <ReactModal
         isOpen={modalOpen}
         contentLabel={gameEditing ? "Editar Jogo" : "Criar Jogo"}
-        // appElement={element}
+        appElement={element}
         onRequestClose={toggleModal}
         onAfterClose={handleAfterClose}
         // overlayClassName="modal-overlay"

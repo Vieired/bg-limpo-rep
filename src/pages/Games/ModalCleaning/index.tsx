@@ -41,7 +41,7 @@ const ModalCleaning: React.FC<Props> = ({
   clearGameEditing,
 }) => {
 
-  // const element = document.createElement("div");
+  const element = document.createElement("div");
   // ReactModal.setAppElement('#root');
   // const dispatch = useDispatch();
 
@@ -129,7 +129,7 @@ const ModalCleaning: React.FC<Props> = ({
       <ReactModal
         isOpen={modalOpen}
         contentLabel="Limpar Jogo"
-        // appElement={element}
+        appElement={element}
         onRequestClose={toggleModal}
         onAfterClose={handleAfterClose}
         style={{
