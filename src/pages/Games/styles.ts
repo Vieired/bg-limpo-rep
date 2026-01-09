@@ -23,11 +23,23 @@ export const Content = styled.div`
     gap: 2rem;
     color: #D9753B;
 
-    > ul {
+    > section {
         display: flex;
         flex-direction: column;
         padding: 0;
-        gap: 1rem;
+        gap: .5rem;
+
+        > p {
+            text-align: start;
+        }
+        
+        > ul {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            margin: 0;
+            gap: 1rem;
+        }
     }
 
     > nav {

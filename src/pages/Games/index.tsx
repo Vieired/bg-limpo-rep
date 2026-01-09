@@ -168,35 +168,35 @@ const Games: React.FC = () => {
                         </label>
                     </span>
                 </Toolbar>
-                {cleaningFrequency != null && !gamesLoading && games ? (
-                    <ul>
-                        {/* {(games as FirestoreDocument[])?.map((game: FirestoreDocument) => (
-                            <li key={game.name}>
-                                {getValue(game.fields.name)}
-                            </li>
-                        ))} */}
-                        {(mappingArrayFirestoreDocumentToArrayGame(games) as Game[])?.map((game: Game) => (
-                            <Card
-                                key={game.name}
-                                game={game}
-                                activeEdition={activeEdition}
-                                setGameEditing={setGameEditing}
-                                toggleModalCleaning={toggleModalCleaning}
-                                toggleModal={toggleModalAddOrEdit}
-                                limitInMonths={cleaningFrequency}
+                <section>
+                    {cleaningFrequency != null && !gamesLoading && games ? (
+                        <>
+                            <p><small>{`Exibindo ${(mappingArrayFirestoreDocumentToArrayGame(games) as Game[]).length} jogos`}</small></p>
+                            <ul>
+                                {(mappingArrayFirestoreDocumentToArrayGame(games) as Game[])?.map((game: Game) => (
+                                    <Card
+                                        key={game.name}
+                                        game={game}
+                                        activeEdition={activeEdition}
+                                        setGameEditing={setGameEditing}
+                                        toggleModalCleaning={toggleModalCleaning}
+                                        toggleModal={toggleModalAddOrEdit}
+                                        limitInMonths={cleaningFrequency}
+                                    />
+                                ))}
+                            </ul>
+                        </>
+                    ) : (
+                        <Loading>
+                            <Skeleton
+                                count={6}
+                                height={132}
+                                baseColor="#00000017"
+                                highlightColor="#00000047"
                             />
-                        ))}
-                    </ul>
-                ) : (
-                    <Loading>
-                        <Skeleton
-                            count={6}
-                            height={132}
-                            baseColor="#00000017"
-                            highlightColor="#00000047"
-                        />
-                    </Loading>
-                )}
+                        </Loading>
+                    )}
+                </section>
 
                 <ModalAddOrEdit
                     gameEditing={gameEditing}
