@@ -34,6 +34,13 @@ const Card: React.FC<ICard> = ({
         return diff >= limitInMonths;
     }
 
+    const getCleaningExpirationPercentage = (startDate: string): number => {
+        const diff = getDiffMonths(startDate, today);
+        if (diff >= limitInMonths) return 100;
+        if (diff <= 0) return 0;
+        return (100 * diff) / limitInMonths;
+    }
+
     const randomImage = useMemo(() => {
         // const seed = new Date().getMilliseconds();
         return `https://picsum.photos/100`;
@@ -51,7 +58,10 @@ const Card: React.FC<ICard> = ({
     }
 
     return (
-        <Container className={isLimitExpired(game.cleaning_date) ? "pending-maintenance" : ""}>
+        <Container
+            // className={isLimitExpired(game.cleaning_date) ? "pending-maintenance" : ""}
+            percentage={getCleaningExpirationPercentage(game.cleaning_date)}
+        >
             <span>
                 <img
                     src={game?.photoUrl || randomImage}

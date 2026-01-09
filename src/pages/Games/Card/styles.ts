@@ -1,6 +1,10 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-export const Container = styled.li`
+interface Prop {
+    percentage?: number; // 0–100
+}
+
+export const Container = styled.li<Prop>`
     display: grid;
     grid-template-columns: min-content auto min-content;
     box-shadow: 3px 3px 4px 1px #0000009c;
@@ -10,9 +14,41 @@ export const Container = styled.li`
     color: #F5F5F5;
     gap: 1rem;
 
-    &.pending-maintenance {
-        background: #C30414;
-    }
+    ${props => {
+        if (props?.percentage == null) {
+            return css`
+                &.pending-maintenance {
+                    background: #C30414;
+                }
+            `
+        }
+    }}
+
+    background: ${({ percentage = 0 }) => {
+        const p = Math.min(100, Math.max(0, percentage));
+
+        // Extremos sólidos
+        if (p === 100) return "#C30414";
+        if (p === 0) return "#023F56";
+
+        /*
+        A "zona de blend" define o quão suave é o degradê.
+        Quanto maior, mais suave.
+        */
+        const blend = 20;
+
+        const start = Math.max(0, p - blend);
+        const end = Math.min(100, p + blend);
+
+        return `
+        linear-gradient(
+            90deg,
+            #C30414 ${start}%,
+            #023F56 ${end}%
+        )
+        `;
+    }};
+    transition: background 0.4s ease;
 
     > span { // para todas as três colunas do card
         display: grid;
