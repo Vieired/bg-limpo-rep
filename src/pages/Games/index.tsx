@@ -86,10 +86,12 @@ const Games: React.FC = () => {
     }
 
     const getSettings = useCallback(() => {
-        settingsService.fetchSettings().then((resp: number) => {
-            setCleaningFrequency(resp);
-            setIsCleaningFrequencyLoading(false)
-        })
+        setIsCleaningFrequencyLoading(true);
+        settingsService.fetchSettings()
+            .then((resp: number) => {
+                setCleaningFrequency(resp)
+            })
+            .finally(() => setIsCleaningFrequencyLoading(false));
     }, []);
 
     const refreshGames = useCallback(() => {
