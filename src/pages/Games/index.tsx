@@ -166,7 +166,7 @@ const Games: React.FC = () => {
                         </label>
                     </span>
                 </Toolbar>
-                {!!cleaningFrequency && !gamesLoading && games ? (
+                {cleaningFrequency != null && !gamesLoading && games ? (
                     <ul>
                         {/* {(games as FirestoreDocument[])?.map((game: FirestoreDocument) => (
                             <li key={game.name}>
