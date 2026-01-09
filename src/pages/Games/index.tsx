@@ -30,12 +30,10 @@ const Games: React.FC = () => {
     const [ gameEditing, setGameEditing ] = useState<Game|null>(null);
     const [ activeEdition, setActiveEdition ] = useState<boolean>(false);
     const [ games, setGames ] = useState<FirestoreDocument[]|null>(null);
-    const [ cleaningFrequency, setCleaningFrequency ] = useState<number>(0);
+    const [ cleaningFrequency, setCleaningFrequency ] = useState<number|null>(null);
+    const [ isCleaningFrequencyLoading, setIsCleaningFrequencyLoading ] = useState<boolean>(true);
     const [ showOnlyActiveGamesFilterToggle, setShowOnlyActiveGamesFilterToggle ] = useState<boolean>(true);
-    const [ cleaningFrequencyLoading, setCleaningFrequencyLoading ] = useState<boolean>(true);
     const [ gamesLoading, setGamesLoading ] = useState<boolean>(true);
-
-    const subtitle = `Frequência de limpezas: ${cleaningFrequency} meses`;
 
     const toggleModalAddOrEdit = useCallback(() => {
         setModalOpen(prevState => !prevState);
@@ -90,7 +88,7 @@ const Games: React.FC = () => {
     const getSettings = useCallback(() => {
         settingsService.fetchSettings().then((resp: number) => {
             setCleaningFrequency(resp);
-            setCleaningFrequencyLoading(false)
+            setIsCleaningFrequencyLoading(false)
         })
     }, []);
 
@@ -127,8 +125,8 @@ const Games: React.FC = () => {
                 </nav>
                 <h2>BG Limpo 2.0</h2>
                 <small>
-                    {!cleaningFrequencyLoading ? (
-                        subtitle
+                    {!isCleaningFrequencyLoading ? (
+                        `Frequência de limpezas: ${cleaningFrequency} meses`
                     ) : (
                         <Skeleton
                             height={8}
@@ -168,7 +166,7 @@ const Games: React.FC = () => {
                         </label>
                     </span>
                 </Toolbar>
-                {!gamesLoading && games ? (
+                {!!cleaningFrequency && !gamesLoading && games ? (
                     <ul>
                         {/* {(games as FirestoreDocument[])?.map((game: FirestoreDocument) => (
                             <li key={game.name}>
