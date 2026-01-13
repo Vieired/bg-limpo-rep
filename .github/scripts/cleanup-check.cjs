@@ -182,13 +182,13 @@ async function sendPush(userToken, title, body, photoUrl) {
 // -------------------- EXECUÇÃO --------------------
 
 (async () => {
-  const data = getCleaningFrequency();
-  const cleaningFrequency = Number(data?.fields?.cleaning_frequency?.integerValue ?? 0);
-  if (!cleaningFrequency) {
-    throw new Error("cleaning_frequency inválido ou não configurado");
-  }
-  console.log("data: ", data);
-  console.log("getCleaningFrequency: ", cleaningFrequency);
+  const configCleaningFrequency = await getCleaningFrequency()
+  console.log("cleaningFrequency na Base: ", configCleaningFrequency);
+  // const cleaningFrequency = Number(configCleaningFrequency?.fields?.cleaning_frequency?.integerValue ?? 0);
+  // if (!cleaningFrequency) {
+  //   throw new Error("cleaning_frequency inválido ou não configurado");
+  // }
+  // console.log("getCleaningFrequency: ", cleaningFrequency);
 
   fetchSettings().then((response) => {
     console.log("cleanup-check.cjs fetchSettings response: ", response)
