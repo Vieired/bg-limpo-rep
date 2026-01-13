@@ -31,15 +31,11 @@ function parseCleaningDate(dateStr) {
   return new Date(dateStr);
 }
 
-function isExpired(cleanDate/*, frequencyMonths*/) {
+function isExpired(cleanDate, frequencyMonths) {
   if (!cleanDate) return false;
 
-  // fetchSettings().then((response) => {
-  //   console.log("fetchSettings response: ", response)
-  // });
-
   const limit = new Date(cleanDate);
-  limit.setMonth(limit.getMonth() + 5/*frequencyMonths*/);
+  limit.setMonth(limit.getMonth() + frequencyMonths);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -89,7 +85,6 @@ async function getAllGames() {
 async function getCleaningFrequency() {
   const token = await getAccessToken();
 
-  // const res = await fetch(`${URL}/${COLLECTION_CLEANING_FREQUENCY}/Ca2WfDMPMGv1b5Q8TU36`, {
   const res = await fetch(`${URL}/${COLLECTION_CLEANING_FREQUENCY}`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -183,12 +178,12 @@ async function sendPush(userToken, title, body, photoUrl) {
 // -------------------- EXECUÇÃO --------------------
 
 (async () => {
-  const settingsCollection = await getCleaningFrequency()
-  console.log("settingsCollection na Base: ", settingsCollection);
-  if (!settingsCollection) {
-    throw new Error("cleaning_frequency inválido ou não configurado");
+  const settings = await getCleaningFrequency();
+  console.log("Configurações encontradas: ", settings);
+  if (!settings) {
+    throw new Error('Coleção "Configurações" inválida ou não configurada');
   }
-  const cleaningFrequency = Number(settingsCollection[0]?.fields?.cleaning_frequency?.integerValue ?? 0);
+  const cleaningFrequency = Number(settings[0]?.fields?.cleaning_frequency?.integerValue ?? 0);
   console.log("Frequência de limpeza (cleaningFrequency) encontrada: ", cleaningFrequency);
 
   const games = await getAllGames();
@@ -212,7 +207,7 @@ async function sendPush(userToken, title, body, photoUrl) {
     const cleanDate = parseCleaningDate(fields.cleaning_date.stringValue);
     if (!cleanDate) continue;
 
-    if (isExpired(cleanDate/*, frequencyMonths*/) && isActive === true) {
+    if (isExpired(cleanDate, frequencyMonths) && isActive === true) {
       console.log("⚠ Jogo vencido:", fields.name.stringValue);
 
       for (const token of userTokens) {
