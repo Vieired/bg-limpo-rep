@@ -32,10 +32,11 @@ export const Container = styled.button<Props>`
                 }
 
                 &:disabled {
-                    background-color: #C4DD07;
+                    /* background-color: #c4dd078a; */
+                    background-color: #bdbdbd;
                     color: #1E2400;
                     border-color: #434E02;
-                    opacity: 0.4;
+                    opacity: 0.8;
                     /* background: #abc10661;
                     color: #1e240080;
                     border-color: #434e021c; */
