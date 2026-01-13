@@ -89,7 +89,8 @@ async function getAllGames() {
 async function getCleaningFrequency() {
   const token = await getAccessToken();
 
-  const res = await fetch(`${URL}/${COLLECTION_CLEANING_FREQUENCY}/Ca2WfDMPMGv1b5Q8TU36`, {
+  // const res = await fetch(`${URL}/${COLLECTION_CLEANING_FREQUENCY}/Ca2WfDMPMGv1b5Q8TU36`, {
+  const res = await fetch(`${URL}/${COLLECTION_CLEANING_FREQUENCY}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -190,9 +191,9 @@ async function sendPush(userToken, title, body, photoUrl) {
   // }
   // console.log("getCleaningFrequency: ", cleaningFrequency);
 
-  fetchSettings().then((response) => {
-    console.log("cleanup-check.cjs fetchSettings response: ", response)
-  });
+  // fetchSettings().then((response) => {
+  //   console.log("cleanup-check.cjs fetchSettings response: ", response)
+  // });
 
   const games = await getAllGames();
   console.log(`📦 Total de jogos válidos encontrados: ${games.length}`);
