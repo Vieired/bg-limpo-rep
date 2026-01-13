@@ -207,7 +207,7 @@ async function sendPush(userToken, title, body, photoUrl) {
     const cleanDate = parseCleaningDate(fields.cleaning_date.stringValue);
     if (!cleanDate) continue;
 
-    if (isExpired(cleanDate, frequencyMonths) && isActive === true) {
+    if (isExpired(cleanDate, cleaningFrequency) && isActive === true) {
       console.log("⚠ Jogo vencido:", fields.name.stringValue);
 
       for (const token of userTokens) {
