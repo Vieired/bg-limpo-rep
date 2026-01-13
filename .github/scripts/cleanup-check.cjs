@@ -89,7 +89,7 @@ async function getAllGames() {
 async function getCleaningFrequency() {
   const token = await getAccessToken();
 
-  const res = await fetch(`${URL}/${COLLECTION_CLEANING_FREQUENCY}`, {
+  const res = await fetch(`${URL}/${COLLECTION_CLEANING_FREQUENCY}/Ca2WfDMPMGv1b5Q8TU36`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
