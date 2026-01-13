@@ -16,6 +16,7 @@ const serviceAccount = {
 // const SERVER_KEY = process.env.FIREBASE_SERVER_KEY;
 const COLLECTION_GAMES = "jogos";
 const COLLECTION_TOKENS = "fcm_tokens";
+const COLLECTION_CLEANING_FREQUENCY = "configuracoes";
 
 const URL = `https://firestore.googleapis.com/v1/projects/${serviceAccount.project_id}/databases/(default)/documents`;
 
@@ -30,7 +31,7 @@ function parseCleaningDate(dateStr) {
   return new Date(dateStr);
 }
 
-function isExpired(cleanDate) {
+function isExpired(cleanDate/*, frequencyMonths*/) {
   if (!cleanDate) return false;
 
   // fetchSettings().then((response) => {
@@ -38,7 +39,7 @@ function isExpired(cleanDate) {
   // });
 
   const limit = new Date(cleanDate);
-  limit.setMonth(limit.getMonth() + 5);
+  limit.setMonth(limit.getMonth() + 5/*frequencyMonths*/);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -67,6 +68,28 @@ async function getAllGames() {
   const token = await getAccessToken();
 
   const res = await fetch(`${URL}/${COLLECTION_GAMES}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const text = await res.text();
+  let json;
+  try {
+    json = JSON.parse(text);
+  } catch (err) {
+    console.error("❌ Erro ao parsear resposta Firestore:", text);
+    return [];
+  }
+
+  if (!json.documents) return [];
+  return json.documents.filter(doc => doc.fields); // só documentos válidos
+}
+
+async function getCleaningFrequency() {
+  const token = await getAccessToken();
+
+  const res = await fetch(`${URL}/${COLLECTION_CLEANING_FREQUENCY}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -159,6 +182,18 @@ async function sendPush(userToken, title, body, photoUrl) {
 // -------------------- EXECUÇÃO --------------------
 
 (async () => {
+  const data = getCleaningFrequency();
+  const cleaningFrequency = Number(data?.fields?.cleaning_frequency?.integerValue ?? 0);
+  if (!cleaningFrequency) {
+    throw new Error("cleaning_frequency inválido ou não configurado");
+  }
+  console.log("data: ", data);
+  console.log("getCleaningFrequency: ", cleaningFrequency);
+
+  fetchSettings().then((response) => {
+    console.log("cleanup-check.cjs fetchSettings response: ", response)
+  });
+
   const games = await getAllGames();
   console.log(`📦 Total de jogos válidos encontrados: ${games.length}`);
 
@@ -180,7 +215,7 @@ async function sendPush(userToken, title, body, photoUrl) {
     const cleanDate = parseCleaningDate(fields.cleaning_date.stringValue);
     if (!cleanDate) continue;
 
-    if (isExpired(cleanDate) && isActive === true) {
+    if (isExpired(cleanDate/*, frequencyMonths*/) && isActive === true) {
       console.log("⚠ Jogo vencido:", fields.name.stringValue);
 
       for (const token of userTokens) {
