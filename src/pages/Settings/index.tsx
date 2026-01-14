@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaArrowLeft as LeftIcon, FaCheck } from 'react-icons/fa';
 import { useFormik } from "formik";
+import Skeleton from "react-loading-skeleton";
 import { settingsService } from "../../shared/services/settingsService";
 import Button from "../../components/Inputs/Button";
 import InputNumber from "../../components/Inputs/InputNumber";
@@ -16,7 +17,7 @@ const Settings: React.FC = () => {
     const navigate = useNavigate();
 
     const [ cleaningFrequency, setCleaningFrequency ] = useState<number>(0);
-    const [ loading, setLoading ] = useState<boolean>(true);
+    const [ isLoading, setIsLoading ] = useState<boolean>(true);
 
     const handleSubmit = (data: { limitInDays: number }) => {
 
@@ -52,7 +53,7 @@ const Settings: React.FC = () => {
         settingsService.fetchSettings()
             .then((cleaningFrequency: number) => {
                 setCleaningFrequency(cleaningFrequency);
-                setLoading(false);
+                setIsLoading(false);
             })
     }, []);
 
@@ -71,14 +72,22 @@ const Settings: React.FC = () => {
                 <h2>Configurações</h2>
                 <small>v.2.0</small>
                 <form onSubmit={formik.handleSubmit}>
-                    <InputNumber
-                        name="limitInDays"
-                        label="Frequência de Limpeza (dias)"
-                        placeholder="Exemplo: 150"
-                        value={formik.values.limitInDays}
-                        onChange={formik.handleChange}
-                        disabled={loading}
-                    />
+                    {isLoading ? (
+                        <Skeleton
+                            height={20+46+15}
+                            baseColor="#00000017"
+                            highlightColor="#00000047"
+                        />
+                    ) : (
+                        <InputNumber
+                            name="limitInDays"
+                            label="Frequência de Limpeza (dias)"
+                            placeholder="Exemplo: 150"
+                            value={formik.values.limitInDays}
+                            onChange={formik.handleChange}
+                            disabled={isLoading}
+                        />
+                    )}
                     <Buttons>
                         <Button
                             btntheme="primary"

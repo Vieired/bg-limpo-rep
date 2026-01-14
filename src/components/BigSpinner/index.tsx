@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import loader from '@assets/loader3.gif';
+import loader from '../../assets/loader3.gif';
 
 const Spinner = styled.div`
     width: 100%;
