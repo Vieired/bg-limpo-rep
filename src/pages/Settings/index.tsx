@@ -18,9 +18,9 @@ const Settings: React.FC = () => {
     const [ cleaningFrequency, setCleaningFrequency ] = useState<number>(0);
     const [ loading, setLoading ] = useState<boolean>(true);
 
-    const handleSubmit = (data: { limitInMonths: number }) => {
+    const handleSubmit = (data: { limitInDays: number }) => {
 
-        settingsService.updateSettings({cleaning_frequency: data.limitInMonths})
+        settingsService.updateSettings({cleaning_frequency: data.limitInDays})
             .then(() => {
                 toast.success("Frequência de limpezas alterada com sucesso.", {
                     toastId: "notification-message",
@@ -44,7 +44,7 @@ const Settings: React.FC = () => {
         onSubmit: handleSubmit,
         enableReinitialize: true,
         initialValues: {
-            limitInMonths: cleaningFrequency
+            limitInDays: cleaningFrequency
         },
     });
 
@@ -72,10 +72,10 @@ const Settings: React.FC = () => {
                 <small>v.2.0</small>
                 <form onSubmit={formik.handleSubmit}>
                     <InputNumber
-                        name="limitInMonths"
-                        label="Frequência de Limpeza (meses)"
-                        placeholder="Exemplo: 6"
-                        value={formik.values.limitInMonths}
+                        name="limitInDays"
+                        label="Frequência de Limpeza (dias)"
+                        placeholder="Exemplo: 150"
+                        value={formik.values.limitInDays}
                         onChange={formik.handleChange}
                         disabled={loading}
                     />

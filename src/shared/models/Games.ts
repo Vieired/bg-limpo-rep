@@ -13,7 +13,7 @@ export interface Game { // TODO: refatorar para deixar todas as props nullable, 
 export interface InitialStateGames {
     games: Game[];
     status: string;
-    limitInMonths: number | null;
+    limitInDays: number | null;
     today: string;
     showOnlyActiveGamesFilter: boolean;
 }

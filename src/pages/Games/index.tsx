@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 // import { toast } from "react-toastify";
 import { FaPlus, FaPen, FaPowerOff, FaCog } from "react-icons/fa";
@@ -34,6 +34,16 @@ const Games: React.FC = () => {
     const [ isCleaningFrequencyLoading, setIsCleaningFrequencyLoading ] = useState<boolean>(true);
     const [ showOnlyActiveGamesFilterToggle, setShowOnlyActiveGamesFilterToggle ] = useState<boolean>(true);
     const [ gamesLoading, setGamesLoading ] = useState<boolean>(true);
+
+    const daysInApproximatelyMonths = useMemo((): string => {
+        if (!cleaningFrequency) return "...";
+
+        if (cleaningFrequency <= 44) return "";
+
+        const daysInApproximatelyMonths = Math.max(cleaningFrequency/30).toFixed(1).toString();
+
+        return ` (aprox. ${daysInApproximatelyMonths} meses)`;
+    }, [cleaningFrequency]);
 
     const toggleModalAddOrEdit = useCallback(() => {
         setModalOpen(prevState => !prevState);
@@ -128,7 +138,7 @@ const Games: React.FC = () => {
                 <h2>BG Limpo 2.0</h2>
                 <small>
                     {!isCleaningFrequencyLoading ? (
-                        `Frequência de limpezas: ${cleaningFrequency} meses`
+                        `Frequência de limpezas: ${cleaningFrequency} dias${daysInApproximatelyMonths}`
                     ) : (
                         <Skeleton
                             height={8}
@@ -181,7 +191,7 @@ const Games: React.FC = () => {
                                         setGameEditing={setGameEditing}
                                         toggleModalCleaning={toggleModalCleaning}
                                         toggleModal={toggleModalAddOrEdit}
-                                        limitInMonths={cleaningFrequency}
+                                        limitInDays={cleaningFrequency}
                                     />
                                 ))}
                             </ul>

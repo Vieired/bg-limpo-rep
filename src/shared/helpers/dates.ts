@@ -33,7 +33,7 @@ export const getDiffMonths = (startDate: string, endDate: string): number => {
     return diferencaMeses;
 }
 
-export const getTimeSinceLastCleaning = (startDate: string, endDate: string) => {
+export const getTimeLabelSinceLastCleaning = (startDate: string, endDate: string): string => {
     const diffDays = getDiffDays(startDate, endDate);
     const diffMonths = getDiffMonths(startDate, endDate);
 

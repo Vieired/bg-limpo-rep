@@ -1,10 +1,10 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { MdCleaningServices } from "react-icons/md";
 import { FaPen } from "react-icons/fa";
 import {
-    getDateByMonthsIncrement,
-    getDiffMonths,
-    getTimeSinceLastCleaning
+    getDateByDaysIncrement,
+    getDiffDays,
+    getTimeLabelSinceLastCleaning
 } from "../../../shared/helpers/dates";
 import type { Game } from "../../../shared/models/Games";
 import { Container } from "./styles";
@@ -12,7 +12,7 @@ import { Container } from "./styles";
 interface ICard {
     game: Game;
     activeEdition: boolean;
-    limitInMonths: number;
+    limitInDays: number;
     setGameEditing: (game: Game) => void;
     toggleModalCleaning: () => void;
     toggleModal: () => void;
@@ -21,7 +21,7 @@ interface ICard {
 const Card: React.FC<ICard> = ({
     game,
     activeEdition,
-    limitInMonths,
+    limitInDays,
     setGameEditing,
     toggleModalCleaning,
     toggleModal,
@@ -30,16 +30,20 @@ const Card: React.FC<ICard> = ({
     const today: string = new Date().toISOString().split("T")[0];
 
     const isLimitExpired = (startDate: string): boolean => {
-        const diff = getDiffMonths(startDate, today);
-        return diff >= limitInMonths;
+        const diff = getDiffDays(startDate, today);
+        return diff >= limitInDays;
     }
 
-    const getCleaningExpirationPercentage = (startDate: string): number => {
-        const diff = getDiffMonths(startDate, today);
-        if (diff >= limitInMonths) return 100;
+    const getCleaningExpirationPercentage = useCallback((startDate: string): number => {
+        const diff = getDiffDays(startDate, today);
+        if (diff >= limitInDays) return 100;
         if (diff <= 0) return 0;
-        return (100 * diff) / limitInMonths;
-    }
+        return (100 * diff) / limitInDays;
+    }, [limitInDays, today])
+
+    const cleaningExpirationPercentage = useMemo(() => {
+        return getCleaningExpirationPercentage(game.cleaning_date)
+    }, [game.cleaning_date, getCleaningExpirationPercentage]);
 
     const randomImage = useMemo(() => {
         // const seed = new Date().getMilliseconds();
@@ -60,7 +64,7 @@ const Card: React.FC<ICard> = ({
     return (
         <Container
             // className={isLimitExpired(game.cleaning_date) ? "pending-maintenance" : ""}
-            percentage={getCleaningExpirationPercentage(game.cleaning_date)}
+            percentage={cleaningExpirationPercentage}
             $active={game?.isActive}
         >
             <span>
@@ -74,7 +78,7 @@ const Card: React.FC<ICard> = ({
                     {`${game?.name || "N/A"}${!game?.isActive ? " (Desativado)" : ""}`}
                 </h3>
                 <div>
-                    <p>{ getTimeSinceLastCleaning(game.cleaning_date, today) }</p>
+                    <p>{ getTimeLabelSinceLastCleaning(game.cleaning_date, today) }</p>
                 </div>
                 <div>
                     <small>
@@ -88,7 +92,7 @@ const Card: React.FC<ICard> = ({
                     </small>
                     {!isLimitExpired(game.cleaning_date) && (
                         <small>{`Próxima limpeza: ${
-                                new Date(getDateByMonthsIncrement(game.cleaning_date, limitInMonths)).toLocaleDateString(
+                                new Date(getDateByDaysIncrement(game.cleaning_date, limitInDays)).toLocaleDateString(
                                     'pt-BR',
                                     {timeZone:"UTC",dateStyle:'short'}
                                 )}`

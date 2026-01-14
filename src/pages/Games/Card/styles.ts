@@ -44,7 +44,7 @@ export const Container = styled.li<Prop>`
         A "zona de blend" define o quão suave é o degradê.
         Quanto maior, mais suave.
         */
-        const blend = 20;
+        const blend = 10;
 
         const start = Math.max(0, p - blend);
         const end = Math.min(100, p + blend);
