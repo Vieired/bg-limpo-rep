@@ -35,14 +35,13 @@ const Games: React.FC = () => {
     const [ showOnlyActiveGamesFilterToggle, setShowOnlyActiveGamesFilterToggle ] = useState<boolean>(true);
     const [ gamesLoading, setGamesLoading ] = useState<boolean>(true);
 
-    const daysInApproximatelyMonths = useMemo((): string => {
+    const approximatelyMonthsLabel = useMemo((): string => {
+
         if (!cleaningFrequency) return "...";
 
         if (cleaningFrequency <= 44) return "";
 
-        const daysInApproximatelyMonths = Math.max(cleaningFrequency/30).toFixed(1).toString();
-
-        return ` (aprox. ${daysInApproximatelyMonths} meses)`;
+        return ` (aprox. ${Number((cleaningFrequency/30).toFixed(1))} meses)`;
     }, [cleaningFrequency]);
 
     const toggleModalAddOrEdit = useCallback(() => {
@@ -138,7 +137,7 @@ const Games: React.FC = () => {
                 <h2>BG Limpo 2.0</h2>
                 <small>
                     {!isCleaningFrequencyLoading ? (
-                        `Frequência de limpezas: ${cleaningFrequency} dias${daysInApproximatelyMonths}`
+                        `Frequência de limpezas: ${cleaningFrequency} dias${approximatelyMonthsLabel}`
                     ) : (
                         <Skeleton
                             height={8}
