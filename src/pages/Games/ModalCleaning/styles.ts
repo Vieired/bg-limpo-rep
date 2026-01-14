@@ -118,3 +118,24 @@ export const CleaningMethods = styled.div`
     }
   }
 `;
+
+export const Spinner = styled.span`
+  display: flex;
+  min-width: 16px;
+  min-height: 16px;
+  background: url(${loader}) center no-repeat;
+  background-size: 22px;
+`;
+
+export const FlexSpinner = styled.span`
+  display: flex;
+  position: fixed;
+  align-self: center;
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
+  background: url(${loader}) #ffffff59 center no-repeat;
+  background-size: 82px;
+  user-select: none;
+  bottom: 90px;
+  top: 89px;
+`;

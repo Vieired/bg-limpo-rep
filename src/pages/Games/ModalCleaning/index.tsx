@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import ReactModal from "react-modal";
 import { useFormik } from "formik";
 import { RiCloseFill } from "react-icons/ri";
@@ -23,6 +23,8 @@ import {
   Buttons,
   ModalFooter,
   CleaningMethods,
+  Spinner,
+  FlexSpinner,
 } from "./styles";
 
 interface Props {
@@ -43,9 +45,9 @@ const ModalCleaning: React.FC<Props> = ({
 
   const element = document.createElement("div");
   // ReactModal.setAppElement('#root');
-  // const dispatch = useDispatch();
-
   const today = new Date().toISOString().split("T")[0];
+
+  const [ isLoading, setIsLoading ] = useState<boolean>(false);
 
   const methodOptions = useMemo(() => {
     return getTypeList().map((x) => {
@@ -63,36 +65,18 @@ const ModalCleaning: React.FC<Props> = ({
 
   const handleSubmit = (data: Game/*GameCleaning*/) => {
 
-    // if (data?.id) {
-    //   dispatch(updateCleaningDate({
-    //     id: data.id,
-    //     methods: data.methods,
-    //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //   }) as any)
-    //   .then(() => {
-    //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //     dispatch(fetchGames(showOnlyActiveGamesFilter) as any);
-    //     toggleModal()
-    //   });
-    // }
+    setIsLoading(true);
     
     if (!data?.id) return;
 
-    gameService.updateGame(data).then(() => {
-      toast.success("Limpeza do jogo atualizada com sucesso.", {
-          toastId: "notification-message",
-      });
-      done();
-    })
-    // gameService.updateCleaningDate({
-    //   ...data,
-    //   cleaning_methods: data.cleaning_methods,
-    // } as Game).then(() => {
-    //   toast.success("Jogo atualizado com sucesso.", {
-    //       toastId: "notification-message",
-    //   });
-    //   done();
-    // })
+    gameService.updateGame(data)
+      .then(() => {
+        toast.success("Limpeza do jogo atualizada com sucesso.", {
+            toastId: "notification-message",
+        });
+        done();
+      })
+      .finally(() => setIsLoading(false));
   };
 
   const formik = useFormik({
@@ -247,6 +231,7 @@ const ModalCleaning: React.FC<Props> = ({
                 </>
               )}
             </form>
+            {isLoading && <FlexSpinner/>}
           </ModalBody>
           <ModalFooter>
             <Buttons>
@@ -257,9 +242,13 @@ const ModalCleaning: React.FC<Props> = ({
                 type="submit"
                 btntheme="primary"
                 form="hookform"
-                // disabled={getLoadingState()}
+                disabled={isLoading}
               >
-                <span>Limpar</span><MdCleaningServices />
+                
+                {isLoading
+                  ? <><Spinner/><MdCleaningServices /></>
+                  : <><span>Limpar</span><MdCleaningServices /></>
+                }
               </Button>
             </Buttons>
           </ModalFooter>
