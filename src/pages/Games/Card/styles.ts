@@ -2,6 +2,7 @@ import styled, { css } from "styled-components";
 
 interface Prop {
     percentage?: number; // 0–100
+    $active?: boolean;
 }
 
 export const Container = styled.li<Prop>`
@@ -13,6 +14,14 @@ export const Container = styled.li<Prop>`
     background: #023F56;
     color: #F5F5F5;
     gap: 1rem;
+
+    ${props => {
+        if (props?.$active === false) {
+            return css`
+                opacity: 0.7;
+            `
+        }
+    }}
 
     ${props => {
         if (props?.percentage == null) {

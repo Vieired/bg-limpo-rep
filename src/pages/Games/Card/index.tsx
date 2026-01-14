@@ -61,6 +61,7 @@ const Card: React.FC<ICard> = ({
         <Container
             // className={isLimitExpired(game.cleaning_date) ? "pending-maintenance" : ""}
             percentage={getCleaningExpirationPercentage(game.cleaning_date)}
+            $active={game?.isActive}
         >
             <span>
                 <img
@@ -70,7 +71,7 @@ const Card: React.FC<ICard> = ({
             </span>
             <span>
                 <h3>
-                    {game?.name || "N/A"}
+                    {`${game?.name || "N/A"}${!game?.isActive ? " (Desativado)" : ""}`}
                 </h3>
                 <div>
                     <p>{ getTimeSinceLastCleaning(game.cleaning_date, today) }</p>
