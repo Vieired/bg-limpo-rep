@@ -7,6 +7,7 @@ import { onMessage } from 'firebase/messaging';
 import { messaging } from './firebase';
 import { requestNotificationPermission } from './pushNotifications';
 // import { onForegroundMessage, requestNotificationPermission } from './firebase';
+import reactSvg from './assets/react.svg';
 import GlobalStyle from "./styles/global";
 import './App.css'
 
@@ -37,6 +38,7 @@ function App() {
 
       new Notification(payload.notification?.title ?? "Notificação", {
         body: payload.notification?.body,
+        icon: reactSvg,
       });
     });
   }, []);
