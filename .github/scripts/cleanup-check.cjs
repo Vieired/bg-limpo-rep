@@ -31,15 +31,16 @@ function parseCleaningDate(dateStr) {
   return new Date(dateStr);
 }
 
-function isExpired(cleanDate, frequencyMonths) {
+function isExpired(cleanDate, frequencyDays) {
+
   if (!cleanDate) return false;
 
   const limit = new Date(cleanDate);
-  limit.setMonth(limit.getMonth() + frequencyMonths);
+  limit.setHours(0, 0, 0, 0);
+  limit.setDate(limit.getDate() + frequencyDays);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  limit.setHours(0, 0, 0, 0);
 
   return limit < today;
 }
