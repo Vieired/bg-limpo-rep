@@ -42,7 +42,7 @@ function isExpired(cleanDate, frequencyDays) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  return limit < today;
+  return limit <= today;
 }
 
 // -------------------- FIRESTORE --------------------
