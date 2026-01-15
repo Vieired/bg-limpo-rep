@@ -6,7 +6,7 @@ import { useFormik } from "formik";
 import Skeleton from "react-loading-skeleton";
 import { settingsService } from "../../shared/services/settingsService";
 import Button from "../../components/Inputs/Button";
-import InputNumber from "../../components/Inputs/InputNumber";
+import InputRange from "../../components/Inputs/InputRange";
 import { FirebaseError } from "firebase/app";
 import { Container, Content, Buttons } from "./styles";
 
@@ -79,13 +79,22 @@ const Settings: React.FC = () => {
                             highlightColor="#00000047"
                         />
                     ) : (
-                        <InputNumber
+                        // <InputNumber
+                        //     name="limitInDays"
+                        //     label="Frequência de Limpeza (dias)"
+                        //     placeholder="Exemplo: 150"
+                        //     value={formik.values.limitInDays}
+                        //     onChange={formik.handleChange}
+                        //     disabled={isLoading}
+                        // />
+                        <InputRange
                             name="limitInDays"
-                            label="Frequência de Limpeza (dias)"
-                            placeholder="Exemplo: 150"
+                            label="Frequência de Limpeza"
+                            min={0}
+                            max={180}
+                            step={1}
                             value={formik.values.limitInDays}
                             onChange={formik.handleChange}
-                            disabled={isLoading}
                         />
                     )}
                     <Buttons>
