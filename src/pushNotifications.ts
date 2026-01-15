@@ -31,9 +31,7 @@ export async function requestNotificationPermission() {
   console.log("📨 Token FCM:", token);
 
   // Salvar no Firestore
-  console.log("Chegou aqui 1");
   await saveTokenToFirestore(token);
-  console.log("Chegou aqui 2");
 
   return token;
 }
