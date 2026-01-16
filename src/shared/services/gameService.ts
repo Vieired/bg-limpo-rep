@@ -3,7 +3,7 @@ import { firebaseConfig } from "../firebase/config";
 import { toFirestoreValue } from "../helpers/firestoreToJS";
 import type { FirestoreDocument, FirestoreListResponseV2 } from "../models/domain/Firestore";
 import type { Game } from "../models/Games";
-import { clearTokens, httpFetch } from "./_httpClient";
+import { httpFetch } from "./_httpClient";
 
 const COLLECTION_ID = "jogos";
 const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents`;
@@ -27,7 +27,7 @@ export const gameService = {
 
   //   if (res.status === 401) {
   //     // token inválido no backend
-  //     clearTokens();
+  //     clearTokenFromStorage();
   //     window.location.href = "/";
   //     throw new Error("Token inválido — redirecionando");
   //   }
@@ -109,13 +109,6 @@ export const gameService = {
       body: JSON.stringify(queryBody),
     } as RequestInit);
 
-    if (res.status === 401) {
-      // token inválido no backend
-      clearTokens();
-      window.location.href = "/";
-      throw new Error("Token inválido — redirecionando");
-    }
-
     if (!res?.ok) {
       throw new Error(`Erro ao buscar jogos: ${res.statusText}`);
     }
@@ -147,12 +140,6 @@ export const gameService = {
       body: JSON.stringify(body),
     } as RequestInit);
 
-    if (response.status === 401) {
-      clearTokens();
-      window.location.href = "/";
-      throw new Error("Token inválido — redirecionando");
-    }
-
     if (!response.ok) {
       throw new Error(`Erro ao atualizar doc: ${response.statusText}`);
     }
@@ -174,12 +161,6 @@ export const gameService = {
       method: "POST",
       body: JSON.stringify(body),
     } as RequestInit);
-
-    if (response.status === 401) {
-      clearTokens();
-      window.location.href = "/";
-      throw new Error("Token inválido — redirecionando");
-    }
 
     if (!response.ok) {
       throw new Error(`Erro ao tentar criar doc: ${response.statusText}`);
@@ -219,12 +200,6 @@ export const gameService = {
   //       }
   //     })
   //   } as RequestInit);
-
-  //   if (response.status === 401) {
-  //     clearTokens();
-  //     window.location.href = "/";
-  //     throw new Error("Token inválido — redirecionando");
-  //   }
 
   //   if (!response.ok) {
   //     throw new Error(`Erro ao atualizar doc: ${response.statusText}`);

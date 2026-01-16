@@ -1,6 +1,31 @@
 import { firebaseConfig } from "../firebase/config";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import type { AuthTokens } from "../../contexts/authContext";
+
+const TOKEN_KEY = "auth_tokens";
+
+export function getAccessTokenFromStorage(): AuthTokens | null {
+  const data = localStorage.getItem(TOKEN_KEY);
+  return data ? JSON.parse(data) : null;
+};
+
+export const isAuthenticated = (): boolean => {
+  const tokens = getAccessTokenFromStorage();
+  return !!tokens && Date.now() < tokens.expiresAt;
+};
+
+export function setTokenToStorage(idToken: string, expiresInSeconds: number): void {
+  const expiresAt = Date.now() + expiresInSeconds * 1000;
+  localStorage.setItem(
+    TOKEN_KEY,
+    JSON.stringify({ idToken, expiresAt })
+  );
+};
+
+export function clearTokenFromStorage(): void {
+  localStorage.removeItem(TOKEN_KEY)
+};
 
 export const getStorageToken = () => {
   const currentUser = localStorage?.getItem("user") && typeof(localStorage.getItem("user")) === "string"

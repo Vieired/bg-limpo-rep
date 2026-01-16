@@ -2,16 +2,16 @@ import { Route, Routes } from "react-router-dom";
 import Login from "../pages/Login";
 import Games from "../pages/Games";
 import Settings from "../pages/Settings";
-import { isAuthenticated } from "../shared/services/_httpClient";
-import { useEffect, useState } from "react";
+import { useAuth } from "../contexts/authContext";
 
 const RoutesHandler: React.FC = () => {
 
-    const [loggedIn, setLoggedIn] = useState(false);
+    const { loggedIn } = useAuth();
+    // const [ isLogged, setIsLogged] = useState(false);
 
-    useEffect(() => {
-        setLoggedIn(isAuthenticated());
-    }, []);
+    // useEffect(() => {
+    //     setLoggedIn(isAuthenticated());
+    // }, []);
 
     {/* Rota pública */}
     if (!loggedIn) {

@@ -1,4 +1,4 @@
-import type { AuthTokens } from "../../contexts/authContext";
+import { clearTokenFromStorage, getAccessTokenFromStorage } from "../helpers/auth";
 
 type FetchOptions = RequestInit & {
   auth?: boolean;
@@ -15,7 +15,7 @@ export async function httpFetch(
     ...rest
   } = options;
 
-  const token = auth ? await getAccessToken() : null;
+  const token = auth ? getAccessTokenFromStorage() : null;
 
   const response = await fetch(url, {
     ...rest,
@@ -26,6 +26,13 @@ export async function httpFetch(
     },
   });
 
+  if (response.status === 401) {
+    clearTokenFromStorage();
+    window.location.href = "/";
+    // window.location.reload();
+    throw new Error("Token inválido — redirecionando");
+  }
+
   if (!response.ok) {
     const body = await response.text();
     throw new Error(`[HTTP ${response.status}] ${body}`);
@@ -33,27 +40,3 @@ export async function httpFetch(
 
   return response;
 }
-
-const TOKEN_KEY = "auth_tokens";
-
-export function getAccessToken(): AuthTokens | null {
-  const data = localStorage.getItem(TOKEN_KEY);
-  return data ? JSON.parse(data) : null;
-};
-
-export function setTokens(idToken: string, expiresInSeconds: number): void {
-  const expiresAt = Date.now() + expiresInSeconds * 1000;
-  localStorage.setItem(
-    TOKEN_KEY,
-    JSON.stringify({ idToken, expiresAt })
-  );
-};
-
-export function clearTokens(): void {
-  localStorage.removeItem(TOKEN_KEY)
-};
-
-export const isAuthenticated = (): boolean => {
-  const tokens = getAccessToken();
-  return !!tokens && Date.now() < tokens.expiresAt;
-};
