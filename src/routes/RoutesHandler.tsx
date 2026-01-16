@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import Login from "../pages/Login";
 import Games from "../pages/Games";
 import Settings from "../pages/Settings";
-import { isAuthenticated } from "../shared/services/authService";
+import { isAuthenticated } from "../shared/services/_httpClient";
 import { useEffect, useState } from "react";
 
 const RoutesHandler: React.FC = () => {

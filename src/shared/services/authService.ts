@@ -1,7 +1,7 @@
 import {
   // onAuthStateChanged,
   // signInWithEmailAndPassword,
-  signOut as logOut,
+  signOut as logout,
   // type Unsubscribe,
   // type User,
 //   type UserCredential,
@@ -24,39 +24,10 @@ import { auth } from "../helpers/auth";
 //   return onAuthStateChanged(auth, cb);
 // }
 
-export interface AuthTokens {
-  idToken: string;
-  expiresAt: number; // timestamp em ms
-}
-
-const TOKEN_KEY = "auth_tokens";
-
-export function getTokens(): AuthTokens | null {
-  const data = localStorage.getItem(TOKEN_KEY);
-  return data ? JSON.parse(data) : null;
-}
-
-export function setTokens(idToken: string, expiresInSeconds: number) {
-  const expiresAt = Date.now() + expiresInSeconds * 1000;
-  localStorage.setItem(
-    TOKEN_KEY,
-    JSON.stringify({ idToken, expiresAt })
-  );
-}
-
-export function clearTokens() {
-  localStorage.removeItem(TOKEN_KEY);
-}
-
-export function isAuthenticated(): boolean {
-  const tokens = getTokens();
-  return !!tokens && Date.now() < tokens.expiresAt;
-}
-
 // export const signIn = (email: string, password: string) => {
 //   ...
 // }
 
 export const signOut = (): Promise<void> => {
-  return logOut(auth);
+  return logout(auth);
 }

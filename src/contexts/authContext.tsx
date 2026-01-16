@@ -4,15 +4,12 @@ import {
     useContext,
     useState
 } from "react";
+import { toast } from "react-toastify";
 import {
-    clearTokens,
-    getTokens,
-    // isAuthenticated,
-    setTokens,
     signOut
 } from "../shared/services/authService";
 import { firebaseConfig } from "../shared/firebase/config";
-import { toast } from "react-toastify";
+import { clearTokens, getAccessToken, httpFetch, setTokens } from "../shared/services/_httpClient";
 
 interface IAuthContext {
     user: User | null;
@@ -24,11 +21,16 @@ interface IAuthContext {
 
 const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
+export interface AuthTokens {
+  idToken: string;
+  expiresAt: number; // timestamp em ms
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const [user, /*setUser*/] = useState<User | null>(null);
     const [loading, ] = useState(true);
-    const [loggedIn, setLoggedIn] = useState<boolean>(!!getTokens());
+    const [loggedIn, setLoggedIn] = useState<boolean>(!!getAccessToken());
 
     // const userCbk = useCallback((user: User | null) => {
     //     setUser(user);
@@ -75,11 +77,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const login = async (email: string, password: string) => {
 
         // Exemplo de login via Firebase REST
-        const res = await fetch(
+        const res = await httpFetch(
             `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${firebaseConfig.apiKey}`,
             {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password, returnSecureToken: true }),
             }
         );
@@ -106,7 +107,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     // useEffect(() => {
-    //     isAuthenticated();
+    //     setLoggedIn(isAuthenticated());
     // }, []);
 
     return (

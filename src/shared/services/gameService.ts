@@ -3,8 +3,7 @@ import { firebaseConfig } from "../firebase/config";
 import { toFirestoreValue } from "../helpers/firestoreToJS";
 import type { FirestoreDocument, FirestoreListResponseV2 } from "../models/domain/Firestore";
 import type { Game } from "../models/Games";
-import { clearTokens, getTokens } from "./authService";
-// import { checkIfAuthenticationIsRequired } from "../utils/auth";
+import { clearTokens, httpFetch } from "./_httpClient";
 
 const COLLECTION_ID = "jogos";
 const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents`;
@@ -42,11 +41,6 @@ export const gameService = {
   // },
 
   fetchGames: async (showOnlyActiveGamesFilter?: boolean): Promise<FirestoreDocument[]> => {
-
-    // checkIfAuthenticationIsRequired();
-
-    // const token = getAccessToken();
-    const token = getTokens()?.idToken;
 
     const queryBody = showOnlyActiveGamesFilter
       ?
@@ -110,9 +104,8 @@ export const gameService = {
       };
 
     // TODO: fazer funcionar a ordenação dos jogos pelo cleaning_date e name
-    const res = await fetch(`${url}:runQuery`, {
+    const res = await httpFetch(`${url}:runQuery`, {
       method: 'POST',
-      headers: { "Authorization": `Bearer ${token}` },
       body: JSON.stringify(queryBody),
     } as RequestInit);
 
@@ -138,9 +131,6 @@ export const gameService = {
 
   updateGame: async (data: Game) => {
 
-    // checkIfAuthenticationIsRequired();
-    const token = getTokens()?.idToken;
-
     // const docId = data?.id?.split(`projects/${firebaseConfig.projectId}/databases/(default)/documents/${COLLECTION_ID}/`)[1];
 
     const fields = Object.fromEntries(
@@ -152,12 +142,8 @@ export const gameService = {
       // updateMask: { fieldPaths: Object.keys(data) },
     };
 
-    const response = await fetch(`${url}/${COLLECTION_ID}/${data?.id}`, {
+    const response = await httpFetch(`${url}/${COLLECTION_ID}/${data?.id}`, {
       method: "PATCH",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
       body: JSON.stringify(body),
     } as RequestInit);
 
@@ -176,9 +162,6 @@ export const gameService = {
 
   createGame: async (payload: Game) => {
 
-    // checkIfAuthenticationIsRequired();
-    const token = getTokens()?.idToken;
-
     const fields = Object.fromEntries(
       Object.entries(payload).map(([k, v]) => [k, toFirestoreValue(v)])
     );
@@ -187,12 +170,8 @@ export const gameService = {
       fields,
     };
 
-    const response = await fetch(`${url}/${COLLECTION_ID}`, {
+    const response = await httpFetch(`${url}/${COLLECTION_ID}`, {
       method: "POST",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
       body: JSON.stringify(body),
     } as RequestInit);
 

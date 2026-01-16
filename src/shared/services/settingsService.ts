@@ -3,7 +3,7 @@ import { firebaseConfig } from "../firebase/config";
 import { firestoreDocToJson, toFirestoreValue } from "../helpers/firestoreToJS";
 import type { ISettings } from "../models/Games";
 import type { FirestoreDocument } from "../models/domain/Firestore";
-import { getTokens } from "./authService";
+import { httpFetch } from "./_httpClient";
 
 // const app = initializeApp(firebaseConfig);
 // const db = getFirestore(app);
@@ -16,14 +16,7 @@ export const settingsService = {
 
   fetchSettings: async (): Promise<number> => {
 
-    const token = getTokens()?.idToken;
-    // const token = getAccessToken();
-
-    const res = await fetch(`${url}/${docId}`, {
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    } as RequestInit);
+    const res = await httpFetch(`${url}/${docId}`);
     
     if (!res?.ok) {
       throw new Error(`Erro ao buscar configurações: ${res.statusText}`);
@@ -36,48 +29,7 @@ export const settingsService = {
     return resp;
   },
 
-  // fetchSettings: async (): Promise<number> => {
-
-  //   const token = getAccessToken();
-
-  //   const res = await fetch(url, {
-  //     headers: {
-  //       "Authorization": `Bearer ${token}`
-  //     }
-  //   } as RequestInit);
-    
-  //   if (!res?.ok) {
-  //     throw new Error(`Erro ao buscar configurações: ${res.statusText}`);
-  //   }
-
-  //   const data: FirestoreListResponse = await res.json();
-
-  //   const mappingArrayFirestoreDocumentToArrayGame = (games: FirestoreDocument[]): { cleaning_frequency: number } => {
-  //       const ret: { cleaning_frequency: number }[] = games.map((game) => firestoreDocToJson(game) as { cleaning_frequency: number }); // casting do tipo Record<string, any> para Game
-  //       return ret[0];
-  //   }
-
-  //   const resp = mappingArrayFirestoreDocumentToArrayGame(data.documents).cleaning_frequency;
-
-  //   return resp;
-  // },
-
-  // fetchSettings: async (): Promise<number> => {
-
-  //   // checkIfAuthenticationIsRequired();
-
-  //   const settingsRef = collection(db, "configuracoes");
-  //   const q = query(settingsRef);
-
-  //   const querySnapshot = await fetchDocs(q);
-  //   const { cleaning_frequency } = querySnapshot.docs[0].data();
-
-  //   return cleaning_frequency
-  // },
-
   updateSettings: async (data: ISettings): Promise<void> => {
-
-    const token = getTokens()?.idToken;
 
     const fields = Object.fromEntries(
       Object.entries(data).map(([k, v]) => [k, toFirestoreValue(v)])
@@ -88,12 +40,8 @@ export const settingsService = {
       // updateMask: { fieldPaths: Object.keys(data) },
     };
 
-    const response = await fetch(`${url}/${docId}`, {
+    const response = await httpFetch(`${url}/${docId}`, {
       method: "PATCH",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
       body: JSON.stringify(body),
     } as RequestInit);
 
