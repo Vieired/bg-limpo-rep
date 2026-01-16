@@ -1,16 +1,7 @@
-// import { initializeApp } from "firebase/app";
-// import {
-//   getFirestore,
-//   collection,
-//   query,
-//   // doc,
-//   // updateDoc,
-// } from "firebase/firestore";
+
 import { firebaseConfig } from "../firebase/config";
-// import { fetchDocs } from "./firestoreService";
-import type { ISettings } from "../models/Games";
-// import { getAccessToken } from "../helpers/auth";
 import { firestoreDocToJson, toFirestoreValue } from "../helpers/firestoreToJS";
+import type { ISettings } from "../models/Games";
 import type { FirestoreDocument } from "../models/domain/Firestore";
 import { getTokens } from "./authService";
 
@@ -19,7 +10,7 @@ import { getTokens } from "./authService";
 const firebaseCollection = "configuracoes";
 const docId = "Ca2WfDMPMGv1b5Q8TU36";
 
-const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/${firebaseCollection}/${docId}`;
+const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/${firebaseCollection}`;
 
 export const settingsService = {
 
@@ -28,7 +19,7 @@ export const settingsService = {
     const token = getTokens()?.idToken;
     // const token = getAccessToken();
 
-    const res = await fetch(url, {
+    const res = await fetch(`${url}/${docId}`, {
       headers: {
         "Authorization": `Bearer ${token}`
       }
@@ -97,7 +88,7 @@ export const settingsService = {
       // updateMask: { fieldPaths: Object.keys(data) },
     };
 
-    const response = await fetch(url, {
+    const response = await fetch(`${url}/${docId}`, {
       method: "PATCH",
       headers: {
         "Authorization": `Bearer ${token}`,
