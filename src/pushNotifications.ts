@@ -19,8 +19,13 @@ export async function requestNotificationPermission() {
 
   console.log("🔔 Permissão concedida! Gerando token FCM...");
 
+  const registration = await navigator.serviceWorker.getRegistration();
+
+  if (!registration) throw new Error("Service Worker não encontrado!");
+
   const token = await getToken(messaging, {
     vapidKey: VAPID_PUBLIC_KEY,
+    serviceWorkerRegistration: registration,
   });
 
   if (!token) {
