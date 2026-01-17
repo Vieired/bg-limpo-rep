@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import { AuthProvider } from './contexts/authContext';
 import { onMessage } from 'firebase/messaging';
 import { messaging } from './firebase';
-import { requestNotificationPermission } from './pushNotifications';
+// import { requestNotificationPermission } from './pushNotifications';
 // import { onForegroundMessage, requestNotificationPermission } from './firebase';
 import reactSvg from './assets/react.svg';
 import GlobalStyle from "./styles/global";
@@ -13,24 +13,28 @@ import './App.css'
 
 function App() {
 
-  useEffect(() => {
-    async function initFCM() {
-      if ("serviceWorker" in navigator) {
-        console.log("🛠 Registrando service worker...");
+  // const { loggedIn } = useAuth();
 
-        const registration = await navigator.serviceWorker.register(
-          "/firebase-messaging-sw.js"
-        );
+  // useEffect(() => {
+  //   if (!loggedIn) return;
+    
+  //   async function initFCM() {
+  //     if ("serviceWorker" in navigator) {
+  //       console.log("🛠 Registrando service worker...");
 
-        console.log("✅ Service Worker registrado:", registration);
+  //       const registration = await navigator.serviceWorker.register(
+  //         "/firebase-messaging-sw.js"
+  //       );
 
-        // Agora sim — só depois do SW — pedir permissão e gerar token
-        await requestNotificationPermission();
-      }
-    }
+  //       console.log("✅ Service Worker registrado:", registration);
 
-    initFCM();
-  }, []);
+  //       // Agora sim — só depois do SW — pedir permissão e gerar token
+  //       await requestNotificationPermission();
+  //     }
+  //   }
+
+  //   initFCM();
+  // }, [loggedIn]);
 
   useEffect(() => {
     onMessage(messaging, (payload) => {
