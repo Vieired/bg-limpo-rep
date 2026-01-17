@@ -155,13 +155,28 @@ async function sendPush(userToken, title, body, photoUrl) {
       body: JSON.stringify({
         message: {
           token: userToken,
-          notification: {
-            title,
-            body,
-            image: photoUrl, // 👈 IMAGEM GRANDE
+          webpush: {
+            notification: {
+              title,
+              body,
+              image: photoUrl,
+            },
+          },
+          data: {
+            click_action: "/",
           },
         },
       }),
+      // body: JSON.stringify({
+      //   message: {
+      //     token: userToken,
+      //     notification: {
+      //       title,
+      //       body,
+      //       image: photoUrl, // 👈 IMAGEM GRANDE
+      //     },
+      //   },
+      // }),
     });
 
     const text = await res.text();
