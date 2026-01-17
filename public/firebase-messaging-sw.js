@@ -1,3 +1,20 @@
+self.addEventListener("push", (event) => {
+  if (!event.data) return;
+
+  const data = event.data.json();
+
+  const title = data.data?.title ?? "Notificação";
+  const options = {
+    body: data.data?.body,
+    image: data.data?.image || undefined,
+    icon: "/icon-192.png",
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
+});
+
 // importScripts("https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js");
 // importScripts("https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js");
 
