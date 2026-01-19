@@ -1,4 +1,3 @@
-// src/pushNotifications.ts
 import { messaging } from "./firebase";
 import { getToken } from "firebase/messaging";
 import { getFirestore, collection, doc, setDoc, serverTimestamp } from "firebase/firestore";

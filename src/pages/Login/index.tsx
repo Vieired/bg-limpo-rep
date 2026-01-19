@@ -1,9 +1,5 @@
-// import { useCallback } from "react";
-// import { toast } from "react-toastify";
 import { useFormik } from "formik";
 import type { Auth } from "../../shared/models/domain/Auth";
-// import { authService } from "../../shared/services/authService";
-// import type { FirebaseError } from "firebase/app";
 import Input from "../../components/Inputs/Input";
 import Button from "../../components/Inputs/Button";
 import { Container } from "./styles";

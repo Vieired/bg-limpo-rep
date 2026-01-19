@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
-// import { toast } from "react-toastify";
 import { FaPlus, FaPen, FaPowerOff, FaCog } from "react-icons/fa";
-// import { useDispatch, useSelector } from "react-redux";
 import Skeleton from "react-loading-skeleton";
 import Switch from "react-switch";
 import type { Game } from "../../shared/models/Games.ts";
@@ -11,14 +9,12 @@ import ModalAddOrEdit from "./ModalAddOrEdit/index";
 import ModalCleaning from "./ModalCleaning/index.tsx";
 import Card from "./Card/index.tsx";
 import type { FirestoreDocument } from "../../shared/models/domain/Firestore.ts";
-// import { setUser } from "../../store/usersSlice.ts";
-// import { firebaseConfig } from "../../shared/firebase/config";
 import { firestoreDocToJson } from "../../shared/helpers/firestoreToJS.ts";
 import { gameService } from "../../shared/services/gameService.ts";
 import { settingsService } from "../../shared/services/settingsService.ts";
-import { Container, Content, Loading, Toolbar } from "./styles";
 import { useAuth } from "../../contexts/authContext.tsx";
 import { firebaseConfig } from "../../shared/firebase/config.ts";
+import { Container, Content, Loading, Toolbar } from "./styles";
 
 const Games: React.FC = () => {
 

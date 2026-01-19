@@ -6,6 +6,9 @@ import Settings from "../pages/Settings";
 import { useAuth } from "../contexts/authContext";
 // import { requestNotificationPermission } from "../firebase";
 import { requestNotificationPermission } from "../pushNotifications";
+import { onMessage } from "firebase/messaging";
+import { messaging } from "../firebase";
+import reactSvg from '../assets/react.svg';
 
 const RoutesHandler: React.FC = () => {
 
@@ -34,6 +37,15 @@ const RoutesHandler: React.FC = () => {
     useEffect(() => {
         if (!loggedIn) return;
         initFCM();
+
+        onMessage(messaging, (payload) => {
+            console.log("📩 Notificação recebida em foreground:", payload);
+
+            new Notification(payload.notification?.title ?? "Notificação", {
+                body: payload.notification?.body,
+                icon: reactSvg,
+            });
+        });
     }, [loggedIn]);
 
     {/* Rota pública */}
