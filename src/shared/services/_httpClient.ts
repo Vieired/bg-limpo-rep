@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { clearTokenFromStorage, getAccessTokenFromStorage } from "../helpers/auth";
 
 type FetchOptions = RequestInit & {
@@ -35,6 +36,7 @@ export async function httpFetch(
 
   if (!response.ok) {
     const body = await response.text();
+    toast.error(`[HTTP ${response.status}] ${JSON.parse(body).error.message}`);
     throw new Error(`[HTTP ${response.status}] ${body}`);
   }
 
