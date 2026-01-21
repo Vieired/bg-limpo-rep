@@ -8,6 +8,9 @@ import {
 } from "firebase/auth";
 import { auth } from "../helpers/auth";
 import type { FirebaseTokenValidationResult } from "../models/domain/Auth";
+import { firebaseConfig } from "../firebase/config";
+
+const ENDPOINT = "https://identitytoolkit.googleapis.com/v1/accounts";
 
 export const authService = {
   // signIn: async (email: string, password: string): Promise<UserCredential> => {
