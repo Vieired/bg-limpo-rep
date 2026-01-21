@@ -1,12 +1,14 @@
 import { useCallback, useMemo } from "react";
 import { MdCleaningServices } from "react-icons/md";
-import { FaPen } from "react-icons/fa";
+import { FaPen, FaTrash } from "react-icons/fa";
+import { toast } from "react-toastify";
 import {
     getDateByDaysIncrement,
     getDiffDays,
     getTimeLabelSinceLastCleaning
 } from "../../../shared/helpers/dates";
 import type { Game } from "../../../shared/models/Games";
+import { gameService } from "../../../shared/services/gameService";
 import { Container } from "./styles";
 
 interface ICard {
@@ -16,6 +18,7 @@ interface ICard {
     setGameEditing: (game: Game) => void;
     toggleModalCleaning: () => void;
     toggleModal: () => void;
+    refreshList: () => void;
 }
 
 const Card: React.FC<ICard> = ({
@@ -25,6 +28,7 @@ const Card: React.FC<ICard> = ({
     setGameEditing,
     toggleModalCleaning,
     toggleModal,
+    refreshList,
 }) => {
     
     const today: string = new Date().toISOString().split("T")[0];
@@ -59,6 +63,20 @@ const Card: React.FC<ICard> = ({
     const handleEditClick = (game: Game) => {
         setGameEditing(game);
         toggleModal();
+    }
+
+    const handleEraseClick = (game: Game) => {
+        if (!game || !game.id) return;
+
+        const isAgree = window.confirm("Tem certeza que deseja remover o jogo XPTO?");
+
+        if (!isAgree) return;
+        
+        gameService.deleteGame(game.id)
+            .then(() => {
+                toast.success("Jogo removido com sucesso?");
+                refreshList()
+            });
     }
 
     return (
@@ -112,13 +130,22 @@ const Card: React.FC<ICard> = ({
                     </button>
                 )}
                 {activeEdition && (
-                    <button
-                        type="button"
-                        onClick={() => handleEditClick(game)}
-                        title="Atualizar Limpeza"
-                    >
-                        <FaPen />
-                    </button>
+                    <>
+                        <button
+                            type="button"
+                            onClick={() => handleEditClick(game)}
+                            title="Editar Jogo"
+                        >
+                            <FaPen />
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => handleEraseClick(game)}
+                            title="Remover Jogo"
+                        >
+                            <FaTrash />
+                        </button>
+                    </>
                 )}
             </span>
         </Container>

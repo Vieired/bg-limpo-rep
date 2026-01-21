@@ -124,8 +124,6 @@ export const gameService = {
 
   updateGame: async (data: Game) => {
 
-    // const docId = data?.id?.split(`projects/${firebaseConfig.projectId}/databases/(default)/documents/${COLLECTION_ID}/`)[1];
-
     const fields = Object.fromEntries(
       Object.entries(data).map(([k, v]) => [k, toFirestoreValue(v)])
     );
@@ -160,6 +158,19 @@ export const gameService = {
     const response = await httpFetch(`${url}/${COLLECTION_ID}`, {
       method: "POST",
       body: JSON.stringify(body),
+    } as RequestInit);
+
+    if (!response.ok) {
+      throw new Error(`Erro ao tentar criar doc: ${response.statusText}`);
+    }
+
+    return await response.json();
+  },
+
+  deleteGame: async (id: string): Promise<void> => {
+
+    const response = await httpFetch(`${url}/${COLLECTION_ID}/${id}`, {
+      method: "DELETE",
     } as RequestInit);
 
     if (!response.ok) {

@@ -183,10 +183,11 @@ const Games: React.FC = () => {
                                         key={game.name}
                                         game={game}
                                         activeEdition={activeEdition}
+                                        limitInDays={cleaningFrequency}
                                         setGameEditing={setGameEditing}
                                         toggleModalCleaning={toggleModalCleaning}
                                         toggleModal={toggleModalAddOrEdit}
-                                        limitInDays={cleaningFrequency}
+                                        refreshList={refreshGames}
                                     />
                                 ))}
                             </ul>
