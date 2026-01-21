@@ -27,10 +27,10 @@ export async function httpFetch(
     },
   });
 
-  if (response.status === 401) {
+  if (response.status === 401 || response.status === 403) {
     clearTokenFromStorage();
-    window.location.href = "/";
-    // window.location.reload();
+    window.location.reload();
+    // window.location.href = "/";
     throw new Error("Token inválido — redirecionando");
   }
 
