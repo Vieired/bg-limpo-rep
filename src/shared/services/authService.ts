@@ -1,7 +1,7 @@
 import {
   // onAuthStateChanged,
   // signInWithEmailAndPassword,
-  signOut as logout,
+  signOut as signOutFirebase,
   // type Unsubscribe,
   // type User,
 //   type UserCredential,
@@ -9,31 +9,22 @@ import {
 import { auth } from "../helpers/auth";
 import type { FirebaseTokenValidationResult } from "../models/domain/Auth";
 
-// export const authService = {
-//   signIn: async (email: string, password: string): Promise<UserCredential> => {
-//     return signInWithEmailAndPassword(auth, email, password);
-//   },
-//   listenAuthState: (cb: (user: User | null) => void): Unsubscribe => {
-//     return onAuthStateChanged(auth, cb);
-//   },
-//   signOut: (): Promise<void> => {
-//     return signOut(auth);
-//   }
-// };
+export const authService = {
+  // signIn: async (email: string, password: string): Promise<UserCredential> => {
+  //   return signInWithEmailAndPassword(auth, email, password);
+  // },
+  // listenAuthState: (cb: (user: User | null) => void): Unsubscribe => {
+  //   return onAuthStateChanged(auth, cb);
+  // },
+  signOut,
+  validateFirebaseIdToken,
+};
 
-// export function listenAuthState(cb: (user: User | null) => void): Unsubscribe {
-//   return onAuthStateChanged(auth, cb);
-// }
-
-// export const signIn = (email: string, password: string) => {
-//   ...
-// }
-
-export const signOut = (): Promise<void> => {
-  return logout(auth);
+function signOut(): Promise<void> {
+  return signOutFirebase(auth);
 }
 
-export async function validateFirebaseIdToken(
+async function validateFirebaseIdToken(
   idToken: string
 ): Promise<FirebaseTokenValidationResult> {
   try {

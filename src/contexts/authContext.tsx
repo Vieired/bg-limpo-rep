@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { type User } from "firebase/auth";
 import { firebaseConfig } from "../shared/firebase/config";
 import { httpFetch } from "../shared/services/_httpClient";
-import { signOut, validateFirebaseIdToken} from "../shared/services/authService";
+import { authService } from "../shared/services/authService";
 import type { FirebaseTokenValidationResult } from "../shared/models/domain/Auth";
 import {
     clearTokenFromStorage,
@@ -103,9 +103,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     const logout = async (): Promise<void> => {
-        signOut();
-        clearTokenFromStorage();
-        window.location.reload();
+        authService.signOut().then(() => {
+            clearTokenFromStorage();
+            window.location.reload();
+        });
     };
 
     const logoutIfExpiredToken = (): void => { // TODO: método para usar caso o app ainda não esteja redirecionando quando o token expirar
@@ -115,21 +116,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (!accessToken || !accessToken.idToken) {
             clearTokenFromStorage();
             setLoggedIn(false);
+            // window.location.reload();
+            // logout();
             return;
         }
 
-        validateFirebaseIdToken(accessToken.idToken)
+        authService.validateFirebaseIdToken(accessToken.idToken)
             .then((response: FirebaseTokenValidationResult) => {
                 if (!response?.valid) {
                     clearTokenFromStorage();
                     setLoggedIn(false);
+                    // window.location.reload();
+                    // logout();
                 }
             })
     }
 
     // useEffect(() => {
-    //     setLoggedIn(isAuthenticated());
-    // }, []);
+    //     // setLoggedIn(isAuthenticated());
+    //     console.log("Checando validade do token...");
+    //     logoutIfExpiredToken();
+    // }, [logoutIfExpiredToken]);
 
     return (
         <AuthContext.Provider value={{
