@@ -9,6 +9,7 @@ import {
 import { auth } from "../helpers/auth";
 import type { FirebaseTokenValidationResult } from "../models/domain/Auth";
 import { firebaseConfig } from "../firebase/config";
+import { httpFetch } from "./_httpClient";
 
 const ENDPOINT = "https://identitytoolkit.googleapis.com/v1/accounts";
 
@@ -19,9 +20,24 @@ export const authService = {
   // listenAuthState: (cb: (user: User | null) => void): Unsubscribe => {
   //   return onAuthStateChanged(auth, cb);
   // },
+  signIn,
   signOut,
   validateFirebaseIdToken,
 };
+
+async function signIn(email: string, password: string): Promise<Response> {
+
+  // login via Firebase REST
+  const response = await httpFetch(
+    `${ENDPOINT}:signInWithPassword?key=${firebaseConfig.apiKey}`,
+    {
+      method: "POST",
+      body: JSON.stringify({ email, password, returnSecureToken: true }),
+    }
+  )
+
+  return response;
+}
 
 function signOut(): Promise<void> {
   return signOutFirebase(auth);
@@ -32,7 +48,7 @@ async function validateFirebaseIdToken(
 ): Promise<FirebaseTokenValidationResult> {
   try {
     const response = await fetch( // TODO: refatorar para usar o encapsulamento httpFetch()
-      `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${firebaseConfig.apiKey}`,
+      `${ENDPOINT}:lookup?key=${firebaseConfig.apiKey}`, // TODO: usar process.env.FIREBASE_API_KEY com a lib .env
       {
         method: "POST",
         headers: {

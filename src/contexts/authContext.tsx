@@ -6,8 +6,6 @@ import {
 } from "react";
 import { toast } from "react-toastify";
 import { type User } from "firebase/auth";
-import { firebaseConfig } from "../shared/firebase/config";
-import { httpFetch } from "../shared/services/_httpClient";
 import { authService } from "../shared/services/authService";
 import type { FirebaseTokenValidationResult } from "../shared/models/domain/Auth";
 import {
@@ -79,28 +77,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const login = async (email: string, password: string) => {
 
-        // Exemplo de login via Firebase REST
-        const res = await httpFetch(
-            `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${firebaseConfig.apiKey}`,
-            {
-                method: "POST",
-                body: JSON.stringify({ email, password, returnSecureToken: true }),
-            }
-        );
+        authService.signIn(email, password)
+            .then(async (response) => {
+                if (response?.status === 200) {
+                    const data = await response.json();
+                    if (!response.ok) {
+                        toast.error("Erro: " + data.error?.message);
+                        return;
+                    }
 
-        const data = await res.json();
-        if (!res.ok) {
-            toast.error("Erro: " + data.error?.message);
-            return;
-        }
+                    // Salva token
+                    setTokenToStorage(data.idToken, Number(data.expiresIn));
 
-        // Salva token
-        setTokenToStorage(data.idToken, Number(data.expiresIn));
+                    // Atualiza estado do app
+                    setLoggedIn(true);
+                }
+            });
 
-        // Atualiza estado do app
-        setLoggedIn(true);
-        // onLoginSuccess();
-        window.location.reload();
+        // const data = await res.json();
+        // if (!res.ok) {
+        //     toast.error("Erro: " + data.error?.message);
+        //     return;
+        // }
+
+        // // Salva token
+        // setTokenToStorage(data.idToken, Number(data.expiresIn));
+
+        // // Atualiza estado do app
+        // setLoggedIn(true);
+        // // onLoginSuccess();
+        // window.location.reload();
     }
 
     const logout = async (): Promise<void> => {
