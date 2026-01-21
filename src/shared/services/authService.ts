@@ -28,8 +28,8 @@ async function validateFirebaseIdToken(
   idToken: string
 ): Promise<FirebaseTokenValidationResult> {
   try {
-    const response = await fetch(
-      `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${process.env.FIREBASE_API_KEY}`,
+    const response = await fetch( // TODO: refatorar para usar o encapsulamento httpFetch()
+      `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${firebaseConfig.apiKey}`,
       {
         method: "POST",
         headers: {

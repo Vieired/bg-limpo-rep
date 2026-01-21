@@ -1,5 +1,7 @@
 import { toast } from "react-toastify";
 import { clearTokenFromStorage, getAccessTokenFromStorage } from "../helpers/auth";
+import { authService } from "./authService";
+import type { FirebaseTokenValidationResult } from "../models/domain/Auth";
 
 type FetchOptions = RequestInit & {
   auth?: boolean;
@@ -17,6 +19,16 @@ export async function httpFetch(
   } = options;
 
   const token = auth ? getAccessTokenFromStorage() : null;
+
+  if (token) {
+    authService.validateFirebaseIdToken(token.idToken)
+      .then((response: FirebaseTokenValidationResult) => {
+        if (!response?.valid) {
+          clearTokenFromStorage();
+          window.location.reload();
+        }
+      })
+  }
 
   const response = await fetch(url, {
     ...rest,

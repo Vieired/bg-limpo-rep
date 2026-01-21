@@ -1,5 +1,6 @@
 import {
     createContext,
+    useCallback,
     useContext,
     useState
 } from "react";
@@ -109,11 +110,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
     };
 
-    const logoutIfExpiredToken = (): void => { // TODO: método para usar caso o app ainda não esteja redirecionando quando o token expirar
+    const logoutIfExpiredToken = useCallback((): void => { // TODO: método para usar caso o app ainda não esteja redirecionando quando o token expirar
 
         const accessToken = getAccessTokenFromStorage();
 
-        if (!accessToken || !accessToken.idToken) {
+        if (!accessToken || !accessToken?.idToken) {
             clearTokenFromStorage();
             setLoggedIn(false);
             // window.location.reload();
@@ -126,11 +127,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 if (!response?.valid) {
                     clearTokenFromStorage();
                     setLoggedIn(false);
-                    // window.location.reload();
-                    // logout();
                 }
             })
-    }
+    }, []);
 
     // useEffect(() => {
     //     // setLoggedIn(isAuthenticated());
