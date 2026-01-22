@@ -7,7 +7,7 @@ export const Container = styled.div`
 
     > div {
 
-        &:first-child {
+        &:first-of-type {
 
             > h1 {
                 font-size: 3rem;
@@ -15,7 +15,7 @@ export const Container = styled.div`
             }
         }
 
-        &:last-child {
+        &:last-of-type {
             display: flex;
             flex-direction: row;
             gap: 2rem;

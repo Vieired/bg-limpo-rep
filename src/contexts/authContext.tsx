@@ -18,7 +18,7 @@ import {
 interface IAuthContext {
     user: User | null;
     loggedIn: boolean;
-    loading: boolean;
+    // isLoading: boolean;
     login: (email: string, senha: string) => Promise<void>;
     logout: () => Promise<void>;
     logoutIfExpiredToken: () => void;
@@ -34,7 +34,7 @@ export interface AuthTokens {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const [user, /*setUser*/] = useState<User | null>(null);
-    const [loading, ] = useState(true);
+    // const [isLoading, setIsLoading] = useState(true);
     const [loggedIn, setLoggedIn] = useState<boolean>(isAuthenticated());
 
     // useEffect(() => {
@@ -147,7 +147,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         <AuthContext.Provider value={{
             user,
             loggedIn,
-            loading,
+            // isLoading,
             login,
             logout,
             logoutIfExpiredToken,
