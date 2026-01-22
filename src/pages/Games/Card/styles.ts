@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import loader from '../../../assets/loader3.gif';
 
 interface Prop {
     percentage?: number; // 0–100
@@ -14,6 +15,7 @@ export const Container = styled.li<Prop>`
     background: #023F56;
     color: #F5F5F5;
     gap: 1rem;
+    position: relative;
 
     ${props => {
         if (props?.$active === false) {
@@ -147,4 +149,15 @@ export const Container = styled.li<Prop>`
             }
         }
     }
+`;
+
+export const CardSpinner = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: url(${loader}) #ffffff59 center no-repeat;
+  background-size: 82px;
+  backdrop-filter: blur(1px);
+  user-select: none;
+  border-radius: 16px;
 `;

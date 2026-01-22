@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { MdCleaningServices } from "react-icons/md";
 import { FaPen, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -9,7 +9,7 @@ import {
 } from "../../../shared/helpers/dates";
 import type { Game } from "../../../shared/models/Games";
 import { gameService } from "../../../shared/services/gameService";
-import { Container } from "./styles";
+import { Container, CardSpinner } from "./styles";
 
 interface ICard {
     game: Game;
@@ -32,6 +32,7 @@ const Card: React.FC<ICard> = ({
 }) => {
     
     const today: string = new Date().toISOString().split("T")[0];
+    const [ isEraseLoading, setIsEraseLoading ] = useState<boolean>(false);
 
     const isLimitExpired = (startDate: string): boolean => {
         const diff = getDiffDays(startDate, today);
@@ -68,15 +69,18 @@ const Card: React.FC<ICard> = ({
     const handleEraseClick = (game: Game) => {
         if (!game || !game.id) return;
 
-        const isAgree = window.confirm("Tem certeza que deseja remover o jogo XPTO?");
+        const isAgree = window.confirm(`Tem certeza que deseja remover o jogo ${game.name}?`);
 
         if (!isAgree) return;
         
+        setIsEraseLoading(true);
+
         gameService.deleteGame(game.id)
             .then(() => {
-                toast.success("Jogo removido com sucesso?");
+                toast.success(`Jogo ${game.name} removido com sucesso?`);
                 refreshList()
-            });
+            })
+            .finally(() => setIsEraseLoading(false));
     }
 
     return (
@@ -148,6 +152,7 @@ const Card: React.FC<ICard> = ({
                     </>
                 )}
             </span>
+            { isEraseLoading && <CardSpinner /> }
         </Container>
     )
 }
