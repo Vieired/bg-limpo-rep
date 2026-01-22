@@ -80,7 +80,7 @@ const Card: React.FC<ICard> = ({
                 toast.success(`Jogo ${game.name} removido com sucesso?`);
                 refreshList()
             })
-            .finally(() => setIsEraseLoading(false));
+            .finally(() => setTimeout(() => setIsEraseLoading(false), 4000));
     }
 
     return (
