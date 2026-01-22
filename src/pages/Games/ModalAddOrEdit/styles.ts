@@ -62,10 +62,7 @@ export const ModalBody = styled.div`
   /* outline: solid #BDBDBD 1px; */
   gap: 16px;
   height: inherit;
-
-  /* p {
-    color: #000;
-  } */
+  position: relative;
 
   > form {
     display: flex;

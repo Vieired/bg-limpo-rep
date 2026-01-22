@@ -13,6 +13,7 @@ import type { Game } from "../../../shared/models/Games";
 //   selectGames,
 // } from "../../../store/gamesSlice";
 import { gameService } from "../../../shared/services/gameService";
+import { BigSpinner } from "../../../components/BigSpinner";
 import Button from "../../../components/Inputs/Button";
 import Input from "../../../components/Inputs/Input";
 import InputDate from "../../../components/Inputs/InputDate";
@@ -54,17 +55,24 @@ const ModalAddOrEdit: React.FC<Props> = ({
   };
 
   const handleSubmit = (data: Game) => {
+
+    const completeSubmissionWithDelay = (): void => {
+      setTimeout(() => formik.setSubmitting(false), 4000)
+    }
+
     // gameEditing ? edit(data, done) : save(data, done);
     if(gameEditing?.id) {
       gameService.updateGame({
         ...data,
         cleaning_method: Number(data.cleaning_method),
-      } as Game).then(() => {
+      } as Game)
+      .then(() => {
         toast.success("Jogo atualizado com sucesso.", {
             toastId: "notification-message",
         });
         done();
       })
+      .finally(() => completeSubmissionWithDelay);
     }
     else {
       gameService.createGame({
@@ -72,6 +80,7 @@ const ModalAddOrEdit: React.FC<Props> = ({
         cleaning_method: Number(data.cleaning_method),
       })
       .then(() => done())
+      .finally(() => completeSubmissionWithDelay)
     }
   };
 
@@ -225,17 +234,22 @@ const ModalAddOrEdit: React.FC<Props> = ({
                 errorText={getErrorMessage("photoUrl")}
               />
             </form>
+            { formik.isSubmitting && <BigSpinner/> }
           </ModalBody>
           <ModalFooter>
             <Buttons>
-              <Button onClick={toggleModal} btntheme="secondary">
+              <Button
+                onClick={toggleModal}
+                btntheme="secondary"
+                disabled={formik.isSubmitting}
+              >
                 Cancelar
               </Button>
               <Button
                 type="submit"
                 btntheme="primary"
                 form="hookform"
-                // disabled={getLoadingState()}
+                disabled={formik.isSubmitting}
               >
                 Salvar
               </Button>
