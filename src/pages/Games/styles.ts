@@ -81,6 +81,7 @@ export const Toolbar = styled.div`
         /* box-shadow: 0 0 13px 4px #000000d4; */
         padding: 8px;
         border-radius: 1rem;
+        z-index: 1;
 
         > button {
             border-radius: 50%;
