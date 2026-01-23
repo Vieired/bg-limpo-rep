@@ -4,6 +4,7 @@ import loader from '../../assets/loader3.gif';
 const Spinner = styled.i`
     position: absolute;
     top: 0;
+    left: 0;
     width: 100%;
     width: -webkit-fill-available;
     height: 100vh;
