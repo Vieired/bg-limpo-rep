@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import ReactModal from "react-modal";
 import { useFormik } from "formik";
 import { RiCloseFill } from "react-icons/ri";
@@ -9,12 +9,13 @@ import type { MultiValue } from "react-select";
 import type { Game } from "../../../shared/models/Games";
 import type { Dropdown } from "../../../shared/models/domain/Select";
 import { gameService } from "../../../shared/services/gameService";
+import { getTypeDescription, getTypeList } from "../../../shared/enums/CleaningMethodEnum";
 import Button from "../../../components/Inputs/Button";
 import InputDate from "../../../components/Inputs/InputDate";
-import schema from "./schema";
+import { BigSpinner } from "../../../components/BigSpinner";
 import InputSelectMulti from "../../../components/Inputs/InputSelectMulti";
-import { getTypeDescription, getTypeList } from "../../../shared/enums/CleaningMethodEnum";
 import Input from "../../../components/Inputs/Input";
+import schema from "./schema";
 import {
   Container,
   ModalContent,
@@ -23,8 +24,6 @@ import {
   Buttons,
   ModalFooter,
   CleaningMethods,
-  Spinner,
-  FlexSpinner,
 } from "./styles";
 
 interface Props {
@@ -47,8 +46,6 @@ const ModalCleaning: React.FC<Props> = ({
   // ReactModal.setAppElement('#root');
   const today = new Date().toISOString().split("T")[0];
 
-  const [ isLoading, setIsLoading ] = useState<boolean>(false);
-
   const methodOptions = useMemo(() => {
     return getTypeList().map((x) => {
       return {
@@ -64,10 +61,11 @@ const ModalCleaning: React.FC<Props> = ({
   };
 
   const handleSubmit = (data: Game/*GameCleaning*/) => {
-
-    setIsLoading(true);
     
-    if (!data?.id) return;
+    if (!data?.id) {
+      formik.setSubmitting(false);
+      return;
+    };
 
     gameService.updateGame(data)
       .then(() => {
@@ -76,7 +74,7 @@ const ModalCleaning: React.FC<Props> = ({
         });
         done();
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => setTimeout(() => formik.setSubmitting(false), 4000));
   };
 
   const formik = useFormik({
@@ -140,7 +138,6 @@ const ModalCleaning: React.FC<Props> = ({
             <form
               id="hookform"
               onSubmit={formik.handleSubmit}
-              // className={getLoadingState() ? "loading" : ""}
             >
               <Input
                 name="name"
@@ -163,10 +160,9 @@ const ModalCleaning: React.FC<Props> = ({
                 id="cleaning_methods"
                 label="Métodos de Limpeza *"
                 placeholder="Ex. Aplicação de Sílica, Sanol, Banho de Sol"
-                onChange={(e: MultiValue<Dropdown>) => {
-                  console.log(e.map(x => Number(x.id)));
-                  formik.setFieldValue('cleaning_methods', e.map(x => Number(x.id)));
-                }}
+                onChange={(e: MultiValue<Dropdown>) => 
+                  formik.setFieldValue('cleaning_methods', e.map(x => Number(x.id)))
+                }
                 selecteds={
                   formik?.values?.cleaning_methods?.map(x => {
                     return {
@@ -219,7 +215,7 @@ const ModalCleaning: React.FC<Props> = ({
                       <h3>Últimos Métodos de Limpeza Usados:</h3>
                       <ul>
                         {gameEditing?.cleaning_methods?.map((cleaning_method) => {
-                        return <li key={cleaning_method}>{getTypeDescription(cleaning_method)}</li>
+                          return <li key={cleaning_method}>{getTypeDescription(cleaning_method)}</li>
                         })}
                       </ul>
                     </CleaningMethods>
@@ -231,24 +227,24 @@ const ModalCleaning: React.FC<Props> = ({
                 </>
               )}
             </form>
-            {isLoading && <FlexSpinner/>}
+            {formik.isSubmitting && <BigSpinner/>}
           </ModalBody>
           <ModalFooter>
             <Buttons>
-              <Button onClick={toggleModal} btntheme="secondary">
+              <Button
+                onClick={toggleModal}
+                btntheme="secondary"
+                disabled={formik.isSubmitting}
+              >
                 Cancelar
               </Button>
               <Button
                 type="submit"
                 btntheme="primary"
                 form="hookform"
-                disabled={isLoading}
+                disabled={formik.isSubmitting}
               >
-                
-                {isLoading
-                  ? <><Spinner/><MdCleaningServices /></>
-                  : <><span>Limpar</span><MdCleaningServices /></>
-                }
+                <span>Limpar</span><MdCleaningServices />
               </Button>
             </Buttons>
           </ModalFooter>
