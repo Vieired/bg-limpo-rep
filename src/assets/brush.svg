@@ -1,0 +1,67 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 200 120"
+  width="200"
+  height="120"
+>
+  <style>
+    .brocha {
+      animation: floatSweep 1.6s ease-in-out infinite;
+      transform-origin: 40px 60px;
+    }
+
+    @keyframes floatSweep {
+      0%   { transform: translateX(0) rotate(-4deg); }
+      50%  { transform: translateX(120px) rotate(4deg); }
+      100% { transform: translateX(0) rotate(-4deg); }
+    }
+  </style>
+
+  <!-- brocha flutuando -->
+  <g class="brocha">
+
+    <!-- cabo curto -->
+    <rect
+      x="38"
+      y="28"
+      width="10"
+      height="26"
+      rx="5"
+      fill="#2B2B2B"
+    />
+
+    <!-- virola -->
+    <rect
+      x="22"
+      y="52"
+      width="42"
+      height="10"
+      rx="1"
+      fill="#6A6A6A"
+    />
+
+    <!-- bloco de cerdas (fechado) -->
+    <rect
+      x="18"
+      y="62"
+      width="50"
+      height="36"
+      rx="2"
+      fill="#E47125"
+    />
+
+    <!-- textura sutil das cerdas -->
+    <g fill="#2B2B2B" opacity="0.15">
+      <rect x="22" y="64" width="2" height="32"/>
+      <rect x="26" y="64" width="2" height="32"/>
+      <rect x="30" y="64" width="2" height="32"/>
+      <rect x="34" y="64" width="2" height="32"/>
+      <rect x="38" y="64" width="2" height="32"/>
+      <rect x="42" y="64" width="2" height="32"/>
+      <rect x="46" y="64" width="2" height="32"/>
+      <rect x="50" y="64" width="2" height="32"/>
+      <rect x="54" y="64" width="2" height="32"/>
+    </g>
+
+  </g>
+</svg>

@@ -12,7 +12,7 @@ import { gameService } from "../../../shared/services/gameService";
 import { getTypeDescription, getTypeList } from "../../../shared/enums/CleaningMethodEnum";
 import Button from "../../../components/Inputs/Button";
 import InputDate from "../../../components/Inputs/InputDate";
-import { BigSpinner } from "../../../components/BigSpinner";
+import { BrushSpinner } from "./BrushSpinner";
 import InputSelectMulti from "../../../components/Inputs/InputSelectMulti";
 import Input from "../../../components/Inputs/Input";
 import schema from "./schema";
@@ -227,7 +227,7 @@ const ModalCleaning: React.FC<Props> = ({
                 </>
               )}
             </form>
-            {formik.isSubmitting && <BigSpinner/>}
+            { formik.isSubmitting && <BrushSpinner/> }
           </ModalBody>
           <ModalFooter>
             <Buttons>
