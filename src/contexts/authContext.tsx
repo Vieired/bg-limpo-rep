@@ -1,16 +1,16 @@
 import {
     createContext,
-    useCallback,
+    // useCallback,
     useContext,
     useState
 } from "react";
 import { toast } from "react-toastify";
 import { type User } from "firebase/auth";
 import { authService } from "../shared/services/authService";
-import type { FirebaseTokenValidationResult } from "../shared/models/domain/Auth";
+// import type { FirebaseTokenValidationResult } from "../shared/models/domain/Auth";
 import {
     clearTokenFromStorage,
-    getAccessTokenFromStorage,
+    // getAccessTokenFromStorage,
     isAuthenticated,
     setTokenToStorage
 } from "../shared/helpers/auth";
@@ -21,7 +21,7 @@ interface IAuthContext {
     // isLoading: boolean;
     login: (email: string, senha: string) => Promise<void>;
     logout: () => Promise<void>;
-    logoutIfExpiredToken: () => void;
+    // logoutIfExpiredToken: () => void;
 }
 
 const AuthContext = createContext<IAuthContext>({} as IAuthContext);
@@ -116,26 +116,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
     };
 
-    const logoutIfExpiredToken = useCallback((): void => { // TODO: método para usar caso o app ainda não esteja redirecionando quando o token expirar
+    // const logoutIfExpiredToken = useCallback((): void => { // TODO: método para usar caso o app ainda não esteja redirecionando quando o token expirar
 
-        const accessToken = getAccessTokenFromStorage();
+    //     const accessToken = getAccessTokenFromStorage();
 
-        if (!accessToken || !accessToken?.idToken) {
-            clearTokenFromStorage();
-            setLoggedIn(false);
-            // window.location.reload();
-            // logout();
-            return;
-        }
+    //     if (!accessToken || !accessToken?.idToken) {
+    //         clearTokenFromStorage();
+    //         setLoggedIn(false);
+    //         // window.location.reload();
+    //         // logout();
+    //         return;
+    //     }
 
-        authService.validateFirebaseIdToken(accessToken.idToken)
-            .then((response: FirebaseTokenValidationResult) => {
-                if (!response?.valid) {
-                    clearTokenFromStorage();
-                    setLoggedIn(false);
-                }
-            })
-    }, []);
+    //     authService.validateFirebaseIdToken(accessToken.idToken)
+    //         .then((response: FirebaseTokenValidationResult) => {
+    //             if (!response?.valid) {
+    //                 clearTokenFromStorage();
+    //                 setLoggedIn(false);
+    //             }
+    //         })
+    // }, []);
 
     // useEffect(() => {
     //     // setLoggedIn(isAuthenticated());
@@ -150,7 +150,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             // isLoading,
             login,
             logout,
-            logoutIfExpiredToken,
+            // logoutIfExpiredToken,
         }}>
             {children}
         </AuthContext.Provider>
