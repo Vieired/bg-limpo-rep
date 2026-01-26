@@ -40,9 +40,10 @@ export async function httpFetch(
   });
 
   if (response.status === 401 || response.status === 403) {
-    clearTokenFromStorage();
-    window.location.reload();
-    // window.location.href = "/";
+    // authService.signOut()
+    // clearTokenFromStorage();
+    // window.location.reload();
+    window.location.href = "/";
     throw new Error("Token inválido — redirecionando");
   }
 
