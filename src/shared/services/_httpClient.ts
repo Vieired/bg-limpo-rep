@@ -25,7 +25,8 @@ export async function httpFetch(
       .then((response: FirebaseTokenValidationResult) => {
         if (!response?.valid) {
           clearTokenFromStorage();
-          window.location.reload();
+          window.location.href = "/";
+          // window.location.reload();
         }
       })
   }
