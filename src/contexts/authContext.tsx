@@ -77,6 +77,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const login = async (email: string, password: string) => {
 
+        setLoggedIn(false);
+
         authService.signIn(email, password)
             .then(async (response) => {
                 if (response?.status === 200) {
