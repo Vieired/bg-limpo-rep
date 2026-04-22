@@ -6,15 +6,15 @@ import { MdCleaningServices } from "react-icons/md";
 import { toast } from "react-toastify";
 import Skeleton from "react-loading-skeleton";
 import type { MultiValue } from "react-select";
-import type { Game } from "../../../shared/models/Games";
-import type { Dropdown } from "../../../shared/models/domain/Select";
-import { gameService } from "../../../shared/services/gameService";
-import { getTypeDescription, getTypeList } from "../../../shared/enums/CleaningMethodEnum";
-import Button from "../../../components/Inputs/Button";
-import InputDate from "../../../components/Inputs/InputDate";
+import type { Game } from "@/shared/models/Games";
+import type { Dropdown } from "@/shared/models/domain/Select";
+import { gameService } from "@/shared/services/gameService";
+import { getTypeDescription, getTypeList } from "@/shared/enums/CleaningMethodEnum";
+import Button from "@/components/Inputs/Button";
+import InputDate from "@/components/Inputs/InputDate";
 import { BrushSpinner } from "./BrushSpinner";
-import InputSelectMulti from "../../../components/Inputs/InputSelectMulti";
-import Input from "../../../components/Inputs/Input";
+import InputSelectMulti from "@/components/Inputs/InputSelectMulti";
+import Input from "@/components/Inputs/Input";
 import schema from "./schema";
 import {
   Container,

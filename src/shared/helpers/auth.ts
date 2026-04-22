@@ -1,7 +1,7 @@
 import { firebaseConfig } from "../firebase/config";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import type { AuthTokens } from "../../contexts/authContext";
+import type { AuthTokens } from "@/contexts/authContext";
 
 const TOKEN_KEY = "auth_tokens";
 

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import brush from '../../../../assets/brush.svg';
+import brush from '@/assets/brush.svg';
 
 const Spinner = styled.i`
     position: absolute;

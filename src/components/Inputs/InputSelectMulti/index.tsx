@@ -12,8 +12,8 @@ import { FaCaretDown } from 'react-icons/fa';
 //   SelectMultiStyles,
 //   SelectMultiStylesWithoutGreen,
 // } from '@assets/styles/ReactSelectStyles';
-import type { Dropdown } from '../../../shared/models/domain/Select';
-import { SelectStyles } from '../../../styles/SelectStyles';
+import type { Dropdown } from '@/shared/models/domain/Select';
+import { SelectStyles } from '@/styles/SelectStyles';
 import { Container } from './styles';
 
 

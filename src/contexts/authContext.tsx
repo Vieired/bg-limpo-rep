@@ -6,14 +6,14 @@ import {
 } from "react";
 import { toast } from "react-toastify";
 import { type User } from "firebase/auth";
-import { authService } from "../shared/services/authService";
-// import type { FirebaseTokenValidationResult } from "../shared/models/domain/Auth";
+import { authService } from "@/shared/services/authService";
+// import type { FirebaseTokenValidationResult } from "@/shared/models/domain/Auth";
 import {
     clearTokenFromStorage,
     // getAccessTokenFromStorage,
     isAuthenticated,
     setTokenToStorage
-} from "../shared/helpers/auth";
+} from "@/shared/helpers/auth";
 
 interface IAuthContext {
     user: User | null;

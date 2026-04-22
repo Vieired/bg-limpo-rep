@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import Login from "../pages/Login";
-import Games from "../pages/Games";
-import Settings from "../pages/Settings";
-import { useAuth } from "../contexts/authContext";
-// import { requestNotificationPermission } from "../firebase";
-import { requestNotificationPermission } from "../pushNotifications";
+import Login from "@/pages/Login";
+import Games from "@/pages/Games";
+import Settings from "@/pages/Settings";
+import { useAuth } from "@/contexts/authContext";
+// import { requestNotificationPermission } from "@/firebase";
+import { requestNotificationPermission } from "@/pushNotifications";
 import { onMessage } from "firebase/messaging";
-import { messaging } from "../firebase";
-import reactSvg from '../assets/react.svg';
+import { messaging } from "@/firebase";
+import reactSvg from '@/assets/react.svg';
 
 const RoutesHandler: React.FC = () => {
 

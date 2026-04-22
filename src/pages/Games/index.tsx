@@ -3,17 +3,17 @@ import { useNavigate } from "react-router";
 import { FaPlus, FaPen, FaPowerOff, FaCog } from "react-icons/fa";
 import Skeleton from "react-loading-skeleton";
 import Switch from "react-switch";
-import type { Game } from "../../shared/models/Games.ts";
-import Button from "../../components/Inputs/Button/index";
+import type { Game } from "@/shared/models/Games.ts";
+import Button from "@/components/Inputs/Button/index";
 import ModalAddOrEdit from "./ModalAddOrEdit/index";
 import ModalCleaning from "./ModalCleaning/index.tsx";
 import Card from "./Card/index.tsx";
-import type { FirestoreDocument } from "../../shared/models/domain/Firestore.ts";
-import { firestoreDocToJson } from "../../shared/helpers/firestoreToJS.ts";
-import { gameService } from "../../shared/services/gameService.ts";
-import { settingsService } from "../../shared/services/settingsService.ts";
-import { useAuth } from "../../contexts/authContext.tsx";
-import { firebaseConfig } from "../../shared/firebase/config.ts";
+import type { FirestoreDocument } from "@/shared/models/domain/Firestore.ts";
+import { firestoreDocToJson } from "@/shared/helpers/firestoreToJS.ts";
+import { gameService } from "@/shared/services/gameService.ts";
+import { settingsService } from "@/shared/services/settingsService.ts";
+import { useAuth } from "@/contexts/authContext.tsx";
+import { firebaseConfig } from "@/shared/firebase/config.ts";
 import { Container, Content, Loading, Toolbar } from "./styles";
 
 const Games: React.FC = () => {

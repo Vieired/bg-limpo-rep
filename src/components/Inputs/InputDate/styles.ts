@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import icon from '../../../assets/img/calendar.svg';
+import icon from '@/assets/img/calendar.svg';
 
 export const Container = styled.div`
     display: flex;

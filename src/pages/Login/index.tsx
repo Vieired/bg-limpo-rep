@@ -1,9 +1,9 @@
 import { useFormik } from "formik";
-import type { Auth } from "../../shared/models/domain/Auth";
-import { useAuth } from "../../contexts/authContext";
-import { BigSpinner } from "../../components/BigSpinner";
-import Input from "../../components/Inputs/Input";
-import Button from "../../components/Inputs/Button";
+import type { Auth } from "@/shared/models/domain/Auth";
+import { useAuth } from "@/contexts/authContext";
+import { BigSpinner } from "@/components/BigSpinner";
+import Input from "@/components/Inputs/Input";
+import Button from "@/components/Inputs/Button";
 import { Container } from "./styles";
 
 

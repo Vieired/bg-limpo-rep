@@ -6,9 +6,9 @@ import {
     getDateByDaysIncrement,
     getDiffDays,
     getTimeLabelSinceLastCleaning
-} from "../../../shared/helpers/dates";
-import type { Game } from "../../../shared/models/Games";
-import { gameService } from "../../../shared/services/gameService";
+} from "@/shared/helpers/dates";
+import type { Game } from "@/shared/models/Games";
+import { gameService } from "@/shared/services/gameService";
 import { Container, CardSpinner } from "./styles";
 
 interface ICard {

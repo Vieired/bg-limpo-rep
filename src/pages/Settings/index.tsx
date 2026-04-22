@@ -4,9 +4,9 @@ import { toast } from "react-toastify";
 import { FaArrowLeft as LeftIcon, FaCheck } from 'react-icons/fa';
 import { useFormik } from "formik";
 import Skeleton from "react-loading-skeleton";
-import { settingsService } from "../../shared/services/settingsService";
-import Button from "../../components/Inputs/Button";
-import InputRange from "../../components/Inputs/InputRange";
+import { settingsService } from "@/shared/services/settingsService";
+import Button from "@/components/Inputs/Button";
+import InputRange from "@/components/Inputs/InputRange";
 import { FirebaseError } from "firebase/app";
 import { Container, Content, Buttons } from "./styles";
 

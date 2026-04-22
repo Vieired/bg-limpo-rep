@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import loader from '../../../assets/loader3.gif';
+import loader from '@/assets/loader3.gif';
 
 interface Prop {
     percentage?: number; // 0–100

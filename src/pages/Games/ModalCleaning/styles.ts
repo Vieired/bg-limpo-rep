@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import loader from '../../../assets/loader3.gif';
+import loader from '@/assets/loader3.gif';
 
 export const Container = styled.div`
   height: 100%;

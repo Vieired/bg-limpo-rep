@@ -5,21 +5,21 @@ import Switch from "react-switch";
 import type { MultiValue } from "react-select";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
-import type { Game } from "../../../shared/models/Games";
+import type { Game } from "@/shared/models/Games";
 // import {
 //   createGame,
 //   updateGame,
 //   fetchGames,
 //   selectGames,
-// } from "../../../store/gamesSlice";
-import { gameService } from "../../../shared/services/gameService";
-import { BigSpinner } from "../../../components/BigSpinner";
-import Button from "../../../components/Inputs/Button";
-import Input from "../../../components/Inputs/Input";
-import InputDate from "../../../components/Inputs/InputDate";
-import InputSelectMulti from "../../../components/Inputs/InputSelectMulti";
-import { getTypeDescription, getTypeList } from "../../../shared/enums/CleaningMethodEnum";
-import type { Dropdown } from "../../../shared/models/domain/Select";
+// } from "@/store/gamesSlice";
+import { gameService } from "@/shared/services/gameService";
+import { BigSpinner } from "@/components/BigSpinner";
+import Button from "@/components/Inputs/Button";
+import Input from "@/components/Inputs/Input";
+import InputDate from "@/components/Inputs/InputDate";
+import InputSelectMulti from "@/components/Inputs/InputSelectMulti";
+import { getTypeDescription, getTypeList } from "@/shared/enums/CleaningMethodEnum";
+import type { Dropdown } from "@/shared/models/domain/Select";
 import schema from "./schema";
 import {
   Container,
