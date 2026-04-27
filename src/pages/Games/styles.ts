@@ -119,3 +119,36 @@ export const Loading = styled.div`
         gap: 1px;
     }
 `;
+
+interface TopScrollingControlProps {
+    isHidden?: boolean;
+}
+
+export const TopScrollingControl = styled.div<TopScrollingControlProps>`
+    position: fixed;
+    bottom: 80px;
+    align-self: self-end;
+    display: ${props => (props.isHidden ? 'none' : 'block')};
+
+    > button {
+        border-radius: 50%;
+        height: 48px;
+        width: 48px;
+        background: #ABC106;
+        padding: 0;
+
+        &.active {
+            background-color: var(--Catan-2-hex-dark5);
+            color: #FFF;
+        }
+
+        &:focus-visible {
+            outline: 6px auto #fff;
+            outline-offset: 4px;
+        }
+    }
+
+    @media (min-width: 768px) {
+        display: none;
+    }
+`;

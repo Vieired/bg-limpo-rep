@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
-import { FaPlus, FaPen, FaPowerOff, FaCog } from "react-icons/fa";
+import { FaPlus, FaPen, FaPowerOff, FaCog, FaArrowUp } from "react-icons/fa";
 import Skeleton from "react-loading-skeleton";
 import Switch from "react-switch";
 import type { Game } from "@/shared/models/Games.ts";
@@ -14,7 +14,7 @@ import { gameService } from "@/shared/services/gameService.ts";
 import { settingsService } from "@/shared/services/settingsService.ts";
 import { useAuth } from "@/contexts/authContext.tsx";
 import { firebaseConfig } from "@/shared/firebase/config.ts";
-import { Container, Content, Loading, Toolbar } from "./styles";
+import { Container, Content, Loading, Toolbar, TopScrollingControl } from "./styles";
 
 const Games: React.FC = () => {
 
@@ -30,6 +30,7 @@ const Games: React.FC = () => {
     const [ isCleaningFrequencyLoading, setIsCleaningFrequencyLoading ] = useState<boolean>(true);
     const [ showOnlyActiveGamesFilterToggle, setShowOnlyActiveGamesFilterToggle ] = useState<boolean>(true);
     const [ gamesLoading, setGamesLoading ] = useState<boolean>(true);
+    const [ verticalHeight, setVerticalHeight ] = useState<number>(0);
 
     const approximatelyMonthsLabel = useMemo((): string => {
 
@@ -76,6 +77,10 @@ const Games: React.FC = () => {
         toggleActiveEdition();
     }
 
+    const handleScrollTopClick = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     const clearGameEditing = () => {
         setGameEditing(null);
     }
@@ -109,6 +114,12 @@ const Games: React.FC = () => {
     useEffect(() => refreshGames(), [refreshGames]);
 
     useEffect(() => getSettings(), [getSettings]);
+
+    useEffect(() => {
+        document.addEventListener('scroll', () => {
+            setVerticalHeight(window.scrollY);
+        })
+    }, [verticalHeight]);
 
     return (
         <Container>
@@ -220,6 +231,15 @@ const Games: React.FC = () => {
                     clearGameEditing={clearGameEditing}
                     refreshList={refreshGames}
                 />
+
+                <TopScrollingControl isHidden={verticalHeight <= 700}>
+                    <Button
+                        btntheme="primary"
+                        onClick={handleScrollTopClick}
+                    >
+                        <FaArrowUp />
+                    </Button>
+                </TopScrollingControl>
             </Content>
         </Container>
     );
