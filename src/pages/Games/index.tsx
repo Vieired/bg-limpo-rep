@@ -232,7 +232,7 @@ const Games: React.FC = () => {
                     refreshList={refreshGames}
                 />
 
-                <TopScrollingControl isHidden={verticalHeight <= 700}>
+                <TopScrollingControl isHidden={verticalHeight <= 1198}>
                     <Button
                         btntheme="primary"
                         onClick={handleScrollTopClick}

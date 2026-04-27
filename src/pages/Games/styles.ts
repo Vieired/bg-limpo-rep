@@ -126,9 +126,11 @@ interface TopScrollingControlProps {
 
 export const TopScrollingControl = styled.div<TopScrollingControlProps>`
     position: fixed;
-    bottom: 80px;
+    bottom: 23px;
     align-self: self-end;
+    border-radius: 50%;
     display: ${props => (props.isHidden ? 'none' : 'block')};
+    box-shadow: 0px 0px 6px 4px #12121270;
 
     > button {
         border-radius: 50%;
