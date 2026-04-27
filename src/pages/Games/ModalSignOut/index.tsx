@@ -60,13 +60,13 @@ const ModalSignOut: React.FC<Props> = ({ modalOpen, toggleModal }) => {
                 btntheme="secondary"
                 autoFocus
               >
-                Não
+                Cancelar
               </Button>
               <Button
                 onClick={handleSignOutConfirmClick}
                 btntheme="primary"
               >
-                Sim
+                Sair
               </Button>
             </Buttons>
           </ModalFooter>
