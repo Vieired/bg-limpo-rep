@@ -8,6 +8,7 @@ export enum CleaningMethodEnum {
     Sunbathing = 7,
     BodoutSilicaApplication = 8,
     SecaPaxSilicaApplication = 9,
+    FilmeBoppQuimpackSilicaApplication = 10,
 }
 
 export const getTypeList = (): {id: CleaningMethodEnum, name: string}[] => {
@@ -26,13 +27,14 @@ export const getTypeDescription = (value: CleaningMethodEnum): string => {
     const data = {
         1: 'Virgem',
         2: 'Aplicação de Sílica',
-        3: 'Sílica Gel Azul GS Química & Cia (10g)',
+        3: 'Sílica Gel Regenerável Azul - GS Química & Cia (10g)',
         4: 'Sanol',
         5: 'Talco',
         6: 'Arejado na Sombra',
         7: 'Banho de Sol',
-        8: 'Sílica Gel Regenerável Bodout (40g)',
-        9: 'Sílica Gel Seca Pax (1g)',
+        8: 'Sílica Gel Regenerável Laranja - Bodout (40g)',
+        9: 'Sílica Gel - Seca Pax (1g)',
+        10: 'Sílica Gel Regenerável Laranja Filme Bopp - Quimpack (10g)',
     };
 
     return data[value];
