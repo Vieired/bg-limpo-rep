@@ -84,7 +84,7 @@ const ModalCleaning: React.FC<Props> = ({
     initialValues: {
       ...gameEditing,
       cleaning_date: today,
-      cleaning_methods: null,
+      cleaning_methods: gameEditing?.cleaning_methods,
     } as Game,
   });
 
