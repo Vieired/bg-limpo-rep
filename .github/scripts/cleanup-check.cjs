@@ -160,11 +160,11 @@ async function sendPush(userToken, title, body, photoUrl) {
             body,
             image: photoUrl ?? "", // imagem grande
           },
-          notification: {
-            title,
-            body,
-            image: photoUrl ?? "",
-          },
+          // notification: {
+          //   title,
+          //   body,
+          //   image: photoUrl ?? "",
+          // },
           android: {
             notification: {
               image: photoUrl ?? "",
