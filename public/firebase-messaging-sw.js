@@ -23,7 +23,6 @@ messaging.onBackgroundMessage((payload) => {
     body,
     image,
     icon: "/vite.svg",
-    // icon: "/icon-192.png",
-    badge: "/vite.svg",
+    badge: image,
   });
 });

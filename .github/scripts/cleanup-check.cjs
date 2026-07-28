@@ -161,8 +161,8 @@ async function sendPush(userToken, title, body, photoUrl) {
             image: photoUrl ?? "", // imagem grande
           },
           notification: {
-            title: "Limpeza",
-            body: "Hora de limpar o jogo",
+            title,
+            body,
             image: photoUrl ?? "",
           },
           android: {
