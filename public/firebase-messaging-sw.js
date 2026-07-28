@@ -22,7 +22,8 @@ messaging.onBackgroundMessage((payload) => {
   self.registration.showNotification(title || "Notificação", {
     body,
     image,
-    icon: image || "/icon-192.png",
-    badge: image,
+    icon: "/vite.svg",
+    // icon: "/icon-192.png",
+    badge: "/vite.svg",
   });
 });
