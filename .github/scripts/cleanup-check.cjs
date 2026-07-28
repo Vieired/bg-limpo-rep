@@ -173,21 +173,6 @@ async function sendPush(userToken, title, body, photoUrl) {
           // },
         },
       }),
-      // body: JSON.stringify({
-      //   message: {
-      //     token: userToken,
-      //     webpush: {
-      //       notification: {
-      //         title,
-      //         body,
-      //         image: photoUrl,
-      //       },
-      //     },
-      //     data: {
-      //       click_action: "/",
-      //     },
-      //   },
-      // }),
     });
 
     const text = await res.text();
