@@ -168,6 +168,7 @@ async function sendPush(userToken, title, body, photoUrl) {
           android: {
             notification: {
               image: photoUrl ?? "",
+              icon: photoUrl ?? "",
             }
           },
         },
