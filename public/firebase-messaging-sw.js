@@ -22,6 +22,7 @@ messaging.onBackgroundMessage((payload) => {
   self.registration.showNotification(title || "Notificação", {
     body,
     image,
+    icon: image,
     // icon: "/vite.svg",
     // badge: image,
   });
