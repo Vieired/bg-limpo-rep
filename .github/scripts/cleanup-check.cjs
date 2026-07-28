@@ -160,6 +160,16 @@ async function sendPush(userToken, title, body, photoUrl) {
             body,
             image: photoUrl ?? "", // imagem grande
           },
+          notification: {
+            title: "Limpeza",
+            body: "Hora de limpar o jogo",
+            image: photoUrl ?? "",
+          },
+          android: {
+            notification: {
+              image: photoUrl ?? "",
+            }
+          },
         },
       }),
       // body: JSON.stringify({
