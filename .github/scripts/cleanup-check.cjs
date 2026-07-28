@@ -158,7 +158,7 @@ async function sendPush(userToken, title, body, photoUrl) {
           data: {
             title,
             body,
-            image: photoUrl ?? "",
+            image: photoUrl ?? "", // imagem grande
           },
         },
       }),
@@ -174,16 +174,6 @@ async function sendPush(userToken, title, body, photoUrl) {
       //     },
       //     data: {
       //       click_action: "/",
-      //     },
-      //   },
-      // }),
-      // body: JSON.stringify({
-      //   message: {
-      //     token: userToken,
-      //     notification: {
-      //       title,
-      //       body,
-      //       image: photoUrl, // 👈 IMAGEM GRANDE
       //     },
       //   },
       // }),
