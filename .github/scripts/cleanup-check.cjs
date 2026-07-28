@@ -165,12 +165,12 @@ async function sendPush(userToken, title, body, photoUrl) {
           //   body,
           //   image: photoUrl ?? "",
           // },
-          android: {
-            notification: {
-              image: photoUrl ?? "",
-              icon: photoUrl ?? "",
-            }
-          },
+          // android: {
+          //   notification: {
+          //     image: photoUrl ?? "",
+          //     icon: photoUrl ?? "",
+          //   }
+          // },
         },
       }),
       // body: JSON.stringify({
