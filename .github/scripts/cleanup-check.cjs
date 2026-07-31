@@ -155,16 +155,16 @@ async function sendPush(userToken, title, body, photoUrl) {
       body: JSON.stringify({
         message: {
           token: userToken,
-          // data: {
-          //   title,
-          //   body,
-          //   image: photoUrl ?? "", // imagem grande
-          // },
-          notification: {
+          data: {
             title,
             body,
             image: photoUrl ?? "", // imagem grande
           },
+          // notification: {
+          //   title,
+          //   body,
+          //   image: photoUrl ?? "", // imagem grande
+          // },
           // android: {
           //   notification: {
           //     image: photoUrl ?? "",
