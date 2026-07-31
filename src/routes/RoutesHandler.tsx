@@ -6,7 +6,7 @@ import Settings from "@/pages/Settings";
 import { useAuth } from "@/contexts/authContext";
 // import { requestNotificationPermission } from "@/firebase";
 import { requestNotificationPermission } from "@/pushNotifications";
-import { onMessage } from "firebase/messaging";
+import { onMessage, type MessagePayload } from "firebase/messaging";
 import { messaging } from "@/firebase";
 import reactSvg from '@/assets/react.svg';
 
@@ -38,12 +38,14 @@ const RoutesHandler: React.FC = () => {
         if (!loggedIn) return;
         initFCM();
 
-        onMessage(messaging, (payload) => {
+        onMessage(messaging, (payload: MessagePayload) => {
             console.log("📩 Notificação recebida em foreground:", payload);
 
-            new Notification(payload.notification?.title ?? "Notificação", {
-                body: payload.notification?.body,
-                icon: reactSvg,
+            // const { data: {title, body, image} } = payload || {};
+
+            new Notification(payload?.data?.title ?? "Notificação", {
+                body: payload?.data?.body,
+                icon: payload?.data?.image || reactSvg,
             });
         });
     }, [loggedIn]);
