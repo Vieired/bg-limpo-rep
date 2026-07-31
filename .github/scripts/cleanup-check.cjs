@@ -165,13 +165,13 @@ async function sendPush(userToken, title, body, photoUrl) {
           //   body,
           //   image: photoUrl ?? "", // imagem grande
           // },
-          android: {
-            notification: {
-              image: "/vite.svg",
-              // image: photoUrl ?? "",
-              icon: "/vite.svg",
-            }
-          },
+          // android: {
+          //   notification: {
+          //     image: "/vite.svg",
+          //     // image: photoUrl ?? "",
+          //     icon: "/vite.svg",
+          //   }
+          // },
         },
       }),
     });
