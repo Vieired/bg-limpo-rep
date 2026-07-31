@@ -167,7 +167,8 @@ async function sendPush(userToken, title, body, photoUrl) {
           // },
           android: {
             notification: {
-              image: photoUrl ?? "",
+              image: "/vite.svg",
+              // image: photoUrl ?? "",
               icon: "/vite.svg",
             }
           },
