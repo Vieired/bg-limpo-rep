@@ -18,8 +18,9 @@ messaging.onBackgroundMessage((payload) => {
   console.log("📩 SW: Push em background recebido:", payload);
 
   const { title, body, image } = payload.data || {};
+  const improvedTitle = title ? `${title} (background)` : "Notificação em Background";
 
-  self.registration.showNotification(title || "Notificação", {
+  self.registration.showNotification(improvedTitle || "Notificação em Background", {
     body,
     image,
     icon: "/vite.svg",

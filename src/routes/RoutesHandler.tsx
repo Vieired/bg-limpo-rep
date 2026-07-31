@@ -39,13 +39,14 @@ const RoutesHandler: React.FC = () => {
         initFCM();
 
         onMessage(messaging, (payload: MessagePayload) => {
-            console.log("📩 Notificação recebida em foreground:", payload);
+            // console.log("📩 Notificação recebida em foreground:", payload);
 
-            // const { data: {title, body, image} } = payload || {};
+            const { title, body, image } = payload.data || {};
+            const improvedTitle = title ? `${title} (foreground)` : "Notificação em Foreground";
 
-            new Notification(payload?.data?.title ?? "Notificação", {
-                body: payload?.data?.body,
-                icon: payload?.data?.image || reactSvg,
+            new Notification(improvedTitle, {
+                body: body,
+                icon: image || reactSvg,
             });
         });
     }, [loggedIn]);
