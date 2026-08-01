@@ -1,3 +1,8 @@
+// import {
+//   parseISO,
+//   format,
+// } from "date-fns"; // TODO: instalar biblioteca date-fns para manipulação mais eficiente de datas
+
 export const getDiffDays = (startDate: string, endDate: string): number => {
     const a = new Date(startDate);
     const b = new Date(endDate);
@@ -77,3 +82,15 @@ export const getDateByMonthsIncrement = (stringDate: string, monthsIncrement: nu
     t.setMonth(t.getMonth() + monthsIncrement);
     return new Date(Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate(),0,0,0,0));
 }
+
+// export function parseDate(date: Date | string) {
+//   if (typeof date === "string") return parseISO(date);
+
+//   return date;
+// }
+
+// export function isoDateFormat(date: Date | string) {
+//   const value = typeof date === "string" ? parseDate(date) : date;
+
+//   return format(value, "yyyy-MM-dd");
+// }

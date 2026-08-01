@@ -47,7 +47,8 @@ const ModalAddOrEdit: React.FC<Props> = ({
 }) => {
 
   const element = document.createElement("div");
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   const done = () => {
     toggleModal();
@@ -92,7 +93,7 @@ const ModalAddOrEdit: React.FC<Props> = ({
       ? (gameEditing as Game)
       : {
         // id: 'idle',
-        cleaning_date: today,
+        cleaning_date: today.toISOString(),
         cleaning_method: 1,
         cleaning_methods: [],
         isActive: true,

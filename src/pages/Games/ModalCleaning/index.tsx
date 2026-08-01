@@ -44,7 +44,8 @@ const ModalCleaning: React.FC<Props> = ({
 
   const element = document.createElement("div");
   // ReactModal.setAppElement('#root');
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   const methodOptions = useMemo(() => {
     return getTypeList().map((x) => {
@@ -83,7 +84,7 @@ const ModalCleaning: React.FC<Props> = ({
     enableReinitialize: true,
     initialValues: {
       ...gameEditing,
-      cleaning_date: today,
+      cleaning_date: today.toISOString(),
       cleaning_methods: gameEditing?.cleaning_methods,
     } as Game,
   });
