@@ -40,12 +40,20 @@ export async function httpFetch(
     },
   });
 
-  if (response.status === 401 || response.status === 403) {
+  if (response.status === 401) {
     // authService.signOut()
-    // clearTokenFromStorage();
     // window.location.reload();
+    clearTokenFromStorage();
     window.location.href = "/";
-    throw new Error("Token inválido — redirecionando");
+    toast.error("Sessão expirada (401)");
+    throw new Error("Sessão expirada");
+  }
+
+  if (response.status === 403) {
+    window.location.href = "/";
+    const msgError = "Usuário sem permissão para este conteúdo (403)";
+    toast.error(msgError);
+    throw new Error(msgError);
   }
 
   if (!response.ok) {

@@ -115,8 +115,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         authService.signOut().then(() => {
             clearTokenFromStorage();
             setLoggedIn(false);
-            // window.location.reload();
-            window.location.href = "/";
         });
     };
 
