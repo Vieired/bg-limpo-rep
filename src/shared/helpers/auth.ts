@@ -44,3 +44,11 @@ export const auth = getAuth(app);
   
 //   return await user.getIdToken(); // Firebase cuida da renovação
 // }
+
+export const clearTokenAndRedirectToLogin = () => {
+  clearTokenFromStorage();
+  if (window.location.pathname !== "/login") {
+    window.location.href = "/login"
+    // window.location.reload();
+  }
+}

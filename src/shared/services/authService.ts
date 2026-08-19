@@ -9,7 +9,6 @@ import {
 import { auth } from "../helpers/auth";
 import type { FirebaseTokenValidationResult } from "../models/domain/Auth";
 import { firebaseConfig } from "../firebase/config";
-import { httpFetch } from "./_httpClient";
 
 const ENDPOINT = "https://identitytoolkit.googleapis.com/v1/accounts";
 
@@ -27,8 +26,8 @@ export const authService = {
 
 async function signIn(email: string, password: string): Promise<Response> {
 
-  // login via Firebase REST
-  const response = await httpFetch(
+  // login via Firebase REST sem httpFetch
+  const response = await fetch(
     `${ENDPOINT}:signInWithPassword?key=${firebaseConfig.apiKey}`,
     {
       method: "POST",

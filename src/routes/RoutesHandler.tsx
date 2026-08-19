@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import Login from "@/pages/Login";
 import Games from "@/pages/Games";
 import Settings from "@/pages/Settings";
@@ -53,8 +53,12 @@ const RoutesHandler: React.FC = () => {
 
     {/* Rota pública */}
     if (!loggedIn) {
-        return <Login/>;
-        // return <Route index element={<Login />} />
+        return (
+            <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="*" element={<Navigate to="/login" replace />} />
+            </Routes>
+        )
     }
 
     {/* Rotas privadas */}
@@ -62,7 +66,7 @@ const RoutesHandler: React.FC = () => {
         <Routes>
             <Route index element={<Games/>} />
             <Route path="/settings" element={<Settings/>} />
-            {/* <Route path="*" element={<Games/>} /> */}
+            <Route path="*" element={<Navigate to="/" replace />}  />
         </Routes>
     )
 };

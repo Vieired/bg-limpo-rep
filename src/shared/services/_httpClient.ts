@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { clearTokenFromStorage, getAccessTokenFromStorage } from "../helpers/auth";
+import { getAccessTokenFromStorage, clearTokenAndRedirectToLogin } from "../helpers/auth";
 import { authService } from "./authService";
 import type { FirebaseTokenValidationResult } from "../models/domain/Auth";
 
@@ -24,9 +24,7 @@ export async function httpFetch(
     authService.validateFirebaseIdToken(token.idToken)
       .then((response: FirebaseTokenValidationResult) => {
         if (!response?.valid) {
-          clearTokenFromStorage();
-          window.location.href = "/";
-          // window.location.reload();
+          clearTokenAndRedirectToLogin();
         }
       })
   }
@@ -40,17 +38,14 @@ export async function httpFetch(
     },
   });
 
-  if (response.status === 401) {
-    // authService.signOut()
-    // window.location.reload();
-    clearTokenFromStorage();
-    window.location.href = "/";
+  if (response.status === 401) { // o bug #1 acontece, pois o fetch retorna primeiro e falha, entrando aqui. E após limpar o token inválido, redireciona novamente pelo location.ref
+    clearTokenAndRedirectToLogin();
     toast.error("Sessão expirada (401)");
     throw new Error("Sessão expirada");
   }
 
   if (response.status === 403) {
-    window.location.href = "/";
+    clearTokenAndRedirectToLogin();
     const msgError = "Usuário sem permissão para este conteúdo (403)";
     toast.error(msgError);
     throw new Error(msgError);
