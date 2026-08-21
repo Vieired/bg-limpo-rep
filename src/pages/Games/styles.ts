@@ -121,7 +121,7 @@ export const Loading = styled.div`
 `;
 
 interface TopScrollingControlProps {
-    isHidden?: boolean;
+    $isHidden?: boolean;
 }
 
 export const TopScrollingControl = styled.div<TopScrollingControlProps>`
@@ -129,7 +129,7 @@ export const TopScrollingControl = styled.div<TopScrollingControlProps>`
     bottom: 23px;
     align-self: self-end;
     border-radius: 50%;
-    display: ${props => (props.isHidden ? 'none' : 'block')};
+    display: ${props => (props.$isHidden ? 'none' : 'block')};
     box-shadow: 0px 0px 6px 4px #12121270;
 
     > button {

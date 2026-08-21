@@ -241,7 +241,7 @@ const Games: React.FC = () => {
                     toggleModal={toggleModal}
                 />
 
-                <TopScrollingControl isHidden={verticalHeight <= 1198}>
+                <TopScrollingControl $isHidden={verticalHeight <= 1198}>
                     <Button
                         btntheme="primary"
                         onClick={handleScrollTopClick}
