@@ -120,10 +120,14 @@ const Games: React.FC = () => {
     useEffect(() => getSettings(), [getSettings]);
 
     useEffect(() => {
-        document.addEventListener('scroll', () => {
+        const handleScroll = () => {
             setVerticalHeight(window.scrollY);
-        })
-    }, [verticalHeight]);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     return (
         <Container>
@@ -182,6 +186,7 @@ const Games: React.FC = () => {
                             <span>Exibir Somente Ativos</span>
                             <Switch
                                 id="onlyActives"
+                                aria-label="Exibir Somente Ativos"
                                 onChange={(e) => setShowOnlyActiveGamesFilterToggle(e)}
                                 checked={showOnlyActiveGamesFilterToggle}
                             />
